@@ -13,7 +13,7 @@ const TopHeader = () => {
             </div>
             <div className="flex items-center gap-[8px] text-body text-[14px]">
               <Mail className="w-[16px] h-[16px] text-primary" />
-              <span>info@yanethospital.com</span>
+              <span>info@yanetprimaryhospital.com</span>
             </div>
             <div className="flex items-center gap-[8px] text-body text-[14px]">
               <MapPin className="w-[16px] h-[16px] text-primary" />

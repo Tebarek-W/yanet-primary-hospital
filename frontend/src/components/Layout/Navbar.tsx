@@ -35,14 +35,19 @@ const Navbar = () => {
           {/* Logo */}
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-[12px] group cursor-pointer"
+            className="flex items-center gap-[8px] group cursor-pointer"
           >
-            <div className="w-[48px] h-[48px] bg-primary rounded-[12px] flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
-              <span className="text-[26px] font-bold">Y</span>
+            <div className="w-[32px] h-[32px] bg-primary rounded-[8px] flex items-center justify-center text-white shadow-md group-hover:rotate-12 transition-transform duration-500">
+              <span className="text-[18px] font-bold">Y</span>
             </div>
-            <span className={`text-[26px] font-bold tracking-tighter ${isSticky ? 'text-secondary' : 'text-white'}`}>
-              Yanet<span className="text-primary group-hover:text-secondary transition-colors">Hospital</span>
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className={`text-[18px] md:text-[20px] font-extrabold tracking-tighter ${isSticky ? 'text-secondary' : 'text-white'}`}>
+                Yanet<span className="text-primary group-hover:text-secondary transition-colors">Primary</span>
+              </span>
+              <span className="text-[8px] font-bold uppercase tracking-[3px] text-primary mt-[1px]">
+                Hospital
+              </span>
+            </div>
           </motion.div>
 
           {/* Desktop Links */}
@@ -54,7 +59,7 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`font-semibold text-[15px] transition-all duration-300 relative group flex items-center gap-[6px] ${
+                className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
                   isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
                 }`}
               >
@@ -65,14 +70,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Search & Actions */}
           <div className="hidden lg:flex items-center gap-[25px]">
-            <motion.button 
-              whileHover={{ scale: 1.2, rotate: 15 }}
-              className={`transition-colors ${isSticky ? 'text-secondary hover:text-primary' : 'text-white/80 hover:text-white'}`}
-            >
-              <Search className="w-[22px] h-[22px]" />
-            </motion.button>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

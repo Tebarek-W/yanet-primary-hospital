@@ -17,7 +17,14 @@ const Footer = () => {
               <div className="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center text-white">
                 <span className="text-[20px] font-bold">Y</span>
               </div>
-              <span className="text-[24px] font-bold text-white tracking-tight">Yanet<span className="text-primary">Hospital</span></span>
+              <div className="flex flex-col leading-none">
+                <span className="text-[22px] font-bold text-white tracking-tight">
+                  Yanet<span className="text-primary">Primary</span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[3px] text-primary mt-[2px]">
+                  Hospital
+                </span>
+              </div>
             </div>
             <p className="text-white/70 mb-[30px] leading-[1.8]">
               Providing world-class medical services with modern technology and expert healthcare professionals. Your health is our priority.
@@ -81,7 +88,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <h4 className="text-white text-[16px] mb-[5px]">Email Address</h4>
-                  <p className="text-white/70">info@yanethospital.com</p>
+                  <p className="text-white/70">info@yanetprimaryhospital.com</p>
                 </div>
               </div>
 
@@ -101,7 +108,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="pt-[30px] border-t border-white/10 text-center">
           <p className="text-white/50 text-[14px]">
-            &copy; {new Date().getFullYear()} Yanet Hospital. All Rights Reserved. Designed by Corf Team.
+            &copy; {new Date().getFullYear()} Yanet Primary Hospital. All Rights Reserved. Designed by Corf Team.
           </p>
         </div>
       </div>

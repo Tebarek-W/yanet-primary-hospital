@@ -1,9 +1,118 @@
 import { motion } from 'framer-motion';
-import { Play, Calendar, ArrowRight } from 'lucide-react';
+import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus } from 'lucide-react';
+
+const SolarSystem = () => {
+  return (
+    <>
+      {/* Primary System */}
+      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] pointer-events-none z-0 will-change-transform">
+        {/* Optimized Central Glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/20 rounded-full blur-[80px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[60px] animate-pulse"></div>
+        
+        {/* Orbit 1 - Heart */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[0%] border border-primary/20 rounded-full border-dashed will-change-transform"
+        >
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{ translateZ: 0 }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-pink-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-[0_0_10px_rgba(236,72,153,0.4)] border border-white/20 will-change-transform"
+          >
+            <Heart className="w-4 h-4 fill-white" />
+          </motion.div>
+        </motion.div>
+
+        {/* Orbit 2 - Stethoscope */}
+        <motion.div 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[20%] border border-white/10 rounded-full will-change-transform"
+        >
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            style={{ translateZ: 0 }}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-gradient-to-br from-primary to-cyan-400 rounded-full flex items-center justify-center text-white shadow-[0_0_15px_rgba(0,184,184,0.5)] border border-white/20 will-change-transform"
+          >
+            <Stethoscope className="w-5 h-5" />
+          </motion.div>
+        </motion.div>
+
+        {/* Orbit 3 - Activity */}
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[38%] border border-primary/10 rounded-full border-dashed will-change-transform"
+        >
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+            style={{ translateZ: 0 }}
+            className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white shadow-[0_0_10px_rgba(251,191,36,0.4)] border border-white/20 will-change-transform"
+          >
+            <Activity className="w-3.5 h-3.5" />
+          </motion.div>
+        </motion.div>
+
+        {/* Orbit 4 - Plus */}
+        <motion.div 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[52%] border border-white/5 rounded-full will-change-transform"
+        >
+          <div className="absolute top-[20%] left-0 -translate-x-1/2 w-2 h-2 bg-primary rounded-full shadow-[0_0_5px_rgba(0,184,184,0.6)]"></div>
+          <div className="absolute bottom-[20%] right-0 translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.6)]"></div>
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+            style={{ translateZ: 0 }}
+            className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-[0_0_8px_rgba(99,102,241,0.5)] border border-white/20 will-change-transform"
+          >
+            <Plus className="w-3 h-3" />
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Secondary System */}
+      <div className="absolute top-[75%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none z-[-1] opacity-30 scale-75 blur-[40px] will-change-transform">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-secondary/30 rounded-full blur-[60px]"></div>
+        <motion.div 
+          animate={{ rotate: -360 }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[0%] border border-white/10 rounded-full border-dashed will-change-transform"
+        >
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-pink-500 rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]"></div>
+        </motion.div>
+      </div>
+
+      {/* Tertiary System */}
+      <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none z-[-1] opacity-20 scale-50 blur-[30px] will-change-transform">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] bg-primary/10 rounded-full blur-[50px]"></div>
+        <motion.div 
+          animate={{ rotate: 360 }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          style={{ translateZ: 0 }}
+          className="absolute inset-[0%] border border-white/5 rounded-full border-dashed will-change-transform"
+        >
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-amber-400 rounded-full shadow-[0_0_5px_rgba(251,191,36,0.6)]"></div>
+        </motion.div>
+      </div>
+    </>
+  );
+};
 
 const Hero = () => {
   return (
-    <section className="relative h-[850px] lg:h-[1000px] flex items-center overflow-hidden bg-secondary">
+    <section className="relative h-[700px] lg:h-[850px] flex items-start pt-[140px] lg:pt-[170px] overflow-hidden bg-secondary">
       {/* Dynamic Background with improved overlay */}
       <motion.div 
         initial={{ scale: 1.2, opacity: 0 }}
@@ -20,11 +129,11 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 to-transparent"></div>
       </motion.div>
 
-      {/* Floating Glowing Orbs */}
-      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[120px] animate-pulse-soft"></div>
-      <div className="absolute bottom-[20%] right-[30%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] animate-pulse-soft"></div>
+      {/* Optimized Floating Orbs */}
+      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] bg-primary/10 rounded-full blur-[80px] animate-pulse-soft"></div>
+      <div className="absolute bottom-[20%] right-[30%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] animate-pulse-soft"></div>
 
-      <div className="container-custom relative z-10 pt-0 mt-[-100px]">
+      <div className="container-custom relative z-10 pt-0 mt-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-[60px]">
           {/* Left Side: Content */}
           <div className="max-w-[700px]">
@@ -83,8 +192,9 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.8, x: 100 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ duration: 1.2, delay: 0.5, type: "spring" }}
-            className="hidden lg:block relative mt-[100px]"
+            className="hidden lg:block relative mt-[60px]"
           >
+            <SolarSystem />
             <div className="relative z-10 flex justify-end">
               <img 
                 src="/doctor_new.png" 
