@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
+import { Play, Calendar, ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section className="relative h-[800px] lg:h-[950px] flex items-center overflow-hidden">
-      {/* Background with subtle zoom animation */}
+    <section className="relative h-[850px] lg:h-[1000px] flex items-center overflow-hidden bg-secondary">
+      {/* Dynamic Background with improved overlay */}
       <motion.div 
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 10, ease: "linear" }}
+        initial={{ scale: 1.2, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop")',
@@ -15,59 +16,107 @@ const Hero = () => {
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-secondary/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 to-transparent"></div>
       </motion.div>
 
-      <div className="container-custom relative z-10 pt-[150px] lg:pt-[200px]">
-        <div className="max-w-[850px]">
+      {/* Floating Glowing Orbs */}
+      <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[120px] animate-pulse-soft"></div>
+      <div className="absolute bottom-[20%] right-[30%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] animate-pulse-soft"></div>
+
+      <div className="container-custom relative z-10 pt-0 mt-[-100px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-[60px]">
+          {/* Left Side: Content */}
+          <div className="max-w-[700px]">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+              className="flex items-center gap-4 mb-[25px]"
+            >
+              <div className="w-[3px] h-[25px] bg-primary"></div>
+              <span className="text-white text-[15px] font-bold uppercase tracking-[4px]">
+                Excellence in Healthcare
+              </span>
+            </motion.div>
+
+            <motion.h1 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
+              className="text-white mb-[25px] leading-[1.1] font-extrabold tracking-tighter !text-[35px] md:!text-[50px] lg:!text-[60px]"
+            >
+              Providing Best <span className="gradient-text">Medical Care</span> For Your Family
+            </motion.h1>
+
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-[16px] md:text-[18px] mb-[40px] text-white/80 leading-[1.6] font-light max-w-[600px]"
+            >
+              Experience world-class healthcare with modern technology and expert specialists. We're dedicated to your health and well-being around the clock.
+            </motion.p>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex flex-wrap items-center gap-[25px]"
+            >
+              <button className="btn-primary flex items-center gap-3 group">
+                Find A Doctor
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </button>
+              
+              <div className="flex items-center gap-4 group cursor-pointer">
+                <div className="w-[60px] h-[60px] bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 group-hover:bg-primary transition-all duration-500">
+                  <Play className="w-6 h-6 text-white fill-white" />
+                </div>
+                <span className="text-white font-bold tracking-wider group-hover:text-primary transition-colors">WATCH VIDEO</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Side: Doctor Image */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            initial={{ opacity: 0, scale: 0.8, x: 100 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 1.2, delay: 0.5, type: "spring" }}
+            className="hidden lg:block relative mt-[100px]"
           >
-            <span className="bg-primary px-[20px] py-[6px] rounded-full text-white text-[14px] font-bold mb-[25px] inline-block uppercase tracking-[1px]">
-              We Provide Total Health Care
-            </span>
-          </motion.div>
-
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-white mb-[30px] leading-[1.1] font-bold"
-          >
-            Your Health Is Our Priority, We Care For You
-          </motion.h1>
-
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-[18px] md:text-[20px] mb-[45px] text-white/90 leading-[1.8]"
-          >
-            Providing high-quality medical services with modern technology and expert doctors. Our mission is to provide the best healthcare services to our patients.
-          </motion.p>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-wrap gap-[20px]"
-          >
-            <button className="btn-primary">
-              Our Services
-            </button>
-            <button className="btn-secondary">
-              Book Appointment
-            </button>
+            <div className="relative z-10 flex justify-end">
+              <img 
+                src="/doctor_new.png" 
+                alt="Ethiopian Doctor" 
+                className="w-auto h-auto max-h-none scale-[1.3] origin-bottom object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] animate-float relative z-10"
+              />
+            </div>
+              
+              {/* Floating Stat Card */}
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-[20%] -left-[40px] bg-white/90 backdrop-blur-xl p-5 rounded-[20px] shadow-2xl z-20 flex items-center gap-4 border border-white"
+              >
+                <div className="w-[50px] h-[50px] bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                  <Calendar className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-secondary text-[20px] font-bold">24/7</h4>
+                  <p className="text-body text-[12px] font-bold uppercase">Online Help</p>
+                </div>
+              </motion.div>
           </motion.div>
         </div>
       </div>
       
-      {/* Decorative Wave at bottom */}
-      <div className="absolute bottom-0 left-0 w-full leading-none z-10">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[100px] fill-white">
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C58.23,115.34,136.58,117.21,215.19,102.6Z"></path>
+      {/* Modern Wave Separator */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[80px] fill-white">
+          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.2,35.26,69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113,2,1200,34.72V0Z" opacity=".5"></path>
+          <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".25"></path>
+          <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
         </svg>
       </div>
     </section>
