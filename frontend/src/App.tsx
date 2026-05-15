@@ -1,35 +1,44 @@
+import { useState } from 'react';
 import TopHeader from './components/Layout/TopHeader';
 import Navbar from './components/Layout/Navbar';
 import Hero from './components/Home/Hero';
 import Features from './components/Home/Features';
 import About from './components/Home/About';
 import Services from './components/Home/Services';
-import Appointment from './components/Home/Appointment';
+import WhyChooseUs from './components/Home/WhyChooseUs';
+import AppointmentModal from './components/Home/AppointmentModal';
 import Doctors from './components/Home/Doctors';
 import Testimonials from './components/Home/Testimonials';
 import Blog from './components/Home/Blog';
 import Footer from './components/Layout/Footer';
 
 function App() {
+  const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="absolute top-0 left-0 w-full z-[100]">
         <TopHeader />
-        <Navbar />
+        <Navbar onAppointmentClick={() => setIsAppointmentOpen(true)} />
       </header>
       
       <main className="flex-grow">
-        <Hero />
+        <Hero onAppointmentClick={() => setIsAppointmentOpen(true)} />
         <Features />
         <About />
         <Services />
-        <Appointment />
+        <WhyChooseUs />
         <Doctors />
         <Testimonials />
         <Blog />
       </main>
 
       <Footer />
+
+      <AppointmentModal 
+        isOpen={isAppointmentOpen} 
+        onClose={() => setIsAppointmentOpen(false)} 
+      />
     </div>
   );
 }

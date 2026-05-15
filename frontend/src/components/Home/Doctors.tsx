@@ -24,13 +24,13 @@ const Doctors = () => {
     {
       name: "Dr. Emily White",
       role: "Pediatrician",
-      image: "https://images.unsplash.com/photo-1559839734-2b71f1536783?q=80&w=2070&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2000&auto=format&fit=crop",
       delay: 0.4
     }
   ];
 
   return (
-    <section className="section-padding overflow-hidden">
+    <section className="pt-[60px] pb-[60px] overflow-hidden">
       <div className="container-custom">
         <div className="section-title">
           <span>Expert Medical Team</span>

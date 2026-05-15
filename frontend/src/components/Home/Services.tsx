@@ -42,7 +42,7 @@ const Services = () => {
   ];
 
   return (
-    <section className="section-padding bg-[#F9FBFC] relative overflow-hidden">
+    <section className="pb-[60px] pt-[60px] bg-[#F9FBFC] relative overflow-hidden">
       {/* Decorative background pattern */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#00B8B8 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
@@ -50,7 +50,7 @@ const Services = () => {
         <div className="section-title">
           <span>Our Specialized Services</span>
           <h2 className="text-secondary">Premium Healthcare Services</h2>
-          <p className="text-[18px]">
+          <p className="text-[16px]">
             We provide a wide range of specialized medical services using the latest technology and expert knowledge.
           </p>
         </div>

@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Menu, X, ChevronDown, User } from 'lucide-react';
 
-const Navbar = () => {
+interface NavbarProps {
+  onAppointmentClick: () => void;
+}
+
+const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -74,7 +78,8 @@ const Navbar = () => {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary flex items-center gap-2 !py-[12px] !px-[28px] !text-[15px]"
+              onClick={onAppointmentClick}
+              className="btn-primary flex items-center gap-2 !py-[8px] !px-[22px] !text-[13px]"
             >
               <User className="w-4 h-4" />
               Appointment
@@ -113,7 +118,13 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="mt-[15px] px-[20px]">
-                <button className="btn-primary w-full shadow-xl">
+                <button 
+                  onClick={() => {
+                    setIsOpen(false);
+                    onAppointmentClick();
+                  }}
+                  className="btn-primary w-full shadow-xl"
+                >
                   Appointment
                 </button>
               </div>

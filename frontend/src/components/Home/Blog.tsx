@@ -5,14 +5,14 @@ const Blog = () => {
   const blogs = [
     {
       title: "Latest Modern Technology for Medical Center",
-      image: "https://images.unsplash.com/photo-1576091160550-2173bdb999ef?q=80&w=2070&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop",
       date: "May 15, 2026",
       author: "Admin",
       delay: 0.1
     },
     {
       title: "How to Keep Your Heart Healthy and Fit",
-      image: "https://images.unsplash.com/photo-1505751172107-57322a29344e?q=80&w=2070&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?q=80&w=2080&auto=format&fit=crop",
       date: "May 12, 2026",
       author: "Admin",
       delay: 0.2
@@ -27,7 +27,7 @@ const Blog = () => {
   ];
 
   return (
-    <section className="section-padding">
+    <section className="pt-[60px] pb-[60px]">
       <div className="container-custom">
         <div className="section-title">
           <span>Our Latest News</span>

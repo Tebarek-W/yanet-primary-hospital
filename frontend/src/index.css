@@ -15,16 +15,16 @@
   }
 
   body {
-    @apply font-roboto text-[16px] leading-[1.8] text-body bg-white m-0 antialiased scroll-smooth;
+    @apply font-roboto text-[15px] leading-[1.7] text-body bg-white m-0 antialiased scroll-smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-poppins text-heading font-bold leading-[1.2] tracking-tight;
   }
 
-  h1 { @apply text-[40px] md:text-[65px] lg:text-[75px]; }
-  h2 { @apply text-[32px] md:text-[42px] lg:text-[48px]; }
-  h3 { @apply text-[24px] md:text-[28px]; }
+  h1 { @apply text-[35px] md:text-[55px] lg:text-[65px]; }
+  h2 { @apply text-[28px] md:text-[38px] lg:text-[44px]; }
+  h3 { @apply text-[22px] md:text-[26px]; }
 }
 
 @layer components {

@@ -5,114 +5,121 @@ const SolarSystem = () => {
   return (
     <>
       {/* Primary System */}
-      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] pointer-events-none z-0 will-change-transform">
-        {/* Optimized Central Glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/20 rounded-full blur-[80px]"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[60px] animate-pulse"></div>
+      <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[950px] pointer-events-none z-0 will-change-transform">
+        {/* Vibrant Multi-tone Glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[100px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[80px] animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[60px]"></div>
         
-        {/* Orbit 1 - Heart */}
+        {/* Orbit 1 - Heart (Pink/Red) */}
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[0%] border border-primary/20 rounded-full border-dashed will-change-transform"
+          className="absolute inset-[0%] border border-pink-500/30 rounded-full border-dashed will-change-transform"
         >
           <motion.div 
             animate={{ rotate: -360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             style={{ translateZ: 0 }}
-            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-pink-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-[0_0_10px_rgba(236,72,153,0.4)] border border-white/20 will-change-transform"
+            className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-pink-500 to-red-600 rounded-full flex items-center justify-center text-white shadow-[0_0_15px_rgba(236,72,153,0.7)] border border-white/30 will-change-transform"
           >
             <Heart className="w-4 h-4 fill-white" />
           </motion.div>
         </motion.div>
 
-        {/* Orbit 2 - Stethoscope */}
+        {/* Orbit 2 - Stethoscope (Teal/Cyan) */}
         <motion.div 
           animate={{ rotate: -360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[20%] border border-white/10 rounded-full will-change-transform"
+          className="absolute inset-[20%] border border-cyan-400/30 rounded-full will-change-transform"
         >
           <motion.div 
             animate={{ rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
             style={{ translateZ: 0 }}
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-gradient-to-br from-primary to-cyan-400 rounded-full flex items-center justify-center text-white shadow-[0_0_15px_rgba(0,184,184,0.5)] border border-white/20 will-change-transform"
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-gradient-to-br from-primary to-cyan-400 rounded-full flex items-center justify-center text-white shadow-[0_0_20px_rgba(0,184,184,0.7)] border border-white/30 will-change-transform"
           >
             <Stethoscope className="w-5 h-5" />
           </motion.div>
         </motion.div>
 
-        {/* Orbit 3 - Activity */}
+        {/* Orbit 3 - Activity (Amber/Orange) */}
         <motion.div 
           animate={{ rotate: 360 }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[38%] border border-primary/10 rounded-full border-dashed will-change-transform"
+          className="absolute inset-[38%] border border-amber-400/30 rounded-full border-dashed will-change-transform"
         >
           <motion.div 
             animate={{ rotate: -360 }}
-            transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             style={{ translateZ: 0 }}
-            className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white shadow-[0_0_10px_rgba(251,191,36,0.4)] border border-white/20 will-change-transform"
+            className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white shadow-[0_0_15px_rgba(251,191,36,0.6)] border border-white/30 will-change-transform"
           >
             <Activity className="w-3.5 h-3.5" />
           </motion.div>
         </motion.div>
 
-        {/* Orbit 4 - Plus */}
+        {/* Orbit 4 - Plus (Indigo/Purple) */}
         <motion.div 
           animate={{ rotate: -360 }}
-          transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[52%] border border-white/5 rounded-full will-change-transform"
+          className="absolute inset-[52%] border border-indigo-400/20 rounded-full will-change-transform"
         >
-          <div className="absolute top-[20%] left-0 -translate-x-1/2 w-2 h-2 bg-primary rounded-full shadow-[0_0_5px_rgba(0,184,184,0.6)]"></div>
-          <div className="absolute bottom-[20%] right-0 translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.6)]"></div>
+          <div className="absolute top-[20%] left-0 -translate-x-1/2 w-2.5 h-2.5 bg-primary rounded-full shadow-[0_0_8px_rgba(0,184,184,0.8)]"></div>
+          <div className="absolute bottom-[20%] right-0 translate-x-1/2 w-2.5 h-2.5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
           <motion.div 
             animate={{ rotate: 360 }}
-            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
             style={{ translateZ: 0 }}
-            className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-[0_0_8px_rgba(99,102,241,0.5)] border border-white/20 will-change-transform"
+            className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-[0_0_12px_rgba(99,102,241,0.7)] border border-white/20 will-change-transform"
           >
             <Plus className="w-3 h-3" />
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Secondary System */}
-      <div className="absolute top-[75%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none z-[-1] opacity-30 scale-75 blur-[40px] will-change-transform">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-secondary/30 rounded-full blur-[60px]"></div>
+      {/* Secondary System (Enhanced Color) */}
+      <div className="absolute top-[75%] left-[25%] -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] pointer-events-none z-[-1] opacity-40 scale-75 blur-[40px] will-change-transform">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-secondary/40 rounded-full blur-[80px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] bg-pink-500/20 rounded-full blur-[60px] animate-pulse"></div>
         <motion.div 
           animate={{ rotate: -360 }}
           transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[0%] border border-white/10 rounded-full border-dashed will-change-transform"
+          className="absolute inset-[0%] border border-pink-400/20 rounded-full border-dashed will-change-transform"
         >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-pink-500 rounded-full shadow-[0_0_8px_rgba(236,72,153,0.6)]"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-gradient-to-br from-pink-400 to-rose-600 rounded-full shadow-[0_0_12px_rgba(236,72,153,0.8)]"></div>
         </motion.div>
       </div>
 
-      {/* Tertiary System */}
-      <div className="absolute top-[20%] left-[80%] -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none z-[-1] opacity-20 scale-50 blur-[30px] will-change-transform">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] bg-primary/10 rounded-full blur-[50px]"></div>
+      {/* Tertiary System (Enhanced Color) */}
+      <div className="absolute top-[20%] left-[85%] -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] pointer-events-none z-[-1] opacity-30 scale-50 blur-[30px] will-change-transform">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[70px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-amber-400/10 rounded-full blur-[50px] animate-pulse"></div>
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
           style={{ translateZ: 0 }}
-          className="absolute inset-[0%] border border-white/5 rounded-full border-dashed will-change-transform"
+          className="absolute inset-[0%] border border-cyan-400/20 rounded-full border-dashed will-change-transform"
         >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-amber-400 rounded-full shadow-[0_0_5px_rgba(251,191,36,0.6)]"></div>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.8)]"></div>
         </motion.div>
       </div>
     </>
   );
 };
 
-const Hero = () => {
+interface HeroProps {
+  onAppointmentClick: () => void;
+}
+
+const Hero = ({ onAppointmentClick }: HeroProps) => {
   return (
-    <section className="relative h-[700px] lg:h-[850px] flex items-start pt-[140px] lg:pt-[170px] overflow-hidden bg-secondary">
+    <section className="relative h-[700px] lg:h-[800px] flex items-start pt-[100px] lg:pt-[120px] overflow-hidden bg-secondary">
       {/* Dynamic Background with improved overlay */}
       <motion.div 
         initial={{ scale: 1.2, opacity: 0 }}
@@ -126,7 +133,7 @@ const Hero = () => {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-secondary/90 via-secondary/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-secondary/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-secondary/40 to-transparent"></div>
       </motion.div>
 
       {/* Optimized Floating Orbs */}
@@ -141,10 +148,11 @@ const Hero = () => {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-              className="flex items-center gap-4 mb-[25px]"
+              className="flex items-center gap-4 mb-[20px]"
             >
-              <div className="w-[3px] h-[25px] bg-primary"></div>
-              <span className="text-white text-[15px] font-bold uppercase tracking-[4px]">
+              <div className="w-[3px] h-[20px] bg-primary"></div>
+              <span className="text-white text-[13px] font-extrabold uppercase tracking-[3px]">
+                <span className="bg-primary text-secondary px-1.5 py-0.5 rounded mr-2 text-[11px]">24/7</span>
                 Excellence in Healthcare
               </span>
             </motion.div>
@@ -153,7 +161,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
-              className="text-white mb-[25px] leading-[1.1] font-extrabold tracking-tighter !text-[35px] md:!text-[50px] lg:!text-[60px]"
+              className="text-white mb-[20px] leading-[1.1] font-extrabold tracking-tighter !text-[30px] md:!text-[42px] lg:!text-[52px]"
             >
               Providing Best <span className="gradient-text">Medical Care</span> For Your Family
             </motion.h1>
@@ -162,7 +170,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-[16px] md:text-[18px] mb-[40px] text-white/80 leading-[1.6] font-light max-w-[600px]"
+              className="text-[14px] md:text-[16px] mb-[35px] text-white/80 leading-[1.6] font-light max-w-[550px]"
             >
               Experience world-class healthcare with modern technology and expert specialists. We're dedicated to your health and well-being around the clock.
             </motion.p>
@@ -173,8 +181,11 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 0.8 }}
               className="flex flex-wrap items-center gap-[25px]"
             >
-              <button className="btn-primary flex items-center gap-3 group">
-                Find A Doctor
+              <button 
+                onClick={onAppointmentClick}
+                className="btn-primary flex items-center gap-3 group shadow-xl shadow-primary/20"
+              >
+                Book Appointment
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               
@@ -199,24 +210,9 @@ const Hero = () => {
               <img 
                 src="/doctor_new.png" 
                 alt="Ethiopian Doctor" 
-                className="w-auto h-auto max-h-none scale-[1.3] origin-bottom object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] animate-float relative z-10"
+                className="w-auto h-auto max-h-none scale-[1.3] origin-bottom object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] animate-float relative z-10 brightness-[1.1] contrast-[1.05]"
               />
             </div>
-              
-              {/* Floating Stat Card */}
-              <motion.div 
-                animate={{ y: [0, -15, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[20%] -left-[40px] bg-white/90 backdrop-blur-xl p-5 rounded-[20px] shadow-2xl z-20 flex items-center gap-4 border border-white"
-              >
-                <div className="w-[50px] h-[50px] bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="text-secondary text-[20px] font-bold">24/7</h4>
-                  <p className="text-body text-[12px] font-bold uppercase">Online Help</p>
-                </div>
-              </motion.div>
           </motion.div>
         </div>
       </div>
