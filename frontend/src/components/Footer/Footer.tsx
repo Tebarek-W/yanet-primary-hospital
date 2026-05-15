@@ -7,9 +7,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* About Column */}
           <div>
-            <div className="mb-8">
-              <span className="text-3xl font-bold">
-                Yanet<span className="text-primary">Hospital</span>
+            <div className="flex flex-col leading-none mb-8">
+              <span className="text-[26px] font-bold text-white tracking-tight">
+                Yanet<span className="text-primary">Primary</span>
+              </span>
+              <span className="text-[12px] font-bold uppercase tracking-[4px] text-primary mt-[2px]">
+                Hospital
               </span>
             </div>
             <p className="text-gray-400 mb-8 leading-relaxed">
@@ -106,14 +109,14 @@ const Footer = () => {
             </div>
             <div>
               <p className="text-sm text-gray-400">Email Us:</p>
-              <p className="font-bold text-white">info@yanet-hospital.com</p>
+              <p className="font-bold text-white">info@yanetprimaryhospital.com</p>
             </div>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="text-center text-gray-500 text-sm">
-          <p>© 2026 Yanet Hospital. All Rights Reserved. Designed by Antigravity.</p>
+          <p>© 2026 Yanet Primary Hospital. All Rights Reserved. Designed by Antigravity.</p>
         </div>
       </div>
     </footer>

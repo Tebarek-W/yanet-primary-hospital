@@ -27,7 +27,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="section-padding bg-light-bg">
+    <section className="pt-[60px] pb-[60px] bg-light-bg">
       <div className="container-custom">
         <div className="section-title">
           <span>What Our Patients Say</span>

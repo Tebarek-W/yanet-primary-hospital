@@ -11,9 +11,9 @@ const TopHeader = () => {
               <Clock className="w-[18px] h-[18px] text-primary" />
               <span>Mon-Fri 9am-5pm</span>
             </div>
-            <div className="flex items-center gap-[8px] text-[#5d666e] text-[14px] font-medium">
-              <Phone className="w-[18px] h-[18px] text-primary" />
-              <span>Call Us: +251-11-123-4567</span>
+            <div className="flex items-center gap-[8px] text-body text-[14px]">
+              <Mail className="w-[16px] h-[16px] text-primary" />
+              <span>info@yanetprimaryhospital.com</span>
             </div>
             <div className="flex items-center gap-[8px] text-[#5d666e] text-[14px] font-medium">
               <Mail className="w-[18px] h-[18px] text-primary" />

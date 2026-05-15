@@ -24,7 +24,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="relative z-20 mt-[-200px]">
+    <section className="relative z-20 mt-[-150px]">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[25px]">
           {features.map((item, index) => (

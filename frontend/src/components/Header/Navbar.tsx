@@ -26,10 +26,12 @@ const Navbar = () => {
   return (
     <nav className={`w-full z-50 transition-all duration-300 ${isSticky ? 'fixed top-0 left-0 bg-white shadow-lg py-3' : 'bg-white py-5'}`}>
       <div className="container-custom flex justify-between items-center">
-        {/* Logo */}
-        <div className="flex items-center">
-          <span className="text-2xl font-bold text-secondary">
-            Yanet<span className="text-primary">Hospital</span>
+        <div className="flex flex-col leading-none">
+          <span className="text-[22px] md:text-[28px] font-bold text-secondary tracking-tight">
+            Yanet<span className="text-primary">Primary</span>
+          </span>
+          <span className="text-[10px] md:text-[12px] font-bold uppercase tracking-[4px] text-primary mt-[2px]">
+            Hospital
           </span>
         </div>
 

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, Plus } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Search, Menu, X, ChevronDown, User } from 'lucide-react';
 
 const Navbar = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -36,6 +35,22 @@ const Navbar = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-[8px] group cursor-pointer"
+          >
+            <div className="w-[32px] h-[32px] bg-primary rounded-[8px] flex items-center justify-center text-white shadow-md group-hover:rotate-12 transition-transform duration-500">
+              <span className="text-[18px] font-bold">Y</span>
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className={`text-[18px] md:text-[20px] font-extrabold tracking-tighter ${isSticky ? 'text-secondary' : 'text-white'}`}>
+                Yanet<span className="text-primary group-hover:text-secondary transition-colors">Primary</span>
+              </span>
+              <span className="text-[8px] font-bold uppercase tracking-[3px] text-primary mt-[1px]">
+                Hospital
+              </span>
+            </div>
+          </motion.div>
           <Link to="/">
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -58,21 +73,19 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
+                className={`font-semibold text-[15px] transition-all duration-300 relative group flex items-center gap-[6px] ${
+                  isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                }`}
               >
-                <Link
-                  to={link.href}
-                  className={`font-bold text-[15px] transition-all duration-300 flex items-center gap-[2px] ${location.pathname === link.href
-                      ? 'text-primary'
-                      : isSticky ? 'text-[#0e121d] hover:text-primary' : 'text-white hover:text-primary'
-                    }`}
-                >
-                  {link.name}
-                  {link.hasDropdown && <Plus className="w-[12px] h-[12px] stroke-[3px]" />}
-                </Link>
-              </motion.div>
+                {link.name}
+                {link.hasDropdown && <ChevronDown className="w-[14px] h-[14px] group-hover:rotate-180 transition-transform duration-500" />}
+                <span className="absolute bottom-[-6px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </motion.a>
             ))}
           </div>
 
+          <div className="hidden lg:flex items-center gap-[25px]">
+            <motion.button 
           {/* Search & Actions */}
           <div className="hidden lg:flex items-center gap-[20px]">
             <motion.button
