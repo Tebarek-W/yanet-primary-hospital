@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import TopHeader from './components/Layout/TopHeader';
 import Navbar from './components/Layout/Navbar';
 import AppointmentModal from './components/Home/AppointmentModal';
@@ -13,7 +13,7 @@ function App() {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
   return (
-    <Router>
+    <>
       <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <header className="absolute top-0 left-0 w-full z-[100]">
@@ -35,7 +35,7 @@ function App() {
           onClose={() => setIsAppointmentOpen(false)} 
         />
       </div>
-    </Router>
+    </>
   );
 }
 
