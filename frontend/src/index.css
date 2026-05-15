@@ -15,21 +15,23 @@
   }
 
   body {
-    @apply font-roboto text-[15px] leading-[1.7] text-body bg-white m-0 antialiased scroll-smooth;
+    @apply font-roboto text-[13px] leading-[1.5] text-body bg-white m-0 antialiased scroll-smooth overflow-x-hidden;
+    /* Achieving the 'resized' look by slightly scaling the base size */
+    font-size: 13px;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-poppins text-heading font-bold leading-[1.2] tracking-tight;
+    @apply font-poppins text-heading font-bold leading-[1.1] tracking-tight;
   }
 
-  h1 { @apply text-[35px] md:text-[55px] lg:text-[65px]; }
-  h2 { @apply text-[28px] md:text-[38px] lg:text-[44px]; }
-  h3 { @apply text-[22px] md:text-[26px]; }
+  h1 { @apply text-[28px] md:text-[36px] lg:text-[42px]; }
+  h2 { @apply text-[22px] md:text-[28px] lg:text-[32px]; }
+  h3 { @apply text-[16px] md:text-[20px]; }
 }
 
 @layer components {
   .btn-primary {
-    @apply relative overflow-hidden bg-primary text-white px-[40px] py-[16px] rounded-[8px] font-semibold text-[16px] transition-all duration-500 hover:shadow-[0_10px_25px_rgba(0,184,184,0.4)] hover:-translate-y-1 active:scale-95 inline-block cursor-pointer z-10;
+    @apply relative overflow-hidden bg-primary text-white px-[25px] py-[10px] rounded-[5px] font-semibold text-[13.5px] transition-all duration-500 hover:shadow-[0_6px_15px_rgba(0,184,184,0.3)] hover:-translate-y-1 active:scale-95 inline-block cursor-pointer z-10;
   }
   
   .btn-primary::after {
@@ -41,23 +43,23 @@
   }
 
   .btn-secondary {
-    @apply relative overflow-hidden bg-secondary text-white px-[40px] py-[16px] rounded-[8px] font-semibold text-[16px] transition-all duration-500 hover:shadow-[0_10px_25px_rgba(0,29,61,0.4)] hover:-translate-y-1 active:scale-95 inline-block cursor-pointer z-10;
+    @apply relative overflow-hidden bg-secondary text-white px-[25px] py-[10px] rounded-[5px] font-semibold text-[13.5px] transition-all duration-500 hover:shadow-[0_6px_15px_rgba(0,29,61,0.3)] hover:-translate-y-1 active:scale-95 inline-block cursor-pointer z-10;
   }
 
   .section-padding {
-    @apply py-[120px];
+    @apply py-[40px];
   }
 
   .container-custom {
-    @apply max-w-[1250px] mx-auto px-[20px];
+    @apply max-w-[1050px] mx-auto px-[15px];
   }
 
   .section-title {
-    @apply mb-[70px] text-center max-w-[800px] mx-auto;
+    @apply mb-[30px] text-center max-w-[550px] mx-auto;
   }
 
   .section-title span {
-    @apply text-primary font-bold tracking-[3px] uppercase text-[13px] mb-[15px] block bg-primary/10 w-fit mx-auto px-4 py-1 rounded-full;
+    @apply text-primary font-bold tracking-[1.5px] uppercase text-[11px] mb-[10px] block bg-primary/10 w-fit mx-auto px-4 py-1 rounded-full;
   }
 
   .glass-card {
