@@ -22,7 +22,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
   const navLinks = [
     { name: 'Home', href: '/' },
-    { name: 'About', href: '/#about' },
+    { name: 'About', href: '/about' },
     { name: 'Pages', href: '#', hasDropdown: true },
     { name: 'Services', href: '/services' },
     { name: 'Doctors', href: '/#doctors' },

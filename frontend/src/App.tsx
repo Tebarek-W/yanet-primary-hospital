@@ -6,6 +6,7 @@ import AppointmentModal from './components/Home/AppointmentModal';
 import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
+import AboutPage from './pages/AboutPage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 
@@ -24,6 +25,7 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
           </Routes>
         </main>
