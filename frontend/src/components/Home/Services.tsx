@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { HeartPulse, Activity, Stethoscope, Microscope, Brain, Baby, Plus } from 'lucide-react';
+import { HeartPulse, Activity, Stethoscope, Microscope, Brain, Baby, Plus, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Services = () => {
   const services = [
@@ -42,7 +43,7 @@ const Services = () => {
   ];
 
   return (
-    <section className="pb-[60px] pt-[60px] bg-[#F9FBFC] relative overflow-hidden">
+    <section id="services" className="pb-[60px] pt-[60px] bg-[#F9FBFC] relative overflow-hidden">
       {/* Decorative background pattern */}
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#00B8B8 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 

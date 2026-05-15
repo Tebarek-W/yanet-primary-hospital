@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Menu, X, ChevronDown, User } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavbarProps {
   onAppointmentClick: () => void;
@@ -9,6 +10,7 @@ interface NavbarProps {
 const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,13 +21,13 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'About', href: '#' },
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/#about' },
     { name: 'Pages', href: '#', hasDropdown: true },
-    { name: 'Services', href: '#' },
-    { name: 'Doctors', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Contact', href: '#' },
+    { name: 'Services', href: '/services' },
+    { name: 'Doctors', href: '/#doctors' },
+    { name: 'Blog', href: '/#blog' },
+    { name: 'Contact', href: '/#contact' },
   ];
 
   return (
@@ -37,40 +39,48 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-[8px] group cursor-pointer"
-          >
-            <div className="w-[32px] h-[32px] bg-primary rounded-[8px] flex items-center justify-center text-white shadow-md group-hover:rotate-12 transition-transform duration-500">
-              <span className="text-[18px] font-bold">Y</span>
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className={`text-[18px] md:text-[20px] font-extrabold tracking-tighter ${isSticky ? 'text-secondary' : 'text-white'}`}>
-                Yanet<span className="text-primary group-hover:text-secondary transition-colors">Primary</span>
-              </span>
-              <span className="text-[8px] font-bold uppercase tracking-[3px] text-primary mt-[1px]">
-                Hospital
-              </span>
-            </div>
-          </motion.div>
+          <Link to="/">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-[8px] group cursor-pointer"
+            >
+              <div className="w-[32px] h-[32px] bg-primary rounded-[8px] flex items-center justify-center text-white shadow-md group-hover:rotate-12 transition-transform duration-500">
+                <span className="text-[18px] font-bold">Y</span>
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className={`text-[18px] md:text-[20px] font-extrabold tracking-tighter ${isSticky ? 'text-secondary' : 'text-white'}`}>
+                  Yanet<span className="text-primary group-hover:text-secondary transition-colors">Primary</span>
+                </span>
+                <span className="text-[8px] font-bold uppercase tracking-[3px] text-primary mt-[1px]">
+                  Hospital
+                </span>
+              </div>
+            </motion.div>
+          </Link>
 
           {/* Desktop Links */}
           <div className="hidden lg:flex items-center gap-[40px]">
             {navLinks.map((link, i) => (
-              <motion.a 
-                key={link.name} 
-                href={link.href} 
+              <motion.div
+                key={link.name}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
-                  isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                }`}
               >
-                {link.name}
-                {link.hasDropdown && <ChevronDown className="w-[14px] h-[14px] group-hover:rotate-180 transition-transform duration-500" />}
-                <span className="absolute bottom-[-6px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </motion.a>
+                <Link 
+                  to={link.href} 
+                  className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
+                    location.pathname === link.href ? 'text-primary' :
+                    isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                  }`}
+                >
+                  {link.name}
+                  {link.hasDropdown && <ChevronDown className="w-[14px] h-[14px] group-hover:rotate-180 transition-transform duration-500" />}
+                  <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
+                    location.pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}></span>
+                </Link>
+              </motion.div>
             ))}
           </div>
 
@@ -107,15 +117,17 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
           >
             <div className="container-custom py-[30px] flex flex-col gap-[10px]">
               {navLinks.map((link) => (
-                <a 
+                <Link 
                   key={link.name} 
-                  href={link.href} 
-                  className="text-secondary font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center"
+                  to={link.href} 
+                  className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center ${
+                    location.pathname === link.href ? 'text-primary bg-primary/5' : 'text-secondary'
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
                   {link.hasDropdown && <ChevronDown className="w-[20px] h-[20px]" />}
-                </a>
+                </Link>
               ))}
               <div className="mt-[15px] px-[20px]">
                 <button 

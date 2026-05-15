@@ -30,7 +30,7 @@ const Doctors = () => {
   ];
 
   return (
-    <section className="pt-[60px] pb-[60px] overflow-hidden">
+    <section id="doctors" className="pt-[60px] pb-[60px] overflow-hidden">
       <div className="container-custom">
         <div className="section-title">
           <span>Expert Medical Team</span>

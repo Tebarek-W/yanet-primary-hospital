@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Blog = () => {
   const blogs = [
@@ -27,7 +28,7 @@ const Blog = () => {
   ];
 
   return (
-    <section className="pt-[60px] pb-[60px]">
+    <section id="blog" className="pt-[60px] pb-[60px]">
       <div className="container-custom">
         <div className="section-title">
           <span>Our Latest News</span>
@@ -74,10 +75,10 @@ const Blog = () => {
                   {blog.title}
                 </h3>
                 
-                <button className="flex items-center gap-[10px] text-primary font-bold uppercase text-[14px] group/btn">
+                <Link to="/#contact" className="flex items-center gap-2 text-primary font-bold group">
                   Read More
-                  <ArrowRight className="w-[18px] h-[18px] transition-transform duration-300 group-hover/btn:translate-x-2" />
-                </button>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </motion.div>
           ))}

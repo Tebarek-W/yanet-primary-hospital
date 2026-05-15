@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const points = [
@@ -12,7 +13,7 @@ const About = () => {
   ];
 
   return (
-    <section className="pb-[60px] pt-[30px] lg:pt-[50px] overflow-hidden bg-white relative">
+    <section id="about" className="pb-[60px] pt-[30px] lg:pt-[50px] overflow-hidden bg-white relative">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10"></div>
       
@@ -107,16 +108,15 @@ const About = () => {
               ))}
             </div>
 
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary group flex items-center gap-3 px-10 py-5 rounded-2xl shadow-xl shadow-primary/20"
+            <Link 
+              to="/services"
+              className="btn-primary group flex items-center gap-3 px-10 py-5 rounded-2xl shadow-xl shadow-primary/20 inline-flex"
             >
               Learn More About Us
               <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
                 <Check className="w-4 h-4" />
               </div>
-            </motion.button>
+            </Link>
           </motion.div>
         </div>
       </div>

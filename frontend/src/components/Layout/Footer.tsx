@@ -1,11 +1,26 @@
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  const quickLinks = ["About Us", "Our Services", "Our Doctors", "Latest News", "Contact Us", "Appointment"];
-  const departmentLinks = ["Cardiology", "Neurology", "General Surgery", "Pediatrics", "Laboratory", "Diagnostic"];
+  const quickLinks = [
+    { name: "About Us", href: "/#about" },
+    { name: "Our Services", href: "/services" },
+    { name: "Our Doctors", href: "/#doctors" },
+    { name: "Latest News", href: "/#blog" },
+    { name: "Contact Us", href: "/#contact" }
+  ];
+
+  const departmentLinks = [
+    { name: "Cardiology", href: "/services" },
+    { name: "Neurology", href: "/services" },
+    { name: "General Surgery", href: "/services" },
+    { name: "Pediatrics", href: "/services" },
+    { name: "Laboratory", href: "/services" },
+    { name: "Diagnostic", href: "/services" }
+  ];
 
   return (
-    <footer className="bg-secondary pt-[100px] pb-[30px] relative overflow-hidden">
+    <footer id="contact" className="bg-secondary pt-[100px] pb-[30px] relative overflow-hidden">
       {/* Decorative background shape */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 -z-0"></div>
 
@@ -14,17 +29,19 @@ const Footer = () => {
           {/* About Column */}
           <div>
             <div className="flex items-center gap-[10px] mb-[30px]">
-              <div className="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center text-white">
-                <span className="text-[20px] font-bold">Y</span>
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-[22px] font-bold text-white tracking-tight">
-                  Yanet<span className="text-primary">Primary</span>
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[3px] text-primary mt-[2px]">
-                  Hospital
-                </span>
-              </div>
+              <Link to="/" className="flex items-center gap-[10px]">
+                <div className="w-[40px] h-[40px] bg-primary rounded-full flex items-center justify-center text-white">
+                  <span className="text-[20px] font-bold">Y</span>
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="text-[22px] font-bold text-white tracking-tight">
+                    Yanet<span className="text-primary">Primary</span>
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-[3px] text-primary mt-[2px]">
+                    Hospital
+                  </span>
+                </div>
+              </Link>
             </div>
             <p className="text-white/70 mb-[30px] leading-[1.8]">
               Providing world-class medical services with modern technology and expert healthcare professionals. Your health is our priority.
@@ -43,11 +60,11 @@ const Footer = () => {
             <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">Quick Links</h3>
             <ul className="space-y-[15px]">
               {quickLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-white/70 hover:text-primary transition-all flex items-center gap-[10px] group">
+                <li key={link.name}>
+                  <Link to={link.href} className="text-white/70 hover:text-primary transition-all flex items-center gap-[10px] group">
                     <ArrowRight className="w-[14px] h-[14px] opacity-0 -ml-[20px] group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -58,11 +75,11 @@ const Footer = () => {
             <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">Departments</h3>
             <ul className="space-y-[15px]">
               {departmentLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-white/70 hover:text-primary transition-all flex items-center gap-[10px] group">
+                <li key={link.name}>
+                  <Link to={link.href} className="text-white/70 hover:text-primary transition-all flex items-center gap-[10px] group">
                     <ArrowRight className="w-[14px] h-[14px] opacity-0 -ml-[20px] group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -88,7 +105,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <h4 className="text-white text-[16px] mb-[5px]">Email Address</h4>
-                  <p className="text-white/70">info@yanetprimaryhospital.com</p>
+                  <p className="text-white/70 break-all">info@yanetprimaryhospital.com</p>
                 </div>
               </div>
 
