@@ -116,7 +116,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="text-center text-gray-500 text-sm">
-          <p>© 2026 Yanet Primary Hospital. All Rights Reserved. Designed by Antigravity.</p>
+          <p>© 2026 Yanet Primary Hospital. All Rights Reserved. Designed by Yanol Team.</p>
         </div>
       </div>
     </footer>

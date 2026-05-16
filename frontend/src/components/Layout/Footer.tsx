@@ -7,7 +7,7 @@ const Footer = () => {
     { name: "Our Services", href: "/services" },
     { name: "Our Doctors", href: "/#doctors" },
     { name: "Latest News", href: "/#blog" },
-    { name: "Contact Us", href: "/#contact" }
+    { name: "Contact Us", href: "/contact" }
   ];
 
   const departmentLinks = [
@@ -125,7 +125,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="pt-[30px] border-t border-white/10 text-center">
           <p className="text-white/50 text-[14px]">
-            &copy; {new Date().getFullYear()} Yanet Primary Hospital. All Rights Reserved. Designed by Corf Team.
+            &copy; {new Date().getFullYear()} Yanet Primary Hospital. All Rights Reserved. Designed by Yanol Team.
           </p>
         </div>
       </div>

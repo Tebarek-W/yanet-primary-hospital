@@ -109,7 +109,7 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
 
                   {/* Read More Link */}
                   <Link
-                    to="/#contact"
+                    to="/contact"
                     className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary/70 group-hover:text-primary transition-all duration-300"
                   >
                     Read More
@@ -149,7 +149,7 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
               >
                 Book Appointment
               </button>
-              <Link to="/#contact" className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-[8px] font-semibold transition-all border border-white/10 backdrop-blur-md text-[15px]">
+              <Link to="/contact" className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-[8px] font-semibold transition-all border border-white/10 backdrop-blur-md text-[15px]">
                 Contact Us
               </Link>
             </div>

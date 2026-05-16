@@ -27,7 +27,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     { name: 'Services', href: '/services' },
     { name: 'Doctors', href: '/#doctors' },
     { name: 'Blog', href: '/#blog' },
-    { name: 'Contact', href: '/#contact' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (

@@ -75,7 +75,7 @@ const Blog = () => {
                   {blog.title}
                 </h3>
                 
-                <Link to="/#contact" className="flex items-center gap-2 text-primary font-bold group">
+                <Link to="/contact" className="flex items-center gap-2 text-primary font-bold group">
                   Read More
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>

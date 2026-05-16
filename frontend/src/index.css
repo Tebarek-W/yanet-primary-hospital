@@ -51,7 +51,7 @@
   }
 
   .container-custom {
-    @apply max-w-[1050px] mx-auto px-[15px];
+    @apply max-w-[1200px] mx-auto px-[15px];
   }
 
   .section-title {

@@ -57,23 +57,23 @@ const WhyChooseUs = () => {
           >
             <div className="bg-white/5 backdrop-blur-xl rounded-[40px] p-10 md:p-14 border border-white/10 shadow-2xl">
               <div className="space-y-10">
-                <div className="flex gap-6 items-start">
-                  <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
-                    <Phone className="w-7 h-7" />
+                <div className="flex gap-4 items-center">
+                  <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shrink-0">
+                    <Phone className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-white/40 text-[12px] uppercase tracking-widest mb-1">Emergency 24/7</h4>
-                    <p className="text-white text-[28px] font-black tracking-tight">+251 11 123 4567</p>
+                    <h4 className="text-white/40 text-[11px] uppercase tracking-widest mb-0.5">Emergency 24/7</h4>
+                    <p className="text-white text-[19px] font-black tracking-tight">+251 11 123 4567</p>
                   </div>
                 </div>
 
-                <div className="flex gap-6 items-start">
-                  <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-white border border-white/10">
-                    <MapPin className="w-7 h-7" />
+                <div className="flex gap-4 items-center">
+                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/10 shrink-0">
+                    <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-white/40 text-[12px] uppercase tracking-widest mb-1">Location</h4>
-                    <p className="text-white text-[20px] font-bold">Bole Road, Addis Ababa, Ethiopia</p>
+                    <h4 className="text-white/40 text-[11px] uppercase tracking-widest mb-0.5">Location</h4>
+                    <p className="text-white text-[16px] font-bold">Bole Road, Addis Ababa, Ethiopia</p>
                   </div>
                 </div>
 

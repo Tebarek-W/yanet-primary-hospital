@@ -7,6 +7,7 @@ import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<HomePage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
+            <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </main>
 

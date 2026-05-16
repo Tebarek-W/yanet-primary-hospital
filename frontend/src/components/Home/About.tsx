@@ -61,7 +61,7 @@ const About = () => {
               whileHover={{ scale: 1.05, rotate: 5 }}
               className="absolute -bottom-5 -right-5 md:right-0 z-30 bg-primary p-8 md:p-10 rounded-[30px] text-white text-center shadow-[0_20px_50px_rgba(0,184,184,0.4)] cursor-pointer"
             >
-              <h2 className="text-white text-[45px] md:text-[55px] font-black leading-none tracking-tighter">25+</h2>
+              <h2 className="text-white text-[45px] md:text-[55px] font-black leading-none tracking-tighter">6+</h2>
               <div className="w-12 h-1.5 bg-white/30 mx-auto my-3 rounded-full"></div>
               <span className="text-[12px] md:text-[14px] uppercase font-bold tracking-[3px] block">Years of<br/>Experience</span>
             </motion.div>
@@ -80,11 +80,11 @@ const About = () => {
           >
             <div className="section-title text-left mx-0 mb-8">
               <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[13px] font-bold uppercase tracking-wider mb-4 inline-block">
-                Since 1999
+                Since 2020
               </span>
               <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">We Are Here To Care For <span className="text-primary italic">Your Health</span></h2>
               <p className="text-body text-[15px] md:text-[16px] leading-relaxed opacity-90">
-                Yanet Primary Hospital has been a leader in high-quality medical services for over 25 years. We combine expert medical professionals with cutting-edge technology to ensure your family receives the best possible care, 24/7.
+                Yanet Primary Hospital has been a leader in high-quality medical services for over 6 years. We combine expert medical professionals with cutting-edge technology to ensure your family receives the best possible care, 24/7.
               </p>
             </div>
 

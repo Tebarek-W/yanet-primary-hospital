@@ -41,7 +41,7 @@ const NetworkAnimation = ({ position }: { position: 'left' | 'right' }) => (
   </motion.div>
 );
 
-const CounterItem = ({ icon, target, label, delay }: { icon: any, target: number, label: string, delay: number }) => {
+const CounterItem = ({ icon, target, label, delay, suffix = "+" }: { icon: any, target: number, label: string, delay: number, suffix?: string }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const [hasStarted, setHasStarted] = useState(false);
@@ -86,7 +86,7 @@ const CounterItem = ({ icon, target, label, delay }: { icon: any, target: number
       <div className="w-[60px] h-[60px] bg-primary/5 rounded-full flex items-center justify-center text-primary mx-auto mb-5 group-hover:bg-primary group-hover:text-white transition-colors duration-500">
         {icon}
       </div>
-      <div className="text-[36px] font-bold text-secondary mb-1">{count}{target > 50 ? '+' : ''}</div>
+      <div className="text-[36px] font-bold text-secondary mb-1">{count}{suffix}</div>
       <div className="text-primary font-bold text-[14px] uppercase tracking-wide">{label}</div>
     </motion.div>
   );
@@ -126,8 +126,8 @@ const CounterStats = () => {
           />
           <CounterItem 
             icon={<HeartPulse className="w-7 h-7" />} 
-            target={54} 
-            label="Experiences" 
+            target={6} 
+            label="Years Experience" 
             delay={0.4} 
           />
         </div>
