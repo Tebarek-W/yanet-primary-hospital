@@ -183,11 +183,20 @@
     "title": "Our Specialist Doctors",
     "desc": "Our specialist doctors combine advanced expertise with compassionate care, providing accurate diagnoses and effective treatments.",
     "roles": {
-      "necrologist": "Necrologist",
+      "necrologist": "Neurologist",
       "surgery": "Surgery Specialist",
       "cardiologist": "Cardiologist",
-      "pediatrician": "Pediatrician"
+      "pediatrician": "Pediatrician",
+      "ophthalmologist": "Ophthalmologist",
+      "dermatologist": "Dermatologist",
+      "obstetrician": "Obstetrician"
     }
+  },
+  "doctors_page": {
+    "title": "Our Doctors",
+    "all": "All Specialists",
+    "filter_title": "Filter by Specialty",
+    "no_results": "No doctors found in this category."
   },
   "services_page": {
     "title": "Our Services",
@@ -239,5 +248,25 @@
       "concern": "Tell us about your concern...",
       "submit": "Confirm Booking"
     }
+  },
+  "doctor_details": {
+    "biography": "Biography",
+    "education": "Education",
+    "experience": "Experience",
+    "skills": "Professional Skills",
+    "contact_info": "Contact Info",
+    "opening_hours": "Opening Hours",
+    "appointment_title": "Book An Appointment",
+    "social_profiles": "Social Profiles",
+    "mon_fri": "Mon - Fri",
+    "sat_sun": "Sat - Sun",
+    "emergency": "Emergency Only"
+  },
+  "chatbot": {
+    "title": "Yanet AI Assistant",
+    "status": "Online & Ready",
+    "placeholder": "Type your message...",
+    "welcome": "Hello! I am the Yanet Primary Hospital Assistant. How can I help you today?",
+    "thinking": "Thinking..."
   }
 }

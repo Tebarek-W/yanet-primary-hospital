@@ -186,8 +186,17 @@
       "necrologist": "የነርቭ ሐኪም",
       "surgery": "የቀዶ ጥገና ስፔሻሊስት",
       "cardiologist": "የልብ ሐኪም",
-      "pediatrician": "የህፃናት ሐኪም"
+      "pediatrician": "የህፃናት ሐኪም",
+      "ophthalmologist": "የዓይን ሐኪም",
+      "dermatologist": "የቆዳ ሐኪም",
+      "obstetrician": "የማህፀንና ፅንስ ሐኪም"
     }
+  },
+  "doctors_page": {
+    "title": "የእኛ ዶክተሮች",
+    "all": "ሁሉም ስፔሻሊስቶች",
+    "filter_title": "በዘርፍ ይለዩ",
+    "no_results": "በዚህ ዘርፍ ምንም ዶክተር አልተገኘም።"
   },
   "services_page": {
     "title": "የእኛ አገልግሎቶች",
@@ -240,5 +249,25 @@
       "concern": "ስለሚያሳስብዎት ነገር ይንገሩን...",
       "submit": "ቀጠሮውን ያረጋግጡ"
     }
+  },
+  "doctor_details": {
+    "biography": "የህይወት ታሪክ",
+    "education": "ትምህርት",
+    "experience": "ልምድ",
+    "skills": "ሙያዊ ብቃቶች",
+    "contact_info": "መገናኛ መረጃ",
+    "opening_hours": "የስራ ሰዓታት",
+    "appointment_title": "ቀጠሮ ያስይዙ",
+    "social_profiles": "ማህበራዊ ሚዲያ",
+    "mon_fri": "ሰኞ - አርብ",
+    "sat_sun": "ቅዳሜ - እሁድ",
+    "emergency": "ለድንገተኛ ብቻ"
+  },
+  "chatbot": {
+    "title": "ያኔት AI ረዳት",
+    "status": "በመስመር ላይ",
+    "placeholder": "መልእክትዎን እዚህ ይጻፉ...",
+    "welcome": "ጤና ይስጥልኝ! ያኔት የመጀመሪያ ደረጃ ሆስፒታል ረዳት ነኝ። እንዴት ልረዳዎ እችላለሁ?",
+    "thinking": "በማሰብ ላይ..."
   }
 }

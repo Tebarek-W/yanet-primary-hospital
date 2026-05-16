@@ -9,8 +9,11 @@ import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
+import DoctorsPage from './pages/DoctorsPage';
+import DoctorDetail from './components/Doctors/DoctorDetail';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
+import ChatBot from './components/Chat/ChatBot';
 
 function App() {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
@@ -31,6 +34,8 @@ function App() {
             <Route path="/services" element={<ServicesPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/doctors" element={<DoctorsPage />} />
+            <Route path="/doctors/:id" element={<DoctorDetail />} />
           </Routes>
         </main>
 
@@ -40,6 +45,7 @@ function App() {
           isOpen={isAppointmentOpen} 
           onClose={() => setIsAppointmentOpen(false)} 
         />
+        <ChatBot />
       </div>
     </>
   );
