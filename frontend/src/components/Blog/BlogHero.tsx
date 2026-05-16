@@ -56,11 +56,12 @@ const BlogHero = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <span className="bg-primary/20 text-primary px-4 py-1 rounded-full text-[12px] font-bold uppercase tracking-wider border border-primary/30">
+              <div className="w-[3px] h-[16px] bg-primary"></div>
+              <span className="text-white text-[13px] font-extrabold uppercase tracking-[3px]">
                 {isAmharic ? "የጤና ዜና" : "Medical News"}
               </span>
               <div className="flex items-center gap-2 text-white/60 text-[12px]">
-                <Clock size={14} />
+                | <Clock size={14} />
                 <span>{isAmharic ? "መደበኛ ዝመናዎች" : "Regular Updates"}</span>
               </div>
             </div>
