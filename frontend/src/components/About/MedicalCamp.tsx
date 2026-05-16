@@ -1,14 +1,18 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const MedicalCamp = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   const objectives = [
-    "Free Registration of Deserving Cases for Surgeries",
-    "Free Hepatitis B & C Screening Test",
-    "Free Consultation & Medicine",
-    "Free Blood Pressure Test",
-    "Free Diabetes Test",
-    "Childbirth",
+    isAmharic ? "ለቀዶ ጥገና ተገቢ የሆኑ ጉዳዮችን በነፃ መመዝገብ" : "Free Registration of Deserving Cases for Surgeries",
+    isAmharic ? "ነፃ የሄፓታይተስ ቢ እና ሲ ምርመራ" : "Free Hepatitis B & C Screening Test",
+    isAmharic ? "ነፃ ምክክር እና መድኃኒት" : "Free Consultation & Medicine",
+    isAmharic ? "ነፃ የደም ግፊት ምርመራ" : "Free Blood Pressure Test",
+    isAmharic ? "ነፃ የዲያቢቲክስ (ስኳር) ምርመራ" : "Free Diabetes Test",
+    isAmharic ? "የወሊድ አገልግሎት" : "Childbirth",
   ];
 
   return (
@@ -25,17 +29,17 @@ const MedicalCamp = () => {
             viewport={{ once: true }}
           >
             <div className="mb-4 relative">
-              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0 whitespace-nowrap">
-                MEDICAL
+              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0 whitespace-nowrap uppercase">
+                {isAmharic ? 'የህክምና' : 'MEDICAL'}
               </span>
-              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">About Us</span>
+              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">{t('nav.about')}</span>
               <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1 leading-tight">
-                Free Medical Camp Importance & <br /> Objectives
+                {t('about_extra.camp.title')}
               </h2>
             </div>
             
             <p className="text-[#5d666e] text-[14px] mb-6 leading-relaxed max-w-[500px]">
-              Free medical camps provide essential healthcare to underserved communities. They aim to improve health outcomes through accessible services and early disease detection.
+              {t('about_extra.camp.desc')}
             </p>
 
             <ul className="grid sm:grid-cols-2 gap-y-3 gap-x-4">
@@ -79,3 +83,4 @@ const MedicalCamp = () => {
 };
 
 export default MedicalCamp;
+

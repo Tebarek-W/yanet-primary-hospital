@@ -1,15 +1,19 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const InfoSection = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   const points = [
-    "24/7 Emergency and Trauma Care",
-    "Modern Diagnostic Laboratory Services",
-    "State-of-the-art Operation Theaters",
-    "Specialized In-patient and Out-patient Services",
-    "Highly Qualified Medical Professionals",
-    "Advanced Medical Imaging (X-Ray, Ultrasound)",
-    "Comprehensive Maternity and Child Care",
+    isAmharic ? "24/7 የድንገተኛ አደጋ እና አሰቃቂ እንክብካቤ" : "24/7 Emergency and Trauma Care",
+    isAmharic ? "ዘመናዊ የምርመራ ላቦራቶሪ አገልግሎቶች" : "Modern Diagnostic Laboratory Services",
+    isAmharic ? "ዘመናዊ የቀዶ ጥገና ክፍሎች" : "State-of-the-art Operation Theaters",
+    isAmharic ? "ልዩ የታካሚ እና የውጭ ታካሚ አገልግሎቶች" : "Specialized In-patient and Out-patient Services",
+    isAmharic ? "ከፍተኛ ብቃት ያላቸው የህክምና ባለሙያዎች" : "Highly Qualified Medical Professionals",
+    isAmharic ? "የላቀ የህክምና ምስል (X-Ray, Ultrasound)" : "Advanced Medical Imaging (X-Ray, Ultrasound)",
+    isAmharic ? "የተሟላ የወሊድ እና የህፃናት እንክብካቤ" : "Comprehensive Maternity and Child Care",
   ];
 
   return (
@@ -68,17 +72,17 @@ const InfoSection = () => {
             viewport={{ once: true }}
           >
             <div className="mb-5 relative">
-              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0 whitespace-nowrap">
-                EXCELLENCE
+              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0 whitespace-nowrap uppercase">
+                {isAmharic ? 'ልህቀት' : 'EXCELLENCE'}
               </span>
-              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">Modern Excellence</span>
-              <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1 leading-tight">Advanced Healthcare Solutions <br /> for Your Family</h2>
+              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">{t('about_extra.info.badge')}</span>
+              <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1 leading-tight">{t('about_extra.info.title')}</h2>
             </div>
             
             <p className="text-body text-[14px] mb-6 leading-relaxed max-w-[500px]">
-              Yanet Primary Hospital is committed to providing world-class medical services with a focus on patient safety, advanced technology, and compassionate care.
+              {t('about_extra.info.desc')}
               <br /><br />
-              <span className="font-bold text-secondary italic">Dedicated to excellence in every heartbeat.</span>
+              <span className="font-bold text-secondary italic">{isAmharic ? "በእያንዳንዱ የልብ ምት ለልህቀት የተሰጠ።" : "Dedicated to excellence in every heartbeat."}</span>
             </p>
 
             <ul className="grid sm:grid-cols-1 gap-y-3">
@@ -106,3 +110,4 @@ const InfoSection = () => {
 };
 
 export default InfoSection;
+

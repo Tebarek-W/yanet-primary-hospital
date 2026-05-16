@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Phone, Mail, User, MessageSquare, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -7,6 +8,9 @@ interface AppointmentModalProps {
 }
 
 const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -39,12 +43,14 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
               <div className="p-8 md:p-12">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-[2px] w-10 bg-primary"></div>
-                  <span className="text-primary font-bold uppercase tracking-[3px] text-[12px]">Online Booking</span>
+                  <span className="text-primary font-bold uppercase tracking-[3px] text-[12px]">{t('appointment_modal.badge')}</span>
                 </div>
                 
-                <h2 className="text-white text-[32px] md:text-[42px] leading-tight mb-4">Book Your <span className="text-primary italic">Appointment</span></h2>
+                <h2 className="text-white text-[32px] md:text-[42px] leading-tight mb-4">
+                  {t('appointment_modal.title_part1')} <span className="text-primary italic">{t('appointment_modal.title_span')}</span>{isAmharic ? t('appointment_modal.title_part2') : ''}
+                </h2>
                 <p className="text-white/60 mb-10 text-[16px] md:text-[18px]">
-                  Fill out the form below and our medical team will contact you shortly to confirm your schedule.
+                  {t('appointment_modal.desc')}
                 </p>
 
                 <form className="space-y-6">
@@ -55,7 +61,7 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                       </div>
                       <input 
                         type="text" 
-                        placeholder="Full Name" 
+                        placeholder={t('appointment_modal.form.name')} 
                         className="w-full bg-white/5 border border-white/10 rounded-[15px] pl-14 pr-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       />
                     </div>
@@ -65,7 +71,7 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                       </div>
                       <input 
                         type="email" 
-                        placeholder="Email Address" 
+                        placeholder={t('appointment_modal.form.email')} 
                         className="w-full bg-white/5 border border-white/10 rounded-[15px] pl-14 pr-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       />
                     </div>
@@ -78,7 +84,7 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                       </div>
                       <input 
                         type="text" 
-                        placeholder="Phone Number" 
+                        placeholder={t('appointment_modal.form.phone')} 
                         className="w-full bg-white/5 border border-white/10 rounded-[15px] pl-14 pr-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       />
                     </div>
@@ -87,10 +93,10 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                         <Calendar className="w-5 h-5" />
                       </div>
                       <select className="w-full bg-white/5 border border-white/10 rounded-[15px] pl-14 pr-6 py-4 text-white/50 focus:outline-none focus:border-primary focus:bg-white/10 transition-all cursor-pointer appearance-none">
-                        <option value="" className="bg-secondary text-white">Select Service</option>
-                        <option value="cardiology" className="bg-secondary text-white">Cardiology</option>
-                        <option value="neurology" className="bg-secondary text-white">Neurology</option>
-                        <option value="pediatrics" className="bg-secondary text-white">Pediatrics</option>
+                        <option value="" className="bg-secondary text-white">{t('appointment_modal.form.service')}</option>
+                        <option value="cardiology" className="bg-secondary text-white">{t('home_services.items.cardiology')}</option>
+                        <option value="neurology" className="bg-secondary text-white">{t('home_services.items.neurology')}</option>
+                        <option value="pediatrics" className="bg-secondary text-white">{t('home_services.items.pediatrics')}</option>
                       </select>
                       <div className="absolute right-5 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
                         <ChevronDown className="w-4 h-4" />
@@ -103,7 +109,7 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                       <MessageSquare className="w-5 h-5" />
                     </div>
                     <textarea 
-                      placeholder="Tell us about your concern..." 
+                      placeholder={t('appointment_modal.form.concern')} 
                       rows={3}
                       className="w-full bg-white/5 border border-white/10 rounded-[15px] pl-14 pr-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                     ></textarea>
@@ -114,7 +120,7 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
                     whileTap={{ scale: 0.98 }}
                     className="btn-primary w-full shadow-xl shadow-primary/20 !py-5 rounded-[15px]"
                   >
-                    Confirm Booking
+                    {t('appointment_modal.form.submit')}
                   </motion.button>
                 </form>
               </div>
@@ -127,3 +133,4 @@ const AppointmentModal = ({ isOpen, onClose }: AppointmentModalProps) => {
 };
 
 export default AppointmentModal;
+

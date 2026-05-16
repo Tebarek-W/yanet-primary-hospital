@@ -1,43 +1,46 @@
 import { motion } from 'framer-motion';
 import { HeartPulse, Activity, Stethoscope, Microscope, Brain, Baby, Plus, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Services = () => {
+  const { t } = useTranslation();
+
   const services = [
     {
       icon: <HeartPulse className="w-14 h-14" />,
-      title: "Cardiology",
-      desc: "Comprehensive heart care with modern diagnostic tools and experienced cardiologists.",
+      title: t('home_services.items.cardiology'),
+      desc: t('services_page.items.cardiology.desc'),
       delay: 0.1
     },
     {
       icon: <Activity className="w-14 h-14" />,
-      title: "Diagnostic",
-      desc: "Advanced diagnostic services including X-ray, MRI, and full laboratory testing.",
+      title: t('home_services.items.diagnostic'),
+      desc: t('services_page.items.diagnostic.desc'),
       delay: 0.2
     },
     {
       icon: <Stethoscope className="w-14 h-14" />,
-      title: "General Surgery",
-      desc: "Expert surgical procedures with minimal invasive techniques and care.",
+      title: t('home_services.items.surgery'),
+      desc: t('services_page.items.surgery.desc'),
       delay: 0.3
     },
     {
       icon: <Microscope className="w-14 h-14" />,
-      title: "Laboratory",
-      desc: "State-of-the-art laboratory services for accurate and timely results.",
+      title: t('home_services.items.laboratory'),
+      desc: t('services_page.items.diagnostic.desc'),
       delay: 0.4
     },
     {
       icon: <Brain className="w-14 h-14" />,
-      title: "Neurology",
-      desc: "Specialized care for neurological conditions with a multidisciplinary approach.",
+      title: t('home_services.items.neurology'),
+      desc: t('services_page.items.neurology.desc'),
       delay: 0.5
     },
     {
       icon: <Baby className="w-14 h-14" />,
-      title: "Pediatrics",
-      desc: "Dedicated care for children from birth through adolescence in a friendly environment.",
+      title: t('home_services.items.pediatrics'),
+      desc: t('services_page.items.pediatrics.desc'),
       delay: 0.6
     }
   ];
@@ -49,10 +52,10 @@ const Services = () => {
 
       <div className="container-custom relative z-10">
         <div className="section-title">
-          <span>Our Specialized Services</span>
-          <h2 className="text-secondary">Premium Healthcare Services</h2>
+          <span>{t('home_services.badge')}</span>
+          <h2 className="text-secondary">{t('home_services.title')}</h2>
           <p className="text-[16px]">
-            We provide a wide range of specialized medical services using the latest technology and expert knowledge.
+            {t('home_services.desc')}
           </p>
         </div>
 
@@ -96,3 +99,4 @@ const Services = () => {
 };
 
 export default Services;
+

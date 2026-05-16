@@ -1,24 +1,27 @@
 import { motion } from 'framer-motion';
 import { Clock, UserCheck, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Features = () => {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: <Clock className="w-8 h-8 text-primary" />,
-      title: "Opening Hours",
-      desc: "Available 24/7 for all medical services.",
+      title: t('features.opening.title'),
+      desc: t('features.opening.desc'),
       delay: 0.1
     },
     {
       icon: <UserCheck className="w-8 h-8 text-primary" />,
-      title: "Expert Doctors",
-      desc: "Highly qualified and experienced staff.",
+      title: t('features.expert.title'),
+      desc: t('features.expert.desc'),
       delay: 0.3
     },
     {
       icon: <ShieldCheck className="w-8 h-8 text-primary" />,
-      title: "Certified Clinic",
-      desc: "Safe and effective certified treatments.",
+      title: t('features.certified.title'),
+      desc: t('features.certified.desc'),
       delay: 0.5
     }
   ];
@@ -56,3 +59,4 @@ const Features = () => {
 };
 
 export default Features;
+

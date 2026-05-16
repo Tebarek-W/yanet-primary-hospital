@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Users, UserCheck, Award, HeartPulse } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const NetworkAnimation = ({ position }: { position: 'left' | 'right' }) => (
   <motion.div 
@@ -93,6 +94,8 @@ const CounterItem = ({ icon, target, label, delay, suffix = "+" }: { icon: any, 
 };
 
 const CounterStats = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="relative section-padding bg-[#f9fdfe] overflow-hidden">
       {/* Network Backgrounds */}
@@ -102,32 +105,32 @@ const CounterStats = () => {
       <div className="container-custom relative z-10">
         {/* Watermark */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] font-black text-primary/[0.04] select-none pointer-events-none z-0 whitespace-nowrap">
-          YANET STATS
+          {t('nav.home') === 'መነሻ' ? 'ያኔት ስታቲስቲክስ' : 'YANET STATS'}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <CounterItem 
             icon={<Users className="w-7 h-7" />} 
             target={540} 
-            label="Expert Doctors" 
+            label={t('counter.doctors')} 
             delay={0.1} 
           />
           <CounterItem 
             icon={<UserCheck className="w-7 h-7" />} 
             target={990} 
-            label="Successful Story" 
+            label={t('counter.success')} 
             delay={0.2} 
           />
           <CounterItem 
             icon={<Award className="w-7 h-7" />} 
             target={3500} 
-            label="Global Presence" 
+            label={t('counter.presence')} 
             delay={0.3} 
           />
           <CounterItem 
             icon={<HeartPulse className="w-7 h-7" />} 
             target={6} 
-            label="Years Experience" 
+            label={t('counter.experience')} 
             delay={0.4} 
           />
         </div>

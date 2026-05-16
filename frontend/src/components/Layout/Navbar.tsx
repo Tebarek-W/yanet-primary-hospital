@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, ChevronDown, User } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, User, Languages } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
+// i18n integration
 interface NavbarProps {
   onAppointmentClick: () => void;
 }
 
 const Navbar = ({ onAppointmentClick }: NavbarProps) => {
+  const { t, i18n } = useTranslation();
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -20,14 +22,21 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const toggleLanguage = () => {
+    const currentLang = i18n.language || 'en';
+    const newLang = currentLang.startsWith('am') ? 'en' : 'am';
+    i18n.changeLanguage(newLang);
+    document.documentElement.lang = newLang;
+  };
+
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'Pages', href: '#', hasDropdown: true },
-    { name: 'Services', href: '/services' },
-    { name: 'Doctors', href: '/#doctors' },
-    { name: 'Blog', href: '/#blog' },
-    { name: 'Contact', href: '/contact' },
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.about'), href: '/about' },
+    { name: t('nav.pages'), href: '#', hasDropdown: true },
+    { name: t('nav.services'), href: '/services' },
+    { name: t('nav.doctors'), href: '/#doctors' },
+    { name: t('nav.blog'), href: '/#blog' },
+    { name: t('nav.contact'), href: '/contact' },
   ];
 
   return (
@@ -59,7 +68,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-[40px]">
+          <div className="hidden lg:flex items-center gap-[30px]">
             {navLinks.map((link, i) => (
               <motion.div
                 key={link.name}
@@ -84,7 +93,16 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-[25px]">
+          <div className="hidden lg:flex items-center gap-[20px]">
+            {/* Language Switcher */}
+            <button 
+              onClick={toggleLanguage}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 transition-all hover:bg-primary hover:border-primary group ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
+            >
+              <Languages className={`w-4 h-4 ${isSticky ? 'text-primary group-hover:text-white' : 'text-primary-light'}`} />
+              <span className="text-[12px] font-bold uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
+            </button>
+
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -92,17 +110,27 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               className="btn-primary flex items-center gap-2 !py-[8px] !px-[22px] !text-[13px]"
             >
               <User className="w-4 h-4" />
-              Appointment
+              {t('nav.appointment')}
             </motion.button>
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button 
-            className={`lg:hidden p-[10px] rounded-full hover:bg-white/10 transition-colors ${isSticky ? 'text-secondary' : 'text-white'}`}
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="w-[32px] h-[32px]" /> : <Menu className="w-[32px] h-[32px]" />}
-          </button>
+          <div className="flex items-center gap-4 lg:hidden">
+             {/* Mobile Language Switcher */}
+             <button 
+              onClick={toggleLanguage}
+              className={`p-2 rounded-full border border-white/10 ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
+            >
+              <span className="text-[12px] font-black">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
+            </button>
+
+            <button 
+              className={`p-[10px] rounded-full hover:bg-white/10 transition-colors ${isSticky ? 'text-secondary' : 'text-white'}`}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="w-[28px] h-[28px]" /> : <Menu className="w-[28px] h-[28px]" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -137,7 +165,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   }}
                   className="btn-primary w-full shadow-xl"
                 >
-                  Appointment
+                  {t('nav.appointment')}
                 </button>
               </div>
             </div>
@@ -149,3 +177,4 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 };
 
 export default Navbar;
+

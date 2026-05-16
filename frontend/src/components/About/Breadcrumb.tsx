@@ -1,12 +1,15 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface BreadcrumbProps {
   title: string;
 }
 
 const Breadcrumb = ({ title }: BreadcrumbProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="relative pt-[220px] pb-[140px] overflow-hidden bg-secondary">
       {/* Background Image with Dark Overlay */}
@@ -51,7 +54,7 @@ const Breadcrumb = ({ title }: BreadcrumbProps) => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex items-center gap-3 text-white font-medium text-[18px]"
           >
-            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+            <Link to="/" className="hover:text-primary transition-colors">{t('nav.home')}</Link>
             <div className="w-[18px] h-[18px] bg-primary rounded-sm flex items-center justify-center">
               <ArrowRight className="w-3 h-3 text-white" />
             </div>
@@ -64,3 +67,4 @@ const Breadcrumb = ({ title }: BreadcrumbProps) => {
 };
 
 export default Breadcrumb;
+

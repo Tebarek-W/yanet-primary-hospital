@@ -1,15 +1,18 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
+  
   const points = [
-    "Qualified Doctors",
-    "Emergency Care",
-    "Modern Technology",
-    "24/7 Service",
-    "Experienced Staff",
-    "Blood Bank"
+    t('about.points.qualified'),
+    t('about.points.emergency'),
+    t('about.points.modern'),
+    t('about.points.service'),
+    t('about.points.staff'),
+    t('about.points.blood')
   ];
 
   return (
@@ -63,7 +66,7 @@ const About = () => {
             >
               <h2 className="text-white text-[45px] md:text-[55px] font-black leading-none tracking-tighter">6+</h2>
               <div className="w-12 h-1.5 bg-white/30 mx-auto my-3 rounded-full"></div>
-              <span className="text-[12px] md:text-[14px] uppercase font-bold tracking-[3px] block">Years of<br/>Experience</span>
+              <span className="text-[12px] md:text-[14px] uppercase font-bold tracking-[3px] block">{t('about.years_exp')}</span>
             </motion.div>
 
             {/* Floating Decorative Orbs */}
@@ -80,11 +83,11 @@ const About = () => {
           >
             <div className="section-title text-left mx-0 mb-8">
               <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[13px] font-bold uppercase tracking-wider mb-4 inline-block">
-                Since 2020
+                {t('common.since', { year: '2020' })}
               </span>
-              <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">We Are Here To Care For <span className="text-primary italic">Your Health</span></h2>
+              <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">{t('about.title_main')} <span className="text-primary italic">{t('about.title_span')}</span></h2>
               <p className="text-body text-[15px] md:text-[16px] leading-relaxed opacity-90">
-                Yanet Primary Hospital has been a leader in high-quality medical services for over 6 years. We combine expert medical professionals with cutting-edge technology to ensure your family receives the best possible care, 24/7.
+                {t('about.desc')}
               </p>
             </div>
 
@@ -112,7 +115,7 @@ const About = () => {
               to="/services"
               className="btn-primary group flex items-center gap-3 px-10 py-5 rounded-2xl shadow-xl shadow-primary/20 inline-flex"
             >
-              Learn More About Us
+              {t('common.read_more')}
               <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1 transition-transform">
                 <Check className="w-4 h-4" />
               </div>
@@ -125,3 +128,4 @@ const About = () => {
 };
 
 export default About;
+

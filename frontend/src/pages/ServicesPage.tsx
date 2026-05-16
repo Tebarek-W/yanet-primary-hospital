@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { HeartPulse, Activity, Stethoscope, Brain, Baby, Eye, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PageBanner from '../components/Layout/PageBanner';
 
 interface ServicesPageProps {
@@ -8,46 +9,48 @@ interface ServicesPageProps {
 }
 
 const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
+  const { t } = useTranslation();
+
   const services = [
     {
       icon: <HeartPulse className="w-7 h-7" />,
-      title: "Cardiology",
-      desc: "Comprehensive heart care with modern diagnostic tools and experienced cardiologists.",
+      title: t('services_page.items.cardiology.title'),
+      desc: t('services_page.items.cardiology.desc'),
       num: "01",
       delay: 0.1
     },
     {
       icon: <Activity className="w-7 h-7" />,
-      title: "Diagnostic",
-      desc: "Advanced diagnostic services including X-ray, MRI, and full laboratory testing.",
+      title: t('services_page.items.diagnostic.title'),
+      desc: t('services_page.items.diagnostic.desc'),
       num: "02",
       delay: 0.15
     },
     {
       icon: <Stethoscope className="w-7 h-7" />,
-      title: "Surgery",
-      desc: "Expert surgical procedures with minimally invasive techniques and rapid recovery.",
+      title: t('services_page.items.surgery.title'),
+      desc: t('services_page.items.surgery.desc'),
       num: "03",
       delay: 0.2
     },
     {
       icon: <Brain className="w-7 h-7" />,
-      title: "Neurology",
-      desc: "Specialized care for neurological conditions including stroke and epilepsy.",
+      title: t('services_page.items.neurology.title'),
+      desc: t('services_page.items.neurology.desc'),
       num: "04",
       delay: 0.25
     },
     {
       icon: <Baby className="w-7 h-7" />,
-      title: "Pediatrics",
-      desc: "Dedicated care for children from birth through adolescence in a safe environment.",
+      title: t('services_page.items.pediatrics.title'),
+      desc: t('services_page.items.pediatrics.desc'),
       num: "05",
       delay: 0.3
     },
     {
       icon: <Eye className="w-7 h-7" />,
-      title: "Ophthalmology",
-      desc: "Complete eye care services including vision correction and eye diseases treatment.",
+      title: t('services_page.items.ophthalmology.title'),
+      desc: t('services_page.items.ophthalmology.desc'),
       num: "06",
       delay: 0.35
     }
@@ -56,8 +59,8 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
   return (
     <>
       <PageBanner
-        title="Our Services"
-        breadcrumbs={[{ label: 'Services' }]}
+        title={t('services_page.title')}
+        breadcrumbs={[{ label: t('nav.services') }]}
       />
 
       {/* Services Grid Section */}
@@ -65,10 +68,10 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
         <div className="container-custom relative z-10">
           {/* Section Header */}
           <div className="section-title">
-            <span>What We Offer</span>
-            <h2 className="text-secondary">Our Medical Services</h2>
+            <span>{t('services_page.badge')}</span>
+            <h2 className="text-secondary">{t('services_page.main_title')}</h2>
             <p className="text-[15px] text-body">
-              We provide a comprehensive range of healthcare services with the latest technology and compassionate care.
+              {t('services_page.desc')}
             </p>
           </div>
 
@@ -112,7 +115,7 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
                     to="/contact"
                     className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary/70 group-hover:text-primary transition-all duration-300"
                   >
-                    Read More
+                    {t('common.read_more')}
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
                   </Link>
                 </div>
@@ -135,22 +138,22 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
             transition={{ duration: 0.6 }}
             className="text-center max-w-[700px] mx-auto"
           >
-            <span className="text-primary font-bold uppercase tracking-[3px] text-[12px] mb-4 block">Need Assistance?</span>
+            <span className="text-primary font-bold uppercase tracking-[3px] text-[12px] mb-4 block">{t('services_page.cta.badge')}</span>
             <h2 className="text-white text-[28px] md:text-[38px] leading-tight mb-6">
-              Ready To Get Started? <span className="text-primary italic">Book An Appointment</span>
+              {t('services_page.cta.title')}
             </h2>
             <p className="text-white/50 text-[15px] mb-8 leading-relaxed">
-              Our team of specialists is ready to provide you with the best medical care. Schedule your consultation today and take the first step towards better health.
+              {t('services_page.cta.desc')}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button 
                 onClick={onAppointmentClick}
                 className="btn-primary shadow-xl shadow-primary/20"
               >
-                Book Appointment
+                {t('hero.cta_appointment')}
               </button>
               <Link to="/contact" className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-[8px] font-semibold transition-all border border-white/10 backdrop-blur-md text-[15px]">
-                Contact Us
+                {t('nav.contact')}
               </Link>
             </div>
           </motion.div>
@@ -161,3 +164,4 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
 };
 
 export default ServicesPage;
+

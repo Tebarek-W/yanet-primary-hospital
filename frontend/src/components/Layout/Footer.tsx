@@ -1,22 +1,25 @@
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   const quickLinks = [
-    { name: "About Us", href: "/#about" },
-    { name: "Our Services", href: "/services" },
-    { name: "Our Doctors", href: "/#doctors" },
-    { name: "Latest News", href: "/#blog" },
-    { name: "Contact Us", href: "/contact" }
+    { name: t('nav.about'), href: "/#about" },
+    { name: t('nav.services'), href: "/services" },
+    { name: t('nav.doctors'), href: "/#doctors" },
+    { name: t('nav.blog'), href: "/#blog" },
+    { name: t('nav.contact'), href: "/contact" }
   ];
 
   const departmentLinks = [
-    { name: "Cardiology", href: "/services" },
-    { name: "Neurology", href: "/services" },
-    { name: "General Surgery", href: "/services" },
-    { name: "Pediatrics", href: "/services" },
+    { name: t('services_page.items.cardiology.title'), href: "/services" },
+    { name: t('services_page.items.neurology.title'), href: "/services" },
+    { name: t('services_page.items.surgery.title'), href: "/services" },
+    { name: t('services_page.items.pediatrics.title'), href: "/services" },
     { name: "Laboratory", href: "/services" },
-    { name: "Diagnostic", href: "/services" }
+    { name: t('services_page.items.diagnostic.title'), href: "/services" }
   ];
 
   return (
@@ -44,7 +47,7 @@ const Footer = () => {
               </Link>
             </div>
             <p className="text-white/70 mb-[30px] leading-[1.8]">
-              Providing world-class medical services with modern technology and expert healthcare professionals. Your health is our priority.
+              {t('footer.desc')}
             </p>
             <div className="flex gap-[15px]">
               {[Facebook, Twitter, Linkedin, Instagram].map((Icon, idx) => (
@@ -57,7 +60,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">Quick Links</h3>
+            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">{t('footer.quick_links')}</h3>
             <ul className="space-y-[15px]">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -72,7 +75,7 @@ const Footer = () => {
 
           {/* Departments */}
           <div>
-            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">Departments</h3>
+            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">{t('footer.departments')}</h3>
             <ul className="space-y-[15px]">
               {departmentLinks.map((link) => (
                 <li key={link.name}>
@@ -87,14 +90,14 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">Contact Us</h3>
+            <h3 className="text-white text-[22px] mb-[35px] relative pb-[15px] after:absolute after:bottom-0 after:left-0 after:w-[50px] after:h-[2px] after:bg-primary">{t('footer.contact_us')}</h3>
             <div className="space-y-[25px]">
               <div className="flex gap-[15px] items-start">
                 <div className="w-[45px] h-[45px] rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <Phone className="w-[20px] h-[20px]" />
                 </div>
                 <div>
-                  <h4 className="text-white text-[16px] mb-[5px]">Phone Number</h4>
+                  <h4 className="text-white text-[16px] mb-[5px]">{t('footer.phone')}</h4>
                   <p className="text-white/70">+251 11 123 4567</p>
                 </div>
               </div>
@@ -104,7 +107,7 @@ const Footer = () => {
                   <Mail className="w-[20px] h-[20px]" />
                 </div>
                 <div>
-                  <h4 className="text-white text-[16px] mb-[5px]">Email Address</h4>
+                  <h4 className="text-white text-[16px] mb-[5px]">{t('footer.email')}</h4>
                   <p className="text-white/70 break-all">info@yanetprimaryhospital.com</p>
                 </div>
               </div>
@@ -114,7 +117,7 @@ const Footer = () => {
                   <MapPin className="w-[20px] h-[20px]" />
                 </div>
                 <div>
-                  <h4 className="text-white text-[16px] mb-[5px]">Location</h4>
+                  <h4 className="text-white text-[16px] mb-[5px]">{t('footer.location')}</h4>
                   <p className="text-white/70">Addis Ababa, Ethiopia</p>
                 </div>
               </div>
@@ -125,7 +128,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="pt-[30px] border-t border-white/10 text-center">
           <p className="text-white/50 text-[14px]">
-            &copy; {new Date().getFullYear()} Yanet Primary Hospital. All Rights Reserved. Designed by Yanol Team.
+            &copy; {new Date().getFullYear()} Yanet Primary Hospital. {t('footer.rights')} {t('footer.designed_by')} Yanol Team.
           </p>
         </div>
       </div>
@@ -134,3 +137,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

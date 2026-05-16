@@ -1,25 +1,29 @@
 import { motion } from 'framer-motion';
 import { Target, Eye, ShieldCheck, Stethoscope, HeartPulse, Activity } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const MissionVision = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   const items = [
     {
-      title: "Our Mission",
-      desc: "To deliver high-quality, accessible, and patient-centered healthcare services that ensure the well-being of our community.",
+      title: t('about_extra.mission.m_title'),
+      desc: t('about_extra.mission.m_desc'),
       icon: <Stethoscope className="w-8 h-8" />,
       color: "bg-primary",
       accent: "text-primary"
     },
     {
-      title: "Our Vision",
-      desc: "To be the leading healthcare provider recognized for medical excellence, innovation, and compassionate patient-focused care.",
+      title: t('about_extra.mission.v_title'),
+      desc: t('about_extra.mission.v_desc'),
       icon: <Activity className="w-8 h-8" />,
       color: "bg-secondary",
       accent: "text-secondary"
     },
     {
-      title: "Core Values",
-      desc: "Integrity, Excellence, Compassion, and Innovation guide every action we take for our patients and their families.",
+      title: isAmharic ? "መሠረታዊ እሴቶች" : "Core Values",
+      desc: isAmharic ? "ቅንነት፣ ልህቀት፣ ርህራሄ እና ፈጠራ ለእያንዳንዱ ታካሚ እና ለቤተሰቦቻቸው የምንወስደውን እርምጃ ይመራሉ።" : "Integrity, Excellence, Compassion, and Innovation guide every action we take for our patients and their families.",
       icon: <ShieldCheck className="w-8 h-8" />,
       color: "bg-teal-600",
       accent: "text-teal-600"
@@ -43,10 +47,10 @@ const MissionVision = () => {
       <div className="container-custom relative z-10">
         <div className="section-title !mb-[40px] relative">
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80px] font-black text-primary/[0.05] select-none pointer-events-none z-0">
-            GOALS
+            {isAmharic ? 'ግቦች' : 'GOALS'}
           </span>
-          <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">Our Philosophy</span>
-          <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1">Mission, Vision & Values</h2>
+          <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">{t('about_extra.mission.badge')}</span>
+          <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1">{t('about_extra.mission.title')}</h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -81,3 +85,4 @@ const MissionVision = () => {
 };
 
 export default MissionVision;
+

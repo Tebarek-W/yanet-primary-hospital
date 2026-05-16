@@ -1,26 +1,30 @@
 import { motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Testimonials = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   const testimonials = [
     {
-      name: "John Doe",
-      role: "Patient",
-      text: "The medical care I received was exceptional. The doctors and staff are very professional and caring. I highly recommend Yanet Primary Hospital.",
+      name: isAmharic ? "ሳራ ጄ." : "Sarah J.",
+      role: isAmharic ? "ታካሚ" : "Patient",
+      text: t('testimonials.list.t1.text'),
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop",
       delay: 0.1
     },
     {
-      name: "Jane Smith",
-      role: "Patient",
-      text: "Very clean environment and modern technology. My surgery went very smoothly and the recovery was faster than I expected.",
+      name: isAmharic ? "ሚካኤል አር." : "Michael R.",
+      role: isAmharic ? "ታካሚ" : "Patient",
+      text: t('testimonials.list.t2.text'),
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop",
       delay: 0.2
     },
     {
-      name: "Robert Wilson",
-      role: "Patient",
-      text: "The 24/7 service is a life saver. I had an emergency at night and the team was ready to help immediately. Great experience.",
+      name: isAmharic ? "ሮበርት ዊልሰን" : "Robert Wilson",
+      role: isAmharic ? "ታካሚ" : "Patient",
+      text: isAmharic ? "የ24 ሰዓት አገልግሎት ህይወት አዳኝ ነው። በምሽት ድንገተኛ አደጋ አጋጥሞኝ ቡድኑ ወዲያውኑ ለመርዳት ዝግጁ ነበር። ታላቅ ተሞክሮ።" : "The 24/7 service is a life saver. I had an emergency at night and the team was ready to help immediately. Great experience.",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974&auto=format&fit=crop",
       delay: 0.3
     }
@@ -30,10 +34,10 @@ const Testimonials = () => {
     <section className="pt-[60px] pb-[60px] bg-light-bg">
       <div className="container-custom">
         <div className="section-title">
-          <span>What Our Patients Say</span>
-          <h2 className="text-secondary">Trusted By Thousands Of Patients</h2>
+          <span>{t('testimonials.badge')}</span>
+          <h2 className="text-secondary">{t('testimonials.title')}</h2>
           <p>
-            Read what our patients have to say about their experience with our medical services.
+            {t('testimonials.desc')}
           </p>
         </div>
 
@@ -81,3 +85,4 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
+

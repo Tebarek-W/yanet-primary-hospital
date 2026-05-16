@@ -1,29 +1,33 @@
 import { motion } from 'framer-motion';
 import { Facebook, Twitter, Linkedin, Instagram, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Doctors = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   const doctors = [
     {
-      name: "Dr. James Anderson",
-      role: "Cardiologist",
+      name: isAmharic ? "ዶ/ር ጀምስ አንደርሰን" : "Dr. James Anderson",
+      role: t('doctor_team.roles.cardiologist'),
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2070&auto=format&fit=crop",
       delay: 0.1
     },
     {
-      name: "Dr. Sarah Taylor",
-      role: "Neurologist",
+      name: isAmharic ? "ዶ/ር ሳራ ቴይለር" : "Dr. Sarah Taylor",
+      role: t('doctor_team.roles.necrologist'),
       image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?q=80&w=1974&auto=format&fit=crop",
       delay: 0.2
     },
     {
-      name: "Dr. Robert Smith",
-      role: "Surgeon",
+      name: isAmharic ? "ዶ/ር ሮበርት ስሚዝ" : "Dr. Robert Smith",
+      role: t('doctor_team.roles.surgery'),
       image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=2070&auto=format&fit=crop",
       delay: 0.3
     },
     {
-      name: "Dr. Emily White",
-      role: "Pediatrician",
+      name: isAmharic ? "ዶ/ር ኤሚሊ ዋይት" : "Dr. Emily White",
+      role: t('doctor_team.roles.pediatrician'),
       image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2000&auto=format&fit=crop",
       delay: 0.4
     }
@@ -33,10 +37,10 @@ const Doctors = () => {
     <section id="doctors" className="pt-[60px] pb-[60px] overflow-hidden">
       <div className="container-custom">
         <div className="section-title">
-          <span>Expert Medical Team</span>
-          <h2 className="text-secondary">Meet Our Best Doctors</h2>
+          <span>{t('home_doctors.badge')}</span>
+          <h2 className="text-secondary">{t('home_doctors.title')}</h2>
           <p className="text-[18px]">
-            Our specialists are dedicated to providing the highest quality healthcare with a patient-centered approach.
+            {t('home_doctors.desc')}
           </p>
         </div>
 
@@ -94,3 +98,4 @@ const Doctors = () => {
 };
 
 export default Doctors;
+

@@ -1,0 +1,243 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "doctors": "Doctors",
+    "blog": "Blog",
+    "contact": "Contact",
+    "appointment": "Appointment",
+    "pages": "Pages"
+  },
+  "hero": {
+    "badge": "24/7 Excellence in Healthcare",
+    "title_part1": "Providing Best",
+    "title_span": "Medical Care",
+    "title_part2": "For Your Family",
+    "desc": "Experience world-class healthcare with modern technology and expert specialists. We're dedicated to your health and well-being around the clock.",
+    "cta_appointment": "Book Appointment",
+    "cta_video": "WATCH VIDEO"
+  },
+  "common": {
+    "since": "Since {{year}}",
+    "read_more": "Read More",
+    "opening_hours": "Opening Hours",
+    "emergency": "Emergency 24/7",
+    "location": "Location",
+    "emergency_call": "+251 11 123 4567"
+  },
+  "features": {
+    "opening": {
+      "title": "Opening Hours",
+      "desc": "Available 24/7 for all medical services."
+    },
+    "expert": {
+      "title": "Expert Doctors",
+      "desc": "Highly qualified and experienced staff."
+    },
+    "certified": {
+      "title": "Certified Clinic",
+      "desc": "Safe and effective certified treatments."
+    }
+  },
+  "home_services": {
+    "badge": "Our Specialized Services",
+    "title": "Premium Healthcare Services",
+    "desc": "We provide a wide range of specialized medical services using the latest technology and expert knowledge.",
+    "items": {
+      "cardiology": "Cardiology",
+      "diagnostic": "Diagnostic",
+      "surgery": "General Surgery",
+      "laboratory": "Laboratory",
+      "neurology": "Neurology",
+      "pediatrics": "Pediatrics"
+    }
+  },
+  "home_doctors": {
+    "badge": "Expert Medical Team",
+    "title": "Meet Our Best Doctors",
+    "desc": "Our specialists are dedicated to providing the highest quality healthcare with a patient-centered approach."
+  },
+  "testimonials": {
+    "badge": "Patients Feedback",
+    "title": "What Our Patients Say",
+    "desc": "We are committed to providing the best healthcare services to our patients.",
+    "list": {
+      "t1": {
+        "text": "The medical care I received at Yanet Primary Hospital was exceptional. The doctors were very attentive and the facilities are top-notch.",
+        "name": "Sarah J.",
+        "role": "Patient"
+      },
+      "t2": {
+        "text": "I highly recommend this hospital for their professional staff and modern technology. They really care about their patients.",
+        "name": "Michael R.",
+        "role": "Patient"
+      }
+    }
+  },
+  "about_extra": {
+    "info": {
+      "badge": "Medical Experience",
+      "title": "We Have 10+ Years Of Experience",
+      "desc": "Our hospital is committed to providing the best healthcare services with modern technology and expert specialists."
+    },
+    "mission": {
+      "badge": "Mission & Vision",
+      "title": "Our Goal is to Provide Best Care",
+      "m_title": "Our Mission",
+      "m_desc": "To provide high-quality, compassionate healthcare services to our community.",
+      "v_title": "Our Vision",
+      "v_desc": "To be the leading healthcare provider recognized for excellence and innovation."
+    },
+    "camp": {
+      "badge": "Medical Camp",
+      "title": "Free Medical Camp Service",
+      "desc": "We regularly organize free medical camps to reach out to the community and provide basic healthcare services."
+    },
+    "cta": {
+      "badge": "Stay Healthy",
+      "title": "Ready to Get Your Health Done?",
+      "desc": "Contact us today to schedule your appointment and experience world-class healthcare."
+    }
+  },
+  "about": {
+    "title_badge": "About Us",
+    "title_main": "We Are Here To Care For",
+    "title_span": "Your Health",
+    "desc": "Yanet Primary Hospital has been a leader in high-quality medical services for over 6 years. We combine expert medical professionals with cutting-edge technology to ensure your family receives the best possible care, 24/7.",
+    "years_exp": "Years of Experience",
+    "points": {
+      "qualified": "Qualified Doctors",
+      "emergency": "Emergency Care",
+      "modern": "Modern Technology",
+      "service": "24/7 Service",
+      "staff": "Experienced Staff",
+      "blood": "Blood Bank"
+    },
+    "about_page_us": {
+      "title": "We are trusted The Best Certificate Healthcare",
+      "desc": "Our commitment to excellence in healthcare is unmatched. We provide top-tier medical services with certified professionals and state-of-the-art facilities.",
+      "f1": "Scientific skills for getting a better result",
+      "f2": "A good environment for work",
+      "f3": "Professional doctors",
+      "f4": "Digital laboratory",
+      "f5": "Emergency services"
+    }
+  },
+  "why_choose": {
+    "badge": "Why Choose Us",
+    "title_main": "We Are Dedicated To",
+    "title_span": "Your Health",
+    "desc": "At Yanet Primary Hospital, we combine world-class medical expertise with compassionate care. Our facility is equipped with the latest technology to ensure accurate diagnostics and effective treatments for your entire family.",
+    "stats": {
+      "doctors": "Expert Doctors",
+      "doctors_desc": "Qualified Specialists",
+      "award": "Award Winning",
+      "award_desc": "Best Care Services",
+      "service": "24/7 Service",
+      "service_desc": "Always Available",
+      "tech": "Modern Tech",
+      "tech_desc": "Advanced Equipment"
+    }
+  },
+  "counter": {
+    "doctors": "Expert Doctors",
+    "success": "Successful Story",
+    "presence": "Global Presence",
+    "experience": "Years Experience"
+  },
+  "footer": {
+    "desc": "Providing world-class medical services with modern technology and expert healthcare professionals. Your health is our priority.",
+    "quick_links": "Quick Links",
+    "departments": "Departments",
+    "contact_us": "Contact Us",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "location": "Location",
+    "rights": "All Rights Reserved.",
+    "designed_by": "Designed by"
+  },
+  "contact_page": {
+    "title": "Contact Us",
+    "find_us": "Find Us",
+    "location_title": "Our Hospital Location",
+    "location_desc": "We are conveniently located in the heart of Addis Ababa, easily accessible from all parts of the city.",
+    "form": {
+      "title": "Send Us a Message",
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "subject": "Subject",
+      "message": "Your Message",
+      "submit": "Send Message"
+    }
+  },
+  "blog_section": {
+    "badge": "Our Latest News",
+    "title": "Read Our Latest Articles",
+    "desc": "Stay updated with the latest medical news and health tips from our expert doctors.",
+    "by": "By"
+  },
+  "doctor_team": {
+    "badge": "Our Doctors",
+    "title": "Our Specialist Doctors",
+    "desc": "Our specialist doctors combine advanced expertise with compassionate care, providing accurate diagnoses and effective treatments.",
+    "roles": {
+      "necrologist": "Necrologist",
+      "surgery": "Surgery Specialist",
+      "cardiologist": "Cardiologist",
+      "pediatrician": "Pediatrician"
+    }
+  },
+  "services_page": {
+    "title": "Our Services",
+    "badge": "What We Offer",
+    "main_title": "Our Medical Services",
+    "desc": "We provide a comprehensive range of healthcare services with the latest technology and compassionate care.",
+    "cta": {
+      "badge": "Need Assistance?",
+      "title": "Ready To Get Started? Book An Appointment",
+      "desc": "Our team of specialists is ready to provide you with the best medical care. Schedule your consultation today and take the first step towards better health."
+    },
+    "items": {
+      "cardiology": {
+        "title": "Cardiology",
+        "desc": "Comprehensive heart care with modern diagnostic tools and experienced cardiologists."
+      },
+      "diagnostic": {
+        "title": "Diagnostic",
+        "desc": "Advanced diagnostic services including X-ray, MRI, and full laboratory testing."
+      },
+      "surgery": {
+        "title": "Surgery",
+        "desc": "Expert surgical procedures with minimally invasive techniques and rapid recovery."
+      },
+      "neurology": {
+        "title": "Neurology",
+        "desc": "Specialized care for neurological conditions including stroke and epilepsy."
+      },
+      "pediatrics": {
+        "title": "Pediatrics",
+        "desc": "Dedicated care for children from birth through adolescence in a safe environment."
+      },
+      "ophthalmology": {
+        "title": "Ophthalmology",
+        "desc": "Complete eye care services including vision correction and eye diseases treatment."
+      }
+    }
+  },
+  "appointment_modal": {
+    "badge": "Online Booking",
+    "title_part1": "Book Your",
+    "title_span": "Appointment",
+    "desc": "Fill out the form below and our medical team will contact you shortly to confirm your schedule.",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "service": "Select Service",
+      "concern": "Tell us about your concern...",
+      "submit": "Confirm Booking"
+    }
+  }
+}

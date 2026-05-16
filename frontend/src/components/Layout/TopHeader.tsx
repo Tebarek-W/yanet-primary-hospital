@@ -1,6 +1,9 @@
 import { Mail, Phone, Clock, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const TopHeader = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white py-[12px] hidden md:block border-b border-gray-100">
       <div className="container-custom">
@@ -9,15 +12,11 @@ const TopHeader = () => {
           <div className="flex items-center gap-[25px]">
             <div className="flex items-center gap-[8px] text-[#5d666e] text-[14px] font-medium">
               <Clock className="w-[18px] h-[18px] text-primary" />
-              <span>Mon-Fri 9am-5pm</span>
+              <span>{t('nav.home') === 'መነሻ' ? 'ሰኞ-አርብ 9am-5pm' : 'Mon-Fri 9am-5pm'}</span>
             </div>
             <div className="flex items-center gap-[8px] text-body text-[14px]">
               <Mail className="w-[16px] h-[16px] text-primary" />
               <span>info@yanetprimaryhospital.com</span>
-            </div>
-            <div className="flex items-center gap-[8px] text-[#5d666e] text-[14px] font-medium">
-              <Mail className="w-[18px] h-[18px] text-primary" />
-              <span>Email: info@yanethospital.com</span>
             </div>
           </div>
 
@@ -40,3 +39,4 @@ const TopHeader = () => {
 };
 
 export default TopHeader;
+

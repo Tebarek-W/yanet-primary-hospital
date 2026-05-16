@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SolarSystem = () => {
   return (
@@ -118,6 +119,8 @@ interface HeroProps {
 }
 
 const Hero = ({ onAppointmentClick }: HeroProps) => {
+  const { t } = useTranslation();
+
   return (
     <section className="relative h-[700px] lg:h-[800px] flex items-start pt-[100px] lg:pt-[120px] overflow-hidden bg-secondary">
       {/* Dynamic Background with improved overlay */}
@@ -153,7 +156,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               <div className="w-[3px] h-[20px] bg-primary"></div>
               <span className="text-white text-[13px] font-extrabold uppercase tracking-[3px]">
                 <span className="bg-primary text-secondary px-1.5 py-0.5 rounded mr-2 text-[11px]">24/7</span>
-                Excellence in Healthcare
+                {t('hero.badge')}
               </span>
             </motion.div>
 
@@ -163,7 +166,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
               className="text-white mb-[20px] leading-[1.1] font-extrabold tracking-tighter !text-[30px] md:!text-[42px] lg:!text-[52px]"
             >
-              Providing Best <span className="gradient-text">Medical Care</span> For Your Family
+              {t('hero.title_part1')} <span className="gradient-text">{t('hero.title_span')}</span> {t('hero.title_part2')}
             </motion.h1>
 
             <motion.p 
@@ -172,7 +175,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-[14px] md:text-[16px] mb-[35px] text-white/80 leading-[1.6] font-light max-w-[550px]"
             >
-              Experience world-class healthcare with modern technology and expert specialists. We're dedicated to your health and well-being around the clock.
+              {t('hero.desc')}
             </motion.p>
 
             <motion.div 
@@ -185,7 +188,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
                 onClick={onAppointmentClick}
                 className="btn-primary flex items-center gap-3 group shadow-xl shadow-primary/20"
               >
-                Book Appointment
+                {t('hero.cta_appointment')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               
@@ -193,7 +196,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
                 <div className="w-[60px] h-[60px] bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 group-hover:bg-primary transition-all duration-500">
                   <Play className="w-6 h-6 text-white fill-white" />
                 </div>
-                <span className="text-white font-bold tracking-wider group-hover:text-primary transition-colors">WATCH VIDEO</span>
+                <span className="text-white font-bold tracking-wider group-hover:text-primary transition-colors">{t('hero.cta_video')}</span>
               </div>
             </motion.div>
           </div>

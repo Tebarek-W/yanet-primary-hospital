@@ -1,13 +1,16 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const AboutUs = () => {
+  const { t } = useTranslation();
+
   const features = [
-    "Scientific skills for getting a better result",
-    "A good environment for work",
-    "Professional doctors",
-    "Digital laboratory",
-    "Emergency services",
+    t('about.about_page_us.f1'),
+    t('about.about_page_us.f2'),
+    t('about.about_page_us.f3'),
+    t('about.about_page_us.f4'),
+    t('about.about_page_us.f5'),
   ];
 
   return (
@@ -64,17 +67,17 @@ const AboutUs = () => {
             viewport={{ once: true }}
           >
             <div className="mb-6 relative">
-              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0">
-                ABOUT
+              <span className="absolute -top-6 -left-4 text-[60px] font-black text-primary/[0.05] select-none pointer-events-none z-0 uppercase">
+                {t('nav.about')}
               </span>
-              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">About Us</span>
+              <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">{t('nav.about')}</span>
               <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1 leading-tight">
-                We are trusted The Best <br /> Certificate Healthcare
+                {t('about.about_page_us.title')}
               </h2>
             </div>
             
             <p className="text-[#5d666e] text-[17px] mb-8 leading-relaxed max-w-[550px]">
-              Our commitment to excellence in healthcare is unmatched. We provide top-tier medical services with certified professionals and state-of-the-art facilities.
+              {t('about.about_page_us.desc')}
             </p>
 
             <ul className="space-y-4">
@@ -102,3 +105,4 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
+

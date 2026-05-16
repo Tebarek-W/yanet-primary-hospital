@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion';
 import { Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const CTABanner = () => {
+  const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
+
   return (
     <section className="relative py-[120px] overflow-hidden">
       {/* Background Image */}
@@ -31,7 +35,9 @@ const CTABanner = () => {
             viewport={{ once: true }}
             className="text-white text-[40px] md:text-[50px] font-bold mb-6 leading-tight"
           >
-            Join Our Next <span className="text-primary">Free Medical Camp</span> For The Needy
+            {isAmharic ? "ለተቸገሩት በሚዘጋጀው " : "Join Our Next "}
+            <span className="text-primary">{isAmharic ? "ነፃ የህክምና ካምፕ" : "Free Medical Camp"}</span> 
+            {isAmharic ? " ላይ ይሳተፉ" : " For The Needy"}
           </motion.h2>
 
           <motion.p 
@@ -41,7 +47,7 @@ const CTABanner = () => {
             transition={{ delay: 0.2 }}
             className="text-white/80 text-[18px] mb-10 leading-relaxed"
           >
-            We regularly organize free medical camps to provide healthcare services to underserved communities. Your health is our priority.
+            {t('about_extra.camp.desc')}
           </motion.p>
 
           <motion.button 
@@ -53,7 +59,7 @@ const CTABanner = () => {
             whileTap={{ scale: 0.95 }}
             className="bg-primary text-white px-12 py-5 rounded-full font-bold text-[18px] shadow-xl hover:bg-white hover:text-primary transition-all duration-300"
           >
-            Book An Appointment
+            {t('hero.cta_appointment')}
           </motion.button>
         </div>
       </div>
@@ -62,3 +68,4 @@ const CTABanner = () => {
 };
 
 export default CTABanner;
+

@@ -1,33 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Facebook, Twitter, Linkedin, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
-
-const doctors = [
-  {
-    name: "Dr. Jemse Watson",
-    role: "Necrologist",
-    desc: "Specializes in neurological disorders and brain conditions.",
-    image: "/doctors/doctor1.png",
-  },
-  {
-    name: "Dr. Neels Bore",
-    role: "Surgery Specialist",
-    desc: "Highly skilled in various surgical procedures and techniques.",
-    image: "/doctors/doctor2.png",
-  },
-  {
-    name: "Dr. Kilva Alis",
-    role: "Cardiologist",
-    desc: "Expert in heart conditions and cardiovascular treatments.",
-    image: "/doctors/doctor3.png",
-  },
-  {
-    name: "Dr. Aster Mamo",
-    role: "Pediatrician",
-    desc: "Dedicated to providing the best healthcare for children.",
-    image: "/doctors/doctor4.png",
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 const DoctorCard = ({ doctor }: { doctor: any }) => {
   return (
@@ -81,8 +55,37 @@ const DoctorCard = ({ doctor }: { doctor: any }) => {
 };
 
 const DoctorTeam = () => {
+  const { t } = useTranslation();
   const [startIndex, setStartIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const isAmharic = t('nav.home') === 'መነሻ';
+
+  const doctors = [
+    {
+      name: isAmharic ? "ዶ/ር ጀምስ ዋትሰን" : "Dr. Jemse Watson",
+      role: t('doctor_team.roles.necrologist'),
+      desc: isAmharic ? "በነርቭ ሕመም እና በአንጎል ሁኔታዎች ላይ ያተኩራል።" : "Specializes in neurological disorders and brain conditions.",
+      image: "/doctors/doctor1.png",
+    },
+    {
+      name: isAmharic ? "ዶ/ር ኒልስ ቦር" : "Dr. Neels Bore",
+      role: t('doctor_team.roles.surgery'),
+      desc: isAmharic ? "በተለያዩ የቀዶ ጥገና ሂደቶች እና ቴክኒኮች ከፍተኛ ችሎታ ያለው።" : "Highly skilled in various surgical procedures and techniques.",
+      image: "/doctors/doctor2.png",
+    },
+    {
+      name: isAmharic ? "ዶ/ር ኪልቫ አሊስ" : "Dr. Kilva Alis",
+      role: t('doctor_team.roles.cardiologist'),
+      desc: isAmharic ? "በልብ ሁኔታዎች እና በልብና የደም ሥር (cardiovascular) ሕክምናዎች ላይ ባለሙያ።" : "Expert in heart conditions and cardiovascular treatments.",
+      image: "/doctors/doctor3.png",
+    },
+    {
+      name: isAmharic ? "ዶ/ር አስቴር ማሞ" : "Dr. Aster Mamo",
+      role: t('doctor_team.roles.pediatrician'),
+      desc: isAmharic ? "ለህፃናት የተሻለ የጤና እንክብካቤ ለመስጠት የተሰጠ።" : "Dedicated to providing the best healthcare for children.",
+      image: "/doctors/doctor4.png",
+    }
+  ];
 
   useEffect(() => {
     if (isPaused) return;
@@ -90,7 +93,7 @@ const DoctorTeam = () => {
       setStartIndex((prev) => (prev + 1) % doctors.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, doctors.length]);
 
   const visibleDoctors = [
     doctors[startIndex],
@@ -103,13 +106,13 @@ const DoctorTeam = () => {
       <div className="container-custom relative z-10">
         <div className="section-title !mb-[50px] relative">
           {/* Watermark Text */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[100px] font-black text-primary/[0.04] select-none pointer-events-none z-0 whitespace-nowrap">
-            YANET EXPERTS
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[100px] font-black text-primary/[0.04] select-none pointer-events-none z-0 whitespace-nowrap uppercase">
+            {isAmharic ? 'ያኔት ባለሙያዎች' : 'YANET EXPERTS'}
           </div>
-          <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">Our Doctors</span>
-          <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">Our Specialist Doctors</h2>
+          <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">{t('doctor_team.badge')}</span>
+          <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">{t('doctor_team.title')}</h2>
           <p className="relative z-10 text-[#5d666e] mt-3 max-w-[600px] mx-auto text-[14px]">
-            Our specialist doctors combine advanced expertise with compassionate care, providing accurate diagnoses and effective treatments.
+            {t('doctor_team.desc')}
           </p>
         </div>
 
@@ -146,3 +149,4 @@ const DoctorTeam = () => {
 };
 
 export default DoctorTeam;
+
