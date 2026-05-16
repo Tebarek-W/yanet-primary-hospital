@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { HeartPulse, Activity, Stethoscope, Brain, Baby, Eye, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import PageBanner from '../components/Layout/PageBanner';
+import ServicesHero from '../components/Services/ServicesHero';
 
 interface ServicesPageProps {
   onAppointmentClick: () => void;
@@ -58,10 +58,7 @@ const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
 
   return (
     <>
-      <PageBanner
-        title={t('services_page.title')}
-        breadcrumbs={[{ label: t('nav.services') }]}
-      />
+      <ServicesHero />
 
       {/* Services Grid Section */}
       <section className="pt-[80px] pb-[80px] bg-white relative overflow-hidden">

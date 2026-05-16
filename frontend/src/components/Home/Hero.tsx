@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import VideoModal from './VideoModal';
 
 const SolarSystem = () => {
   return (
@@ -120,6 +122,7 @@ interface HeroProps {
 
 const Hero = ({ onAppointmentClick }: HeroProps) => {
   const { t } = useTranslation();
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   return (
     <section className="relative h-[700px] lg:h-[800px] flex items-start pt-[100px] lg:pt-[120px] overflow-hidden bg-secondary">
@@ -192,7 +195,10 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               
-              <div className="flex items-center gap-4 group cursor-pointer">
+              <div 
+                className="flex items-center gap-4 group cursor-pointer"
+                onClick={() => setIsVideoOpen(true)}
+              >
                 <div className="w-[60px] h-[60px] bg-white/10 backdrop-blur-lg rounded-full flex items-center justify-center border border-white/20 group-hover:bg-primary transition-all duration-500">
                   <Play className="w-6 h-6 text-white fill-white" />
                 </div>
@@ -228,8 +234,15 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
           <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
         </svg>
       </div>
+
+      <VideoModal 
+        isOpen={isVideoOpen} 
+        onClose={() => setIsVideoOpen(false)} 
+        videoUrl="https://www.youtube.com/embed/3NRFpvIqEzI" 
+      />
     </section>
   );
 };
+
 
 export default Hero;

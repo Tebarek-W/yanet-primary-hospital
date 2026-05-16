@@ -35,7 +35,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     { name: t('nav.pages'), href: '#', hasDropdown: true },
     { name: t('nav.services'), href: '/services' },
     { name: t('nav.doctors'), href: '/#doctors' },
-    { name: t('nav.blog'), href: '/#blog' },
+    { name: t('nav.blog'), href: '/blog' },
     { name: t('nav.contact'), href: '/contact' },
   ];
 

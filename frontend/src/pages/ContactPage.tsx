@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import PageBanner from '../components/Layout/PageBanner';
+import ContactHero from '../components/Contact/ContactHero';
 import ContactInfo from '../components/Contact/ContactInfo';
 import ContactForm from '../components/Contact/ContactForm';
 import ContactMap from '../components/Contact/ContactMap';
@@ -9,10 +9,7 @@ const ContactPage = () => {
 
   return (
     <div className="bg-white">
-      <PageBanner 
-        title={t('contact_page.title')} 
-        breadcrumbs={[{ label: t('contact_page.title') }]} 
-      />
+      <ContactHero />
       
       <section className="py-[100px] relative">
         <div className="container-custom">

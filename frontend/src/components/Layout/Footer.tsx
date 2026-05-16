@@ -6,10 +6,10 @@ const Footer = () => {
   const { t } = useTranslation();
 
   const quickLinks = [
-    { name: t('nav.about'), href: "/#about" },
+    { name: t('nav.about'), href: "/about" },
     { name: t('nav.services'), href: "/services" },
     { name: t('nav.doctors'), href: "/#doctors" },
-    { name: t('nav.blog'), href: "/#blog" },
+    { name: t('nav.blog'), href: "/blog" },
     { name: t('nav.contact'), href: "/contact" }
   ];
 
