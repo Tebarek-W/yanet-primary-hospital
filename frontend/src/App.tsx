@@ -6,6 +6,7 @@ import AppointmentModal from './components/Home/AppointmentModal';
 import Footer from './components/Layout/Footer';
 import HomePage from './pages/HomePage';
 import ServicesPage from './pages/ServicesPage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<HomePage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
+            <Route path="/services/:slug" element={<ServiceDetailPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />

@@ -116,12 +116,113 @@
     },
     "about_page_us": {
       "title": "We are trusted The Best Certificate Healthcare",
-      "desc": "Our commitment to excellence in healthcare is unmatched. We provide top-tier medical services with certified professionals and state-of-the-art facilities.",
+      "desc": "Established in 2020, Yanet Primary Hospital has rapidly scaled from a specialized local clinic to a leading primary healthcare provider. Today, we serve over 50,000 patients annually with a dedicated team of 100+ medical professionals and advanced diagnostic labs. Guided by our mission of compassionate care and clinical excellence, we deliver trusted healthcare 24/7.",
       "f1": "Scientific skills for getting a better result",
       "f2": "A good environment for work",
       "f3": "Professional doctors",
       "f4": "Digital laboratory",
       "f5": "Emergency services"
+    }
+  },
+  "about_timeline": {
+    "badge": "Our Journey",
+    "title": "History & Milestones",
+    "desc": "Explore our progress and key milestones as we continue to elevate healthcare standards in our community.",
+    "years": {
+      "2020": {
+        "title": "Founding & Launch",
+        "desc": "Yanet Primary Hospital opened its doors to deliver high-quality, compassionate healthcare to Hawassa and surrounding regions."
+      },
+      "2021": {
+        "title": "Specialty Departments",
+        "desc": "Inaugurated specialized wings for Pediatrics, Maternity Care, and a 24/7 fully equipped emergency trauma center."
+      },
+      "2022": {
+        "title": "Diagnostic Expansion",
+        "desc": "Launched a state-of-the-art digital laboratory and advanced imaging division, featuring ultrasound and high-resolution X-ray."
+      },
+      "2023": {
+        "title": "Regional Medical Camps",
+        "desc": "Initiated regular free regional medical camps, providing essential healthcare and health education to over 15,000+ underserved citizens."
+      },
+      "2024": {
+        "title": "Digital Health Integration",
+        "desc": "Integrated modern Electronic Medical Records (EMR) systems and remote consultation services for seamless patient experiences."
+      },
+      "2025": {
+        "title": "Advanced Wing & Awards",
+        "desc": "Completed a new surgical wing, expanded capacity to 100+ beds, and achieved the national clinical quality excellence award."
+      }
+    }
+  },
+  "about_leadership": {
+    "badge": "Executive Team",
+    "title": "Leadership & Management",
+    "desc": "Our visionary executive leadership team directs hospital operations with a commitment to medical excellence, patient safety, and compassionate care.",
+    "members": {
+      "ceo": {
+        "name": "Dr. Tebarek Liyana",
+        "role": "Founder & Chief Executive Officer",
+        "bio": "A passionate medical entrepreneur dedicated to making advanced healthcare affordable and accessible across Ethiopia."
+      },
+      "md": {
+        "name": "Dr. Birhanu Mengiste",
+        "role": "Medical Director",
+        "bio": "With over 15 years of surgical experience, he supervises clinical programs, medical protocols, and quality improvement."
+      },
+      "cno": {
+        "name": "Sister Tigist Hailu",
+        "role": "Chief Nursing Officer",
+        "bio": "Directs our nursing divisions with an unwavering focus on patient dignity, clinical compliance, and compassionate nursing care."
+      },
+      "coo": {
+        "name": "Ato Samuel Kassa",
+        "role": "Head of Operations & Administration",
+        "bio": "Coordinates hospital logistics, administrative operations, and public relations to ensure flawless 24/7 service delivery."
+      }
+    }
+  },
+  "about_certifications": {
+    "badge": "Trust & Standards",
+    "title": "Licenses & Accreditations",
+    "desc": "Yanet Primary Hospital is fully accredited and operates under international healthcare protocols, ensuring safe and premium medical operations.",
+    "items": {
+      "fmhaca": {
+        "title": "FMHACA Licensed",
+        "desc": "Certified by the Federal Medicine, Health Care Administration and Control Authority of Ethiopia for full surgical and inpatient care."
+      },
+      "iso": {
+        "title": "ISO 9001:2015 Quality",
+        "desc": "Adheres strictly to ISO standards for quality management systems in patient-care delivery and risk controls."
+      },
+      "nqs": {
+        "title": "National Quality Award",
+        "desc": "Recognized by the Ministry of Health for exceptional hygiene, patient outcomes, and standard of diagnostic services."
+      },
+      "ema": {
+        "title": "EMA Code of Conduct",
+        "desc": "Official member of the Ethiopian Medical Association, committed to the highest ethical and professional medical standards."
+      }
+    }
+  },
+  "about_partnerships": {
+    "badge": "Collaborations",
+    "title": "Partners & Referrals",
+    "desc": "We cooperate with leading insurance companies, national referral hospitals, and international NGOs to provide comprehensive healthcare coverage.",
+    "categories": {
+      "insurers": "Accepted Insurances",
+      "hospitals": "Medical Referrals",
+      "ngos": "NGO Collaborations"
+    },
+    "items": {
+      "nyala": "Nyala Insurance S.C.",
+      "medhin": "Medhin Insurance",
+      "united": "United Insurance S.C.",
+      "awash": "Awash Insurance",
+      "black_lion": "Black Lion (Tikur Anbessa) Referral Hospital",
+      "hawassa_uni": "Hawassa University Comprehensive Hospital",
+      "red_cross": "Ethiopian Red Cross Society",
+      "usaid": "USAID Health Support Network"
     }
   },
   "why_choose": {
