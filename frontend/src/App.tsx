@@ -12,6 +12,7 @@ import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
 import DoctorsPage from './pages/DoctorsPage';
 import DoctorDetail from './components/Doctors/DoctorDetail';
+import VirtualTourPage from './pages/VirtualTourPage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 import ChatBot from './components/Chat/ChatBot';
@@ -38,6 +39,7 @@ function App() {
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/doctors/:id" element={<DoctorDetail />} />
+            <Route path="/virtual-tour" element={<VirtualTourPage />} />
           </Routes>
         </main>
 
