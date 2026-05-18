@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Menu, X, ChevronDown, User, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { branchesData } from '../../data/branchesData';
 
 // Flag SVGs for language switcher
 const EthiopianFlag = () => (
@@ -71,11 +72,14 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
       href: '#', 
       hasDropdown: true,
       dropdownItems: [
-        { name: t('branches_list.hawassa'), href: '/contact?branch=hawassa' },
-        { name: t('branches_list.bole'), href: '/contact?branch=bole' },
-        { name: t('branches_list.adama'), href: '/contact?branch=adama' },
-        { name: t('branches_list.bahirdar'), href: '/contact?branch=bahirdar' },
-        { name: t('branches_list.mekelle'), href: '/contact?branch=mekelle' },
+        ...branchesData.map((b) => ({
+          name: i18n.language.startsWith('am') ? b.nameAm : b.name,
+          href: `/branches/${b.slug}`
+        })),
+        {
+          name: i18n.language.startsWith('am') ? 'ሁሉም ቅርንጫፎች ይመልከቱ' : 'View All Branches',
+          href: '/branches'
+        }
       ]
     },
     { name: t('nav.doctors'), href: '/doctors' },

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { User, ArrowRight } from 'lucide-react';
 import DoctorCard from '../Doctors/DoctorCard';
 import { doctorsData } from '../../data/doctorsData';
+import drKirubelImage from '../../assets/Dr._Kirubel_Abraham.jpg';
 
 const Doctors = () => {
   const { t } = useTranslation();
@@ -44,6 +45,7 @@ const Doctors = () => {
               key={doctor.id} 
               doctor={{
                 ...doctor,
+                image: drKirubelImage,
                 name: isAmharic ? doctor.nameAm : doctor.name,
                 role: t(doctor.roleKey),
                 desc: isAmharic ? doctor.descAm : doctor.desc
