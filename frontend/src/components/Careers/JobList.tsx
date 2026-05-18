@@ -16,17 +16,27 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
   const [activeDept, setActiveDept] = useState<string>('All');
   const [activeLoc, setActiveLoc] = useState<string>('All');
 
-  // Extract unique departments & locations
-  const departments = useMemo(() => {
-    const depts = new Set<string>();
-    careersData.forEach(job => depts.add(job.department));
-    return ['All', ...Array.from(depts)];
+  // Extract unique departments & locations with bilingual mapping
+  const departmentsMap = useMemo(() => {
+    const map = new Map<string, { en: string; am: string }>();
+    careersData.forEach(job => {
+      map.set(job.department, { en: job.department, am: job.departmentAm });
+    });
+    return [
+      { key: 'All', en: 'All Departments', am: 'ሁሉም የስራ ክፍሎች' },
+      ...Array.from(map.values()).map(v => ({ key: v.en, en: v.en, am: v.am }))
+    ];
   }, []);
 
-  const locations = useMemo(() => {
-    const locs = new Set<string>();
-    careersData.forEach(job => locs.add(job.location));
-    return ['All', ...Array.from(locs)];
+  const locationsMap = useMemo(() => {
+    const map = new Map<string, { en: string; am: string }>();
+    careersData.forEach(job => {
+      map.set(job.location, { en: job.location, am: job.locationAm });
+    });
+    return [
+      { key: 'All', en: 'All Branches', am: 'ሁሉም ቅርንጫፎች' },
+      ...Array.from(map.values()).map(v => ({ key: v.en, en: v.en, am: v.am }))
+    ];
   }, []);
 
   // Filter jobs
@@ -71,9 +81,9 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
               onChange={(e) => setActiveLoc(e.target.value)}
               className="bg-white border border-gray-200 py-2.5 px-4 rounded-xl font-bold text-sm text-gray-800 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none cursor-pointer"
             >
-              {locations.map(loc => (
-                <option key={loc} value={loc}>
-                  {loc === 'All' ? t('careers.all_locs', 'All Branches') : loc}
+              {locationsMap.map(locObj => (
+                <option key={locObj.key} value={locObj.key}>
+                  {isAmharic ? locObj.am : locObj.en}
                 </option>
               ))}
             </select>
@@ -82,18 +92,18 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
 
         {/* Department Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none">
-          {departments.map(dept => (
+          {departmentsMap.map(deptObj => (
             <button
-              key={dept}
-              onClick={() => setActiveDept(dept)}
+              key={deptObj.key}
+              onClick={() => setActiveDept(deptObj.key)}
               className={`px-6 py-3 rounded-2xl font-bold text-sm whitespace-nowrap transition-all duration-300 shadow-sm flex items-center gap-2 ${
-                activeDept === dept
+                activeDept === deptObj.key
                   ? 'bg-primary text-white shadow-primary/20 scale-105'
                   : 'bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900 border border-gray-100'
               }`}
             >
               <Briefcase size={16} />
-              {dept === 'All' ? t('careers.all_depts', 'All Departments') : dept}
+              {isAmharic ? deptObj.am : deptObj.en}
             </button>
           ))}
         </div>
@@ -187,7 +197,7 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
                           </div>
                           <div className="flex items-center lg:justify-end gap-1.5 text-xs text-gray-400">
                             <Calendar size={13} />
-                            <span>Posted: {job.postedDate}</span>
+                            <span>{isAmharic ? 'የወጣበት ቀን: ' : 'Posted: '}{job.postedDate}</span>
                           </div>
                         </div>
 
