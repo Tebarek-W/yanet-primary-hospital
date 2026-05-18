@@ -7,7 +7,15 @@
     "blog": "ብሎግ",
     "contact": "ግንኙነት",
     "appointment": "ቀጠሮ",
-    "pages": "ገጾች"
+    "pages": "ገጾች",
+    "branches": "ቅርንጫፎች"
+  },
+  "branches_list": {
+    "bole": "ቦሌ ቅርንጫፍ (አዲስ አበባ)",
+    "hawassa": "ሀዋሳ ቅርንጫፍ (ዋናው መሥሪያ ቤት)",
+    "adama": "አዳማ ቅርንጫፍ",
+    "bahirdar": "ባሕር ዳር ቅርንጫፍ",
+    "mekelle": "መቀሌ ቅርንጫፍ"
   },
   "hero": {
     "badge": "ጥራት ያለው የህክምና አገልግሎት",
