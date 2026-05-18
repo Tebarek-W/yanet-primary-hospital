@@ -7,6 +7,7 @@ import WhyChooseUs from '../components/Home/WhyChooseUs';
 import Doctors from '../components/Home/Doctors';
 import Testimonials from '../components/Home/Testimonials';
 import CampaignBanner from '../components/Home/CampaignBanner';
+import VirtualTourSection from '../components/Home/VirtualTourSection';
 import Blog from '../components/Home/Blog';
 
 interface HomePageProps {
@@ -24,6 +25,7 @@ const HomePage = ({ onAppointmentClick }: HomePageProps) => {
       <WhyChooseUs />
       <Doctors />
       <Testimonials />
+      <VirtualTourSection />
       <CampaignBanner onAppointmentClick={onAppointmentClick} />
       <Blog />
     </>

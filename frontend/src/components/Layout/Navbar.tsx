@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ChevronDown, User, Languages, Phone, Compass } from 'lucide-react';
 import { Search, Menu, X, ChevronDown, User, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -36,6 +37,7 @@ interface NavbarProps {
 
 const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const { t, i18n } = useTranslation();
+  const isAmharic = (i18n.language || 'en').startsWith('am');
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -198,6 +200,19 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               {(i18n.language || 'en').startsWith('am') ? <UKFlag /> : <EthiopianFlag />}
               <span className="text-[12px] font-bold uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
             </button>
+
+            {/* Virtual Tour Link */}
+            <Link
+              to="/virtual-tour"
+              className={`flex items-center gap-1.5 font-bold text-[13px] px-4 py-2 rounded-full border transition-all duration-300 ${
+                isSticky
+                  ? 'border-primary/30 text-primary hover:bg-primary hover:text-white'
+                  : 'border-white/20 text-white/90 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              {isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Tour'}
+            </Link>
 
             <motion.button 
               whileHover={{ scale: 1.05 }}
