@@ -14,6 +14,8 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import DoctorsPage from './pages/DoctorsPage';
 import DoctorDetail from './components/Doctors/DoctorDetail';
 import VirtualTourPage from './pages/VirtualTourPage';
+import BranchesPage from './pages/BranchesPage';
+import BranchDetailPage from './pages/BranchDetailPage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 import ChatBot from './components/Chat/ChatBot';
@@ -36,6 +38,8 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/services/:slug" element={<ServiceDetailPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
+            <Route path="/branches" element={<BranchesPage />} />
+            <Route path="/branches/:slug" element={<BranchDetailPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:id" element={<BlogDetailPage />} />

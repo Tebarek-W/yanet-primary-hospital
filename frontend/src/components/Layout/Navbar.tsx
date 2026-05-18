@@ -1,8 +1,35 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, User, Languages, Phone, Compass } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, User, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { branchesData } from '../../data/branchesData';
+
+// Flag SVGs for language switcher
+const EthiopianFlag = () => (
+  <svg viewBox="0 0 30 20" className="w-[18px] h-[12px] rounded-[2px] shadow-sm shrink-0">
+    <rect width="30" height="6.67" fill="#078930" />
+    <rect y="6.67" width="30" height="6.67" fill="#fcdd09" />
+    <rect y="13.33" width="30" height="6.67" fill="#da121a" />
+    <circle cx="15" cy="10" r="3.5" fill="#0f47af" />
+    <polygon points="15,7.3 15.9,9.8 18.5,9.8 16.4,11.4 17.2,13.9 15,12.3 12.8,13.9 13.6,11.4 11.5,9.8 14.1,9.8" fill="#fcdd09" />
+  </svg>
+);
+
+const UKFlag = () => (
+  <svg viewBox="0 0 30 20" className="w-[18px] h-[12px] rounded-[2px] shadow-sm shrink-0 bg-[#00247d]">
+    <line x1="0" y1="0" x2="30" y2="20" stroke="#fff" strokeWidth="3" />
+    <line x1="30" y1="0" x2="0" y2="20" stroke="#fff" strokeWidth="3" />
+    <line x1="0" y1="0" x2="30" y2="20" stroke="#cf142b" strokeWidth="2" />
+    <line x1="30" y1="0" x2="0" y2="20" stroke="#cf142b" strokeWidth="2" />
+    <rect x="12" y="0" width="6" height="20" fill="#fff" />
+    <rect x="0" y="7" width="30" height="6" fill="#fff" />
+    <rect x="13.5" y="0" width="3" height="20" fill="#cf142b" />
+    <rect x="0" y="8.5" width="30" height="3" fill="#cf142b" />
+  </svg>
+);
+
 // i18n integration
 interface NavbarProps {
   onAppointmentClick: () => void;
@@ -13,6 +40,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const isAmharic = (i18n.language || 'en').startsWith('am');
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobileBranchesOpen, setIsMobileBranchesOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -30,11 +59,31 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     document.documentElement.lang = newLang;
   };
 
-  const navLinks = [
+  interface NavLink {
+    name: string;
+    href: string;
+    hasDropdown?: boolean;
+    dropdownItems?: { name: string; href: string }[];
+  }
+
+  const navLinks: NavLink[] = [
     { name: t('nav.home'), href: '/' },
     { name: t('nav.about'), href: '/about' },
-    { name: t('nav.pages'), href: '#', hasDropdown: true },
-    { name: t('nav.services'), href: '/services' },
+    { 
+      name: t('nav.branches'), 
+      href: '#', 
+      hasDropdown: true,
+      dropdownItems: [
+        ...branchesData.map((b) => ({
+          name: i18n.language.startsWith('am') ? b.nameAm : b.name,
+          href: `/branches/${b.slug}`
+        })),
+        {
+          name: i18n.language.startsWith('am') ? 'ሁሉም ቅርንጫፎች ይመልከቱ' : 'View All Branches',
+          href: '/branches'
+        }
+      ]
+    },
     { name: t('nav.doctors'), href: '/doctors' },
     { name: t('nav.blog'), href: '/blog' },
     { name: t('nav.contact'), href: '/contact' },
@@ -70,28 +119,76 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
           {/* Desktop Links */}
           <div className="hidden lg:flex items-center gap-[30px]">
-            {navLinks.map((link, i) => (
-              <motion.div
-                key={link.name}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Link 
-                  to={link.href} 
-                  className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
-                    location.pathname === link.href ? 'text-primary' :
-                    isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                  }`}
+            {navLinks.map((link, i) => {
+              const hasDropdown = link.hasDropdown && link.dropdownItems && link.dropdownItems.length > 0;
+              return (
+                <motion.div
+                  key={link.name}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="relative py-2"
+                  onMouseEnter={() => hasDropdown && setActiveDropdown(link.name)}
+                  onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
                 >
-                  {link.name}
-                  {link.hasDropdown && <ChevronDown className="w-[14px] h-[14px] group-hover:rotate-180 transition-transform duration-500" />}
-                  <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
-                    location.pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </Link>
-              </motion.div>
-            ))}
+                  {hasDropdown ? (
+                    <div className="flex items-center gap-[4px] cursor-pointer">
+                      <span 
+                        className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[4px] ${
+                          activeDropdown === link.name ? 'text-primary' :
+                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                        }`}
+                      >
+                        {link.name}
+                        <ChevronDown className={`w-[14px] h-[14px] transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-primary' : ''}`} />
+                        <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
+                          activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></span>
+                      </span>
+                    </div>
+                  ) : (
+                    <Link 
+                      to={link.href} 
+                      className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
+                        location.pathname === link.href ? 'text-primary' :
+                        isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                      }`}
+                    >
+                      {link.name}
+                      <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
+                        location.pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}></span>
+                    </Link>
+                  )}
+
+                  {/* Dropdown Menu */}
+                  {hasDropdown && link.dropdownItems && (
+                    <AnimatePresence>
+                      {activeDropdown === link.name && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-[12px] w-[260px] bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden"
+                        >
+                          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary to-primary-light"></div>
+                          {link.dropdownItems.map((item) => (
+                            <Link
+                              key={item.name}
+                              to={item.href}
+                              className="block px-5 py-3 text-[13px] font-bold text-secondary hover:text-primary hover:bg-primary/5 transition-all duration-200 border-l-2 border-transparent hover:border-primary"
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
 
           <div className="hidden lg:flex items-center gap-[20px]">
@@ -100,7 +197,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               onClick={toggleLanguage}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 transition-all hover:bg-primary hover:border-primary group ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
-              <Languages className={`w-4 h-4 ${isSticky ? 'text-primary group-hover:text-white' : 'text-primary-light'}`} />
+              {(i18n.language || 'en').startsWith('am') ? <UKFlag /> : <EthiopianFlag />}
               <span className="text-[12px] font-bold uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
             </button>
 
@@ -133,9 +230,10 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
              {/* Mobile Language Switcher */}
              <button 
               onClick={toggleLanguage}
-              className={`p-2 rounded-full border border-white/10 ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
-              <span className="text-[12px] font-black">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
+              {(i18n.language || 'en').startsWith('am') ? <UKFlag /> : <EthiopianFlag />}
+              <span className="text-[12px] font-black uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
             </button>
 
             <button 
@@ -158,19 +256,62 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             className="lg:hidden absolute top-[100%] left-0 w-full bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-2xl overflow-hidden"
           >
             <div className="container-custom py-[30px] flex flex-col gap-[10px]">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
-                  to={link.href} 
-                  className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center ${
-                    location.pathname === link.href ? 'text-primary bg-primary/5' : 'text-secondary'
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                  {link.hasDropdown && <ChevronDown className="w-[20px] h-[20px]" />}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const hasDropdown = link.hasDropdown && link.dropdownItems && link.dropdownItems.length > 0;
+                return (
+                  <div key={link.name} className="w-full">
+                    {hasDropdown ? (
+                      <div className="w-full">
+                        <button
+                          onClick={() => setIsMobileBranchesOpen(!isMobileBranchesOpen)}
+                          className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
+                            isMobileBranchesOpen ? 'text-primary bg-primary/5' : 'text-secondary'
+                          }`}
+                        >
+                          <span>{link.name}</span>
+                          <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${isMobileBranchesOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        <AnimatePresence>
+                          {isMobileBranchesOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: "easeInOut" }}
+                              className="overflow-hidden bg-gray-50/50 rounded-[10px] mt-1 ml-4"
+                            >
+                              {link.dropdownItems?.map((item) => (
+                                <Link 
+                                  key={item.name} 
+                                  to={item.href} 
+                                  className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
+                                  onClick={() => {
+                                    setIsOpen(false);
+                                    setIsMobileBranchesOpen(false);
+                                  }}
+                                >
+                                  {item.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link 
+                        to={link.href} 
+                        className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center ${
+                          location.pathname === link.href ? 'text-primary bg-primary/5' : 'text-secondary'
+                        }`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
               <div className="mt-[15px] px-[20px]">
                 <button 
                   onClick={() => {

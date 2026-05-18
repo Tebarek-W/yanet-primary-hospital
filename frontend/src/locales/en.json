@@ -7,7 +7,15 @@
     "blog": "Blog",
     "contact": "Contact",
     "appointment": "Appointment",
-    "pages": "Pages"
+    "pages": "Pages",
+    "branches": "Branches"
+  },
+  "branches_list": {
+    "bole": "Bole Branch (Addis Ababa)",
+    "hawassa": "Hawassa Branch (HQ)",
+    "adama": "Adama Branch",
+    "bahirdar": "Bahir Dar Branch",
+    "mekelle": "Mekelle Branch"
   },
   "hero": {
     "badge": "Excellence in Healthcare",
