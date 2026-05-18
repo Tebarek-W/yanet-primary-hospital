@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, User, Languages, Phone, Compass } from 'lucide-react';
-import { Search, Menu, X, ChevronDown, User, Phone } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, User, Languages, Phone, Compass } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { branchesData } from '../../data/branchesData';
