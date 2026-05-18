@@ -252,7 +252,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
       <VideoModal 
         isOpen={isVideoOpen} 
         onClose={() => setIsVideoOpen(false)} 
-        videoUrl="https://www.youtube.com/embed/3NRFpvIqEzI" 
+        videoUrl="https://www.youtube.com/embed/vJ8WzMfqSXc" 
       />
     </section>
   );

@@ -134,7 +134,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   {hasDropdown ? (
                     <div className="flex items-center gap-[4px] cursor-pointer">
                       <span 
-                        className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[4px] ${
+                        className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[4px] ${
                           activeDropdown === link.name ? 'text-primary' :
                           isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
                         }`}
@@ -149,7 +149,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   ) : (
                     <Link 
                       to={link.href} 
-                      className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[6px] ${
+                      className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${
                         location.pathname === link.href ? 'text-primary' :
                         isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
                       }`}
@@ -177,7 +177,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                             <Link
                               key={item.name}
                               to={item.href}
-                              className="block px-5 py-3 text-[13px] font-bold text-secondary hover:text-primary hover:bg-primary/5 transition-all duration-200 border-l-2 border-transparent hover:border-primary"
+                              className="block px-5 py-3 text-[12px] font-bold text-secondary hover:text-primary hover:bg-primary/5 transition-all duration-200 border-l-2 border-transparent hover:border-primary"
                             >
                               {item.name}
                             </Link>
@@ -204,7 +204,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             {/* Virtual Tour Link */}
             <Link
               to="/virtual-tour"
-              className={`flex items-center gap-1.5 font-bold text-[13px] px-4 py-2 rounded-full border transition-all duration-300 ${
+              className={`flex items-center gap-1.5 font-bold text-[12px] px-4 py-2 rounded-full border transition-all duration-300 ${
                 isSticky
                   ? 'border-primary/30 text-primary hover:bg-primary hover:text-white'
                   : 'border-white/20 text-white/90 hover:bg-white/10 hover:text-white'
@@ -218,7 +218,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onAppointmentClick}
-              className="btn-primary flex items-center gap-2 !py-[8px] !px-[22px] !text-[13px]"
+              className="btn-primary flex items-center gap-2 !py-[8px] !px-[22px] !text-[12px]"
             >
               <User className="w-4 h-4" />
               {t('nav.appointment')}
