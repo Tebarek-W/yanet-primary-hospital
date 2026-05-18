@@ -10,6 +10,7 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
+import BlogDetailPage from './pages/BlogDetailPage';
 import DoctorsPage from './pages/DoctorsPage';
 import DoctorDetail from './components/Doctors/DoctorDetail';
 import VirtualTourPage from './pages/VirtualTourPage';
@@ -37,6 +38,7 @@ function App() {
             <Route path="/services/:slug" element={<ServiceDetailPage onAppointmentClick={() => setIsAppointmentOpen(true)} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogDetailPage />} />
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/doctors/:id" element={<DoctorDetail />} />
             <Route path="/virtual-tour" element={<VirtualTourPage />} />
