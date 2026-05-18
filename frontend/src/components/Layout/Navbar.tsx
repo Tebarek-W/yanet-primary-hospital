@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, ChevronDown, User, Phone } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, User, Phone, ArrowRight, ChevronRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { branchesData } from '../../data/branchesData';
@@ -40,7 +40,9 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileBranchesOpen, setIsMobileBranchesOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const location = useLocation();
+  const isAmharic = i18n.language.startsWith('am');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,6 +63,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     name: string;
     href: string;
     hasDropdown?: boolean;
+    isMegaMenu?: boolean;
     dropdownItems?: { name: string; href: string }[];
   }
 
@@ -68,16 +71,31 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     { name: t('nav.home'), href: '/' },
     { name: t('nav.about'), href: '/about' },
     { 
+      name: t('nav.services'), 
+      href: '/services', 
+      hasDropdown: true,
+      isMegaMenu: true,
+      dropdownItems: [
+        { name: isAmharic ? 'ጠቅላላ ሕክምና' : 'General Medicine', href: '/services/general-medicine' },
+        { name: isAmharic ? 'የልብ ሕክምና' : 'Cardiology', href: '/services/cardiology' },
+        { name: isAmharic ? 'የህፃናት ሕክምና' : 'Pediatrics', href: '/services/pediatrics' },
+        { name: isAmharic ? 'ቀዶ ጥገና' : 'Surgery', href: '/services/surgery' },
+        { name: isAmharic ? 'ላቦራቶሪ' : 'Laboratory', href: '/services/laboratory' },
+        { name: isAmharic ? 'ፋርማሲ' : 'Pharmacy', href: '/services/pharmacy' },
+        { name: isAmharic ? 'አምቡላንስ አገልግሎት' : 'Ambulance Services', href: '/services/ambulance-services' },
+      ]
+    },
+    { 
       name: t('nav.branches'), 
       href: '#', 
       hasDropdown: true,
       dropdownItems: [
         ...branchesData.map((b) => ({
-          name: i18n.language.startsWith('am') ? b.nameAm : b.name,
+          name: isAmharic ? b.nameAm : b.name,
           href: `/branches/${b.slug}`
         })),
         {
-          name: i18n.language.startsWith('am') ? 'ሁሉም ቅርንጫፎች ይመልከቱ' : 'View All Branches',
+          name: isAmharic ? 'ሁሉም ቅርንጫፎች ይመልከቱ' : 'View All Branches',
           href: '/branches'
         }
       ]
@@ -95,6 +113,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
     }`}>
       <div className="container-custom">
         <div className="flex items-center justify-between">
+          
           {/* Logo */}
           <Link to="/">
             <motion.div 
@@ -115,7 +134,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             </motion.div>
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center gap-[30px]">
             {navLinks.map((link, i) => {
               const hasDropdown = link.hasDropdown && link.dropdownItems && link.dropdownItems.length > 0;
@@ -131,18 +150,34 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                 >
                   {hasDropdown ? (
                     <div className="flex items-center gap-[4px] cursor-pointer">
-                      <span 
-                        className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[4px] ${
-                          activeDropdown === link.name ? 'text-primary' :
-                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                        }`}
-                      >
-                        {link.name}
-                        <ChevronDown className={`w-[14px] h-[14px] transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-primary' : ''}`} />
-                        <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
-                          activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
-                        }`}></span>
-                      </span>
+                      {link.href === '#' ? (
+                        <span 
+                          className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[4px] ${
+                            activeDropdown === link.name ? 'text-primary' :
+                            isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                          }`}
+                        >
+                          {link.name}
+                          <ChevronDown className={`w-[14px] h-[14px] transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-primary' : ''}`} />
+                          <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
+                            activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
+                          }`}></span>
+                        </span>
+                      ) : (
+                        <Link 
+                          to={link.href}
+                          className={`font-bold text-[13px] transition-all duration-300 relative group flex items-center gap-[4px] ${
+                            activeDropdown === link.name ? 'text-primary' :
+                            isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                          }`}
+                        >
+                          {link.name}
+                          <ChevronDown className={`w-[14px] h-[14px] transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-primary' : ''}`} />
+                          <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
+                            activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
+                          }`}></span>
+                        </Link>
+                      )}
                     </div>
                   ) : (
                     <Link 
@@ -159,28 +194,116 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                     </Link>
                   )}
 
-                  {/* Dropdown Menu */}
+                  {/* Dropdown / Mega Menu Rendering */}
                   {hasDropdown && link.dropdownItems && (
                     <AnimatePresence>
                       {activeDropdown === link.name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-[12px] w-[260px] bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden"
-                        >
-                          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary to-primary-light"></div>
-                          {link.dropdownItems.map((item) => (
-                            <Link
-                              key={item.name}
-                              to={item.href}
-                              className="block px-5 py-3 text-[13px] font-bold text-secondary hover:text-primary hover:bg-primary/5 transition-all duration-200 border-l-2 border-transparent hover:border-primary"
-                            >
-                              {item.name}
-                            </Link>
-                          ))}
-                        </motion.div>
+                        link.isMegaMenu ? (
+                          /* 1. CREATIVE DOUBLE COLUMN MEGA MENU FOR CLINICAL PORTFOLIO */
+                          <motion.div
+                            initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className="absolute top-full left-0 mt-[12px] w-[500px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 z-[110] overflow-hidden"
+                          >
+                            <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-primary via-primary-light to-secondary"></div>
+                            
+                            <div className="grid grid-cols-2 gap-6">
+                              {/* Left Column: Medical Departments */}
+                              <div>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest block mb-3 pb-1 border-b border-gray-50">
+                                  {isAmharic ? 'የሕክምና ክፍሎች' : 'Clinical Depts'}
+                                </span>
+                                <div className="space-y-1.5">
+                                  {link.dropdownItems.slice(0, 4).map((item) => (
+                                    <Link
+                                      key={item.name}
+                                      to={item.href}
+                                      className="group flex items-center justify-between p-2 rounded-lg text-[12.5px] font-extrabold text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+                                      onClick={() => setActiveDropdown(null)}
+                                    >
+                                      <span>{item.name}</span>
+                                      <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
+                                    </Link>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Right Column: Support Services & Triage Link */}
+                              <div className="flex flex-col justify-between">
+                                <div>
+                                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-3 pb-1 border-b border-gray-50">
+                                    {isAmharic ? 'ደጋፊ አገልግሎቶች' : 'Support Services'}
+                                  </span>
+                                  <div className="space-y-1.5">
+                                    {link.dropdownItems.slice(4).map((item) => (
+                                      <Link
+                                        key={item.name}
+                                        to={item.href}
+                                        className="group flex items-center justify-between p-2 rounded-lg text-[12.5px] font-extrabold text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+                                        onClick={() => setActiveDropdown(null)}
+                                      >
+                                        <span>{item.name}</span>
+                                        <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-primary" />
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Glowing Triage Shortcut widget */}
+                                <div className="mt-4 p-3 rounded-xl bg-[#eef9fb] border border-primary/10 flex flex-col gap-1 shadow-inner">
+                                  <span className="text-[9px] font-black text-primary uppercase tracking-widest">
+                                    {isAmharic ? 'የቀጠሮ ረዳት' : 'Triage Dispatcher'}
+                                  </span>
+                                  <Link 
+                                    to="/services" 
+                                    className="text-[11.5px] font-black text-secondary hover:text-primary flex items-center gap-1 transition-colors"
+                                    onClick={() => setActiveDropdown(null)}
+                                  >
+                                    <span>⚡ {isAmharic ? 'የምልክት መመርመሪያ' : 'Symptom Triage Tool'}</span>
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Mega Menu Footer */}
+                            <div className="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between">
+                              <span className="text-[11px] text-gray-400 font-semibold">
+                                {isAmharic ? 'ያኔት ሁለንተናዊ የጤና እንክብካቤ' : 'Comprehensive Medical Care'}
+                              </span>
+                              <Link 
+                                to="/services" 
+                                className="text-[12.5px] font-black text-primary hover:text-secondary flex items-center gap-1 transition-colors"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                <span>{isAmharic ? 'ሁሉንም አገልግሎቶች ይመልከቱ' : 'View Clinical Catalogue'}</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </Link>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          /* 2. STANDARD PREMIUM DROPDOWN FOR REGIONAL BRANCHES */
+                          <motion.div
+                            initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                            className="absolute top-full left-1/2 -translate-x-1/2 mt-[12px] w-[260px] bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-[110] overflow-hidden"
+                          >
+                            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary to-primary-light"></div>
+                            {link.dropdownItems.map((item) => (
+                              <Link
+                                key={item.name}
+                                to={item.href}
+                                className="block px-5 py-3 text-[13px] font-bold text-secondary hover:text-primary hover:bg-primary/5 transition-all duration-200 border-l-2 border-transparent hover:border-primary"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                {item.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )
                       )}
                     </AnimatePresence>
                   )}
@@ -189,14 +312,14 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             })}
           </div>
 
+          {/* Action Toolbar: Language switch & appointments button */}
           <div className="hidden lg:flex items-center gap-[20px]">
-            {/* Language Switcher */}
             <button 
               onClick={toggleLanguage}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 transition-all hover:bg-primary hover:border-primary group ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
-              {(i18n.language || 'en').startsWith('am') ? <UKFlag /> : <EthiopianFlag />}
-              <span className="text-[12px] font-bold uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
+              {isAmharic ? <UKFlag /> : <EthiopianFlag />}
+              <span className="text-[12px] font-bold uppercase tracking-wider">{isAmharic ? 'EN' : 'AM'}</span>
             </button>
 
             <motion.button 
@@ -210,15 +333,14 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             </motion.button>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggles */}
           <div className="flex items-center gap-4 lg:hidden">
-             {/* Mobile Language Switcher */}
-             <button 
+            <button 
               onClick={toggleLanguage}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
-              {(i18n.language || 'en').startsWith('am') ? <UKFlag /> : <EthiopianFlag />}
-              <span className="text-[12px] font-black uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
+              {isAmharic ? <UKFlag /> : <EthiopianFlag />}
+              <span className="text-[12px] font-black uppercase tracking-wider">{isAmharic ? 'EN' : 'AM'}</span>
             </button>
 
             <button 
@@ -228,10 +350,11 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               {isOpen ? <X className="w-[28px] h-[28px]" /> : <Menu className="w-[28px] h-[28px]" />}
             </button>
           </div>
+
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Accordion Menu Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -246,43 +369,85 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                 return (
                   <div key={link.name} className="w-full">
                     {hasDropdown ? (
-                      <div className="w-full">
-                        <button
-                          onClick={() => setIsMobileBranchesOpen(!isMobileBranchesOpen)}
-                          className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
-                            isMobileBranchesOpen ? 'text-primary bg-primary/5' : 'text-secondary'
-                          }`}
-                        >
-                          <span>{link.name}</span>
-                          <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${isMobileBranchesOpen ? 'rotate-180' : ''}`} />
-                        </button>
-                        
-                        <AnimatePresence>
-                          {isMobileBranchesOpen && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.25, ease: "easeInOut" }}
-                              className="overflow-hidden bg-gray-50/50 rounded-[10px] mt-1 ml-4"
-                            >
-                              {link.dropdownItems?.map((item) => (
-                                <Link 
-                                  key={item.name} 
-                                  to={item.href} 
-                                  className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
-                                  onClick={() => {
-                                    setIsOpen(false);
-                                    setIsMobileBranchesOpen(false);
-                                  }}
-                                >
-                                  {item.name}
-                                </Link>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
+                      link.isMegaMenu ? (
+                        /* Services Mobile Accordion */
+                        <div className="w-full">
+                          <button
+                            onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
+                            className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
+                              isMobileServicesOpen ? 'text-primary bg-primary/5' : 'text-secondary'
+                            }`}
+                          >
+                            <span>{link.name}</span>
+                            <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${isMobileServicesOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {isMobileServicesOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: "easeInOut" }}
+                                className="overflow-hidden bg-gray-50/50 rounded-[10px] mt-1 ml-4"
+                              >
+                                {link.dropdownItems?.map((item) => (
+                                  <Link 
+                                    key={item.name} 
+                                    to={item.href} 
+                                    className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      setIsMobileServicesOpen(false);
+                                    }}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        /* Branches Mobile Accordion */
+                        <div className="w-full">
+                          <button
+                            onClick={() => setIsMobileBranchesOpen(!isMobileBranchesOpen)}
+                            className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
+                              isMobileBranchesOpen ? 'text-primary bg-primary/5' : 'text-secondary'
+                            }`}
+                          >
+                            <span>{link.name}</span>
+                            <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${isMobileBranchesOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {isMobileBranchesOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: "easeInOut" }}
+                                className="overflow-hidden bg-gray-50/50 rounded-[10px] mt-1 ml-4"
+                              >
+                                {link.dropdownItems?.map((item) => (
+                                  <Link 
+                                    key={item.name} 
+                                    to={item.href} 
+                                    className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      setIsMobileBranchesOpen(false);
+                                    }}
+                                  >
+                                    {item.name}
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      )
                     ) : (
                       <Link 
                         to={link.href} 
@@ -297,6 +462,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   </div>
                 );
               })}
+
+              {/* Mobile Primary Callout Buttons */}
               <div className="mt-[15px] px-[20px]">
                 <button 
                   onClick={() => {
@@ -327,4 +494,3 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 };
 
 export default Navbar;
-
