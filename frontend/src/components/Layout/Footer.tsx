@@ -10,6 +10,7 @@ const Footer = () => {
     { name: t('nav.services'), href: "/services" },
     { name: t('nav.doctors'), href: "/#doctors" },
     { name: t('nav.blog'), href: "/blog" },
+    { name: t('nav.careers', 'Careers'), href: "/careers" },
     { name: t('nav.contact'), href: "/contact" }
   ];
 

@@ -17,6 +17,50 @@ export interface ServiceDetails {
 
 export const servicesData: ServiceDetails[] = [
   {
+    slug: 'emergency-care',
+    category: 'department',
+    iconName: 'AlertCircle',
+    title: 'Emergency Care',
+    titleAm: 'የድንገተኛ አደጋ እንክብካቤ',
+    desc: '24/7 rapid response emergency medical services with fully equipped ambulances and trauma care specialists.',
+    descAm: 'የ24/7 ፈጣን የድንገተኛ አደጋ ህክምና አገልግሎቶች ሙሉ በሙሉ ከተሟሉ አምቡላንሶች እና የትራማ እንክብካቤ ስፔሻሊስቶች ጋር።',
+    fullDesc: 'The Emergency Care Department at Yanet Primary Hospital operates 24 hours a day, 7 days a week, providing immediate critical care for life-threatening conditions. Our facility is equipped with state-of-the-art resuscitation bays, trauma rooms, and a dedicated fleet of GPS-tracked advanced life support ambulances. Our specialized emergency physicians, trauma surgeons, and triage nurses are trained to deliver rapid, life-saving interventions with response times among the fastest in the city.',
+    fullDescAm: 'በያኔት የመጀመሪያ ደረጃ ሆስፒታል የድንገተኛ አደጋ እንክብካቤ ክፍል በሳምንት 7 ቀናት ለ24 ሰዓታት የሚሰራ ሲሆን፣ ለሕይወት አስጊ ለሆኑ ሁኔታዎች ፈጣን እና ወሳኝ እንክብካቤ ይሰጣል። የእኛ ተቋም ዘመናዊ የመነቃቂያ ክፍሎች፣ የትራማ ክፍሎች፣ እና የጂፒኤስ ክትትል ያላቸው የላቀ የህይወት ድጋፍ አምቡላንሶች አሉት። ልዩ የድንገተኛ አደጋ ሀኪሞቻችን፣ የትራማ ቀዶ ህክምና ባለሙያዎች እና ትራያጅ ነርሶች በከተማው ውስጥ በጣም ፈጣን በሆነ ምላሽ ህይወት አድን ጣልቃ ገብነቶችን ለመስጠት የሰለጠኑ ናቸው።',
+    specialty: 'Emergency',
+    treatments: [
+      'Advanced Trauma Life Support (ATLS)',
+      'Cardiac Arrest & Stroke Rapid Response Protocol',
+      'Acute Respiratory Failure Management',
+      'Emergency Minor & Major Surgical Interventions',
+      '24/7 Ambulance Dispatch & Paramedic Evacuation',
+      'Poisoning and Toxicity Management'
+    ],
+    treatmentsAm: [
+      'የላቀ የትራማ ህይወት ድጋፍ (ATLS)',
+      'የልብ ድካም እና ስትሮክ ፈጣን ምላሽ ፕሮቶኮል',
+      'አጣዳፊ የመተንፈሻ አካላት ውድቀት አያያዝ',
+      'የድንገተኛ አነስተኛ እና ዋና የቀዶ ጥገና ጣልቃ ገብነቶች',
+      'የ24/7 አምቡላንስ ስምሪት እና የፓራሜዲክ ማስወጣት',
+      'የመርዝ እና ቶክሲሲቲ አያያዝ'
+    ],
+    equipment: [
+      'Advanced Life Support (ALS) Ambulances',
+      'Defibrillators & Automated External Defibrillators (AED)',
+      'Portable Mechanical Ventilators',
+      'Continuous Vital Sign Monitors',
+      'Emergency Ultrasound (POCUS) & Mobile X-Ray',
+      'Fully Stocked Resuscitation Crash Carts'
+    ],
+    equipmentAm: [
+      'የላቀ የህይወት ድጋፍ (ALS) አምቡላንሶች',
+      'ዲፊብሪሌተሮች እና አውቶሜትድ ኤክስተርናል ዲፊብሪሌተሮች (AED)',
+      'ተንቀሳቃሽ ሜካኒካል ቬንቲሌተሮች',
+      'ተከታታይ የህይወት ምልክት መቆጣጠሪያዎች',
+      'የድንገተኛ አልትራሳውንድ (POCUS) እና ተንቀሳቃሽ ኤክስሬይ',
+      'ሙሉ በሙሉ የተሟሉ የመነቃቂያ ክራሽ ካርቶች'
+    ]
+  },
+  {
     slug: 'general-medicine',
     category: 'department',
     iconName: 'Stethoscope',

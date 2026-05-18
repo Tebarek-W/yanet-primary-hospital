@@ -40,7 +40,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isMobileBranchesOpen, setIsMobileBranchesOpen] = useState(false);
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -67,7 +67,17 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
   const navLinks: NavLink[] = [
     { name: t('nav.home'), href: '/' },
-    { name: t('nav.about'), href: '/about' },
+    { 
+      name: isAmharic ? 'ስለ ሆስፒታሉ' : 'About Us', 
+      href: '#',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: t('nav.about'), href: '/about' },
+        { name: t('nav.doctors'), href: '/doctors' },
+        { name: t('nav.careers', 'Careers'), href: '/careers' }
+      ]
+    },
+    { name: t('nav.services'), href: '/services' },
     { 
       name: t('nav.branches'), 
       href: '#', 
@@ -83,9 +93,15 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
         }
       ]
     },
-    { name: t('nav.services'), href: '/services' },
-    { name: t('nav.doctors'), href: '/doctors' },
-    { name: t('nav.blog'), href: '/blog' },
+    { 
+      name: isAmharic ? 'ሚዲያ እና መረጃ' : 'Media & News', 
+      href: '#',
+      hasDropdown: true,
+      dropdownItems: [
+        { name: t('nav.blog'), href: '/blog' },
+        { name: isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Virtual Tour', href: '/virtual-tour' }
+      ]
+    },
     { name: t('nav.contact'), href: '/contact' },
   ];
 
@@ -263,17 +279,17 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                     {hasDropdown ? (
                       <div className="w-full">
                         <button
-                          onClick={() => setIsMobileBranchesOpen(!isMobileBranchesOpen)}
+                          onClick={() => setActiveMobileDropdown(activeMobileDropdown === link.name ? null : link.name)}
                           className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
-                            isMobileBranchesOpen ? 'text-primary bg-primary/5' : 'text-secondary'
+                            activeMobileDropdown === link.name ? 'text-primary bg-primary/5' : 'text-secondary'
                           }`}
                         >
                           <span>{link.name}</span>
-                          <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${isMobileBranchesOpen ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${activeMobileDropdown === link.name ? 'rotate-180' : ''}`} />
                         </button>
                         
                         <AnimatePresence>
-                          {isMobileBranchesOpen && (
+                          {activeMobileDropdown === link.name && (
                             <motion.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: 'auto', opacity: 1 }}
@@ -288,7 +304,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                                   className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
                                   onClick={() => {
                                     setIsOpen(false);
-                                    setIsMobileBranchesOpen(false);
+                                    setActiveMobileDropdown(null);
                                   }}
                                 >
                                   {item.name}

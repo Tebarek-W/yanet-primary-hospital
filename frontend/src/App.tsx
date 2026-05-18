@@ -16,9 +16,11 @@ import DoctorDetail from './components/Doctors/DoctorDetail';
 import VirtualTourPage from './pages/VirtualTourPage';
 import BranchesPage from './pages/BranchesPage';
 import BranchDetailPage from './pages/BranchDetailPage';
+import CareersPage from './pages/CareersPage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 import ChatBot from './components/Chat/ChatBot';
+import EmergencySOS from './components/Emergency/EmergencySOS';
 
 function App() {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
@@ -46,6 +48,7 @@ function App() {
             <Route path="/doctors" element={<DoctorsPage />} />
             <Route path="/doctors/:id" element={<DoctorDetail />} />
             <Route path="/virtual-tour" element={<VirtualTourPage />} />
+            <Route path="/careers" element={<CareersPage />} />
           </Routes>
         </main>
 
@@ -56,6 +59,7 @@ function App() {
           onClose={() => setIsAppointmentOpen(false)} 
         />
         <ChatBot />
+        <EmergencySOS />
       </div>
     </>
   );
