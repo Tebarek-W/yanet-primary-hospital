@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, ChevronDown, User, Languages } from 'lucide-react';
+import { Search, Menu, X, ChevronDown, User, Languages, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 // i18n integration
@@ -167,6 +167,16 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                 >
                   {t('nav.appointment')}
                 </button>
+              </div>
+              <div className="mt-[10px] px-[20px]">
+                <a 
+                  href={`tel:${t('common.emergency_call').replace(/\s+/g, '')}`} 
+                  className="w-full py-[12px] bg-red-600 hover:bg-red-750 text-white font-bold rounded-[10px] flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 transition-all text-center"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Phone className="w-4 h-4 fill-white" />
+                  <span>{t('common.emergency')}: {t('common.emergency_call')}</span>
+                </a>
               </div>
             </div>
           </motion.div>

@@ -146,6 +146,26 @@
     "presence": "Global Presence",
     "experience": "Years Experience"
   },
+  "stats_live": {
+    "patients_served": "Patients Served",
+    "doctors_staff": "Doctors & Staff",
+    "branches": "Hospital Branches",
+    "live_indicator": "Live Real-Time Updates"
+  },
+  "campaign": {
+    "flu_badge": "Seasonal Protection",
+    "flu_title": "Protect Your Family this Flu Season",
+    "flu_desc": "Get your annual flu vaccine today. Fast, safe, and highly effective protection. Walk-ins are fully welcome, or book online to skip any queues.",
+    "flu_cta": "Book Vaccine Slot",
+    "wellness_badge": "Free Screening Campaign",
+    "wellness_title": "Annual General Wellness & Screening",
+    "wellness_desc": "Get a comprehensive body screening package. Includes custom consults with senior specialists. Early screening saves lives.",
+    "wellness_cta": "Get Screening Offer",
+    "maternal_badge": "Maternal Care Awareness",
+    "maternal_title": "Premium Prenatal & Postnatal Packages",
+    "maternal_desc": "Comprehensive pregnancy program guided by expert OB-GYN specialists. Dedicated support for mother and child before and after birth.",
+    "maternal_cta": "Connect with Specialists"
+  },
   "footer": {
     "desc": "Providing world-class medical services with modern technology and expert healthcare professionals. Your health is our priority.",
     "quick_links": "Quick Links",

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus } from 'lucide-react';
+import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import VideoModal from './VideoModal';
 
@@ -204,6 +204,20 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
                 </div>
                 <span className="text-white font-bold tracking-wider group-hover:text-primary transition-colors">{t('hero.cta_video')}</span>
               </div>
+
+              {/* Glowing Emergency Call Pill */}
+              <a 
+                href={`tel:${t('common.emergency_call').replace(/\s+/g, '')}`}
+                className="flex items-center gap-3 bg-red-500/15 border border-red-500/40 rounded-full px-5 py-2.5 hover:bg-red-600 hover:border-red-600 hover:scale-105 transition-all duration-300 backdrop-blur-md group/phone shadow-lg shadow-red-500/10 animate-pulse-soft"
+              >
+                <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-white shrink-0 group-hover/phone:bg-white group-hover/phone:text-red-600 transition-colors shadow-md">
+                  <Phone className="w-4 h-4 fill-white group-hover/phone:fill-red-600" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-red-300 group-hover/phone:text-red-100 font-extrabold text-[10px] uppercase tracking-wider leading-none mb-1">{t('common.emergency')}</span>
+                  <span className="text-white font-black text-[15px] leading-none">{t('common.emergency_call')}</span>
+                </div>
+              </a>
             </motion.div>
           </div>
 

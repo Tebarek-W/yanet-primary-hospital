@@ -18,6 +18,13 @@ const TopHeader = () => {
               <Mail className="w-[16px] h-[16px] text-primary" />
               <span>info@yanetprimaryhospital.com</span>
             </div>
+            <a 
+              href={`tel:${t('common.emergency_call').replace(/\s+/g, '')}`} 
+              className="flex items-center gap-[8px] text-red-600 hover:text-red-750 transition-colors text-[14px] font-extrabold group/header-phone animate-pulse-soft"
+            >
+              <Phone className="w-[16px] h-[16px] text-red-500 fill-red-500 group-hover/header-phone:animate-bounce-soft" />
+              <span>{t('common.emergency')}: <span className="underline">{t('common.emergency_call')}</span></span>
+            </a>
           </div>
 
           {/* Social Links */}

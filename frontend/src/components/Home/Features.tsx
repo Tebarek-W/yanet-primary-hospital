@@ -1,27 +1,61 @@
 import { motion } from 'framer-motion';
-import { Clock, UserCheck, ShieldCheck } from 'lucide-react';
+import { Calendar, UserCheck, PhoneCall, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-const Features = () => {
-  const { t } = useTranslation();
+interface FeaturesProps {
+  onAppointmentClick: () => void;
+}
 
-  const features = [
+const Features = ({ onAppointmentClick }: FeaturesProps) => {
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const isAmharic = i18n.language?.startsWith('am');
+
+  const ctas = [
     {
-      icon: <Clock className="w-8 h-8 text-primary" />,
-      title: t('features.opening.title'),
-      desc: t('features.opening.desc'),
+      icon: <Calendar className="w-8 h-8 text-primary" />,
+      title: isAmharic ? 'ቀጠሮ ያስይዙ' : 'Book Appointment',
+      desc: isAmharic 
+        ? 'ከአጠቃላይ እና ስፔሻሊስት ዶክተሮቻችን ጋር ቀጠሮዎን በመስመር ላይ በቀላሉ ያስይዙ።' 
+        : 'Schedule an online consultation or in-person visit with our medical team.',
+      btnText: isAmharic ? 'ቀጠሮ ይያዙ' : 'Book Now',
+      action: onAppointmentClick,
+      colorClass: 'bg-[#E0F7F7]/90 border-primary/10 hover:bg-primary/15',
+      textColorClass: 'text-secondary',
+      descColorClass: 'text-body',
+      iconContainerClass: 'bg-white',
+      btnClass: 'text-primary font-bold inline-flex items-center gap-1.5 text-[13px]',
       delay: 0.1
     },
     {
       icon: <UserCheck className="w-8 h-8 text-primary" />,
-      title: t('features.expert.title'),
-      desc: t('features.expert.desc'),
+      title: isAmharic ? 'ዶክተር ያግኙ' : 'Find a Doctor',
+      desc: isAmharic 
+        ? 'የእኛን የልዩ ባለሙያ ዶክተሮች ዝርዝር ይመልከቱ እና ለእርስዎ የሚስማማውን ባለሙያ ይምረጡ።' 
+        : 'Meet our highly qualified team of specialized doctors and choose the right expert.',
+      btnText: isAmharic ? 'ዶክተሮችን ይመልከቱ' : 'Meet Specialists',
+      action: () => navigate('/doctors'),
+      colorClass: 'bg-[#E0F7F7]/90 border-primary/10 hover:bg-primary/15',
+      textColorClass: 'text-secondary',
+      descColorClass: 'text-body',
+      iconContainerClass: 'bg-white',
+      btnClass: 'text-primary font-bold inline-flex items-center gap-1.5 text-[13px]',
       delay: 0.3
     },
     {
-      icon: <ShieldCheck className="w-8 h-8 text-primary" />,
-      title: t('features.certified.title'),
-      desc: t('features.certified.desc'),
+      icon: <PhoneCall className="w-8 h-8 text-red-500 animate-pulse-soft" />,
+      title: isAmharic ? 'ድንገተኛ አገልግሎቶች' : 'Emergency Services',
+      desc: isAmharic 
+        ? 'በ24/7 የድንገተኛ አደጋ እና የመጀመሪያ ደረጃ የህክምና እርዳታ ቡድን በፍጥነት ይድረሱ።' 
+        : '24/7 immediate trauma care and critical response hotline. Reach our unit instantly.',
+      btnText: t('common.emergency_call'),
+      action: () => window.open(`tel:${t('common.emergency_call').replace(/\s+/g, '')}`),
+      colorClass: 'bg-red-50/90 border-red-200/50 hover:bg-red-100/70',
+      textColorClass: 'text-red-950',
+      descColorClass: 'text-red-900/70',
+      iconContainerClass: 'bg-white border border-red-100 shadow-sm',
+      btnClass: 'text-red-600 font-black inline-flex items-center gap-1.5 text-[13px] animate-pulse-soft',
       delay: 0.5
     }
   ];
@@ -30,25 +64,32 @@ const Features = () => {
     <section className="relative z-20 mt-[-150px]">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[25px]">
-          {features.map((item, index) => (
+          {ctas.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: item.delay }}
-              className="bg-[#E0F7F7]/90 backdrop-blur-md p-[30px] rounded-[15px] shadow-[0_10px_30px_rgba(0,184,184,0.1)] border border-primary/10 flex items-center gap-[20px] hover:bg-primary/10 transition-all duration-300 group"
+              onClick={item.action}
+              className={`backdrop-blur-md p-[30px] rounded-[15px] border flex items-center gap-[20px] transition-all duration-300 cursor-pointer group ${item.colorClass}`}
             >
-              <div className="bg-white p-[12px] rounded-full shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+              <div className={`p-[12px] rounded-full shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-300 ${item.iconContainerClass}`}>
                 {item.icon}
               </div>
-              <div>
-                <h4 className="text-[18px] font-bold text-secondary mb-[4px]">
+              <div className="flex-grow">
+                <h4 className={`text-[18px] font-bold mb-[4px] transition-colors duration-300 ${item.textColorClass}`}>
                   {item.title}
                 </h4>
-                <p className="text-body text-[14px]">
+                <p className={`text-[14px] leading-relaxed mb-[6px] transition-colors duration-300 ${item.descColorClass}`}>
                   {item.desc}
                 </p>
+                <div className="overflow-hidden">
+                  <span className={`transition-all duration-300 ${item.btnClass}`}>
+                    {item.btnText}
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </span>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -59,4 +100,3 @@ const Features = () => {
 };
 
 export default Features;
-
