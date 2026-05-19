@@ -13,11 +13,19 @@ const Features = ({ onAppointmentClick, cmsData }: FeaturesProps) => {
   const navigate = useNavigate();
   const isAmharic = i18n.language?.startsWith('am');
 
+  const showCmsBookingTitle = cmsData?.qa_booking_title && cmsData.qa_booking_title !== "Book Appointment";
+  const showCmsBookingDesc = cmsData?.qa_booking_desc && cmsData.qa_booking_desc !== "Easily schedule your visit online.";
+  const showCmsHoursTitle = cmsData?.qa_hours_title && cmsData.qa_hours_title !== "Opening Hours";
+  const showCmsHoursDesc = cmsData?.qa_hours_desc && cmsData.qa_hours_desc !== "Open 24 hours every day, including holidays.";
+  const showCmsEmergencyTitle = cmsData?.qa_emergency_title && cmsData.qa_emergency_title !== "Emergency Cases";
+  const showCmsEmergencyDesc = cmsData?.qa_emergency_desc && cmsData.qa_emergency_desc !== "We are available 24/7 for emergency medical services.";
+  const showCmsEmergencyPhone = cmsData?.qa_emergency_phone && cmsData.qa_emergency_phone !== "8181";
+
   const ctas = [
     {
       icon: <Calendar className="w-8 h-8 text-primary" />,
-      title: cmsData?.qa_booking_title || (isAmharic ? 'ቀጠሮ ያስይዙ' : 'Book Appointment'),
-      desc: cmsData?.qa_booking_desc || (isAmharic 
+      title: showCmsBookingTitle ? cmsData.qa_booking_title : (isAmharic ? 'ቀጠሮ ያስይዙ' : 'Book Appointment'),
+      desc: showCmsBookingDesc ? cmsData.qa_booking_desc : (isAmharic 
         ? 'ከአጠቃላይ እና ስፔሻሊስት ዶክተሮቻችን ጋር ቀጠሮዎን በመስመር ላይ በቀላሉ ያስይዙ።' 
         : 'Schedule an online consultation or in-person visit with our medical team.'),
       btnText: isAmharic ? 'ቀጠሮ ይያዙ' : 'Book Now',
@@ -31,8 +39,8 @@ const Features = ({ onAppointmentClick, cmsData }: FeaturesProps) => {
     },
     {
       icon: <UserCheck className="w-8 h-8 text-primary" />,
-      title: cmsData?.qa_hours_title || (isAmharic ? 'ዶክተር ያግኙ' : 'Find a Doctor'),
-      desc: cmsData?.qa_hours_desc || (isAmharic 
+      title: showCmsHoursTitle ? cmsData.qa_hours_title : (isAmharic ? 'ዶክተር ያግኙ' : 'Find a Doctor'),
+      desc: showCmsHoursDesc ? cmsData.qa_hours_desc : (isAmharic 
         ? 'የእኛን የልዩ ባለሙያ ዶክተሮች ዝርዝር ይመልከቱ እና ለእርስዎ የሚስማማውን ባለሙያ ይምረጡ።' 
         : 'Meet our highly qualified team of specialized doctors and choose the right expert.'),
       btnText: isAmharic ? 'ዶክተሮችን ይመልከቱ' : 'Meet Specialists',
@@ -46,12 +54,12 @@ const Features = ({ onAppointmentClick, cmsData }: FeaturesProps) => {
     },
     {
       icon: <PhoneCall className="w-8 h-8 text-red-500 animate-pulse-soft" />,
-      title: cmsData?.qa_emergency_title || (isAmharic ? 'ድንገተኛ አገልግሎቶች' : 'Emergency Services'),
-      desc: cmsData?.qa_emergency_desc || (isAmharic 
+      title: showCmsEmergencyTitle ? cmsData.qa_emergency_title : (isAmharic ? 'ድንገተኛ አገልግሎቶች' : 'Emergency Services'),
+      desc: showCmsEmergencyDesc ? cmsData.qa_emergency_desc : (isAmharic 
         ? 'በ24/7 የድንገተኛ አደጋ እና የመጀመሪያ ደረጃ የህክምና እርዳታ ቡድን በፍጥነት ይድረሱ።' 
         : '24/7 immediate trauma care and critical response hotline. Reach our unit instantly.'),
-      btnText: cmsData?.qa_emergency_phone || t('common.emergency_call'),
-      action: () => window.open(`tel:${(cmsData?.qa_emergency_phone || t('common.emergency_call')).replace(/\s+/g, '')}`),
+      btnText: showCmsEmergencyPhone ? cmsData.qa_emergency_phone : t('common.emergency_call'),
+      action: () => window.open(`tel:${(showCmsEmergencyPhone ? cmsData.qa_emergency_phone : t('common.emergency_call')).replace(/\s+/g, '')}`),
       colorClass: 'bg-red-50/90 border-red-200/50 hover:bg-red-100/70',
       textColorClass: 'text-red-950',
       descColorClass: 'text-red-900/70',

@@ -59,18 +59,30 @@ const Testimonials = ({ cmsData }: TestimonialsProps) => {
     }
   ];
 
+  const showCmsTitle = cmsData?.testi_title && cmsData.testi_title !== "Patient Stories";
+  const showCmsSubtitle = cmsData?.testi_subtitle && cmsData.testi_subtitle !== "What our patients say about us";
+
   let testimonials = defaultTestimonials;
   if (cmsData?.testi_data) {
     try {
       const parsed = JSON.parse(cmsData.testi_data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        testimonials = parsed.map((item: any, index: number) => ({
-          name: item.name || `User ${index + 1}`,
-          role: item.role || 'Patient',
-          text: item.text || '',
-          stars: item.stars || 5,
-          image: item.image || `https://images.unsplash.com/photo-${index === 0 ? '1494790108377-be9c29b29330' : index === 1 ? '1507003211169-0a1dd7228f2d' : '1500648767791-00dcc994a43e'}?q=80&w=150&auto=format&fit=crop`
-        }));
+        // check if it's the default seed (1 or 2 items) to preserve the fully populated 3D rotating planet layout
+        const isSeed = parsed.length <= 2 || (
+          parsed.length === 2 && 
+          parsed[0].name === "Sarah J." && 
+          parsed[1].name === "Dr. Thomas B."
+        );
+        
+        if (!isSeed) {
+          testimonials = parsed.map((item: any, index: number) => ({
+            name: item.name || `User ${index + 1}`,
+            role: item.role || 'Patient',
+            text: item.text || '',
+            stars: item.stars || 5,
+            image: item.image || `https://images.unsplash.com/photo-${index === 0 ? '1494790108377-be9c29b29330' : index === 1 ? '1507003211169-0a1dd7228f2d' : '1500648767791-00dcc994a43e'}?q=80&w=150&auto=format&fit=crop`
+          }));
+        }
       }
     } catch (e) {
       console.warn("Failed to parse testimonials data from CMS:", e);
@@ -123,10 +135,10 @@ const Testimonials = ({ cmsData }: TestimonialsProps) => {
         <div className="section-title text-center max-w-[700px] mx-auto mb-[60px]">
           <span className="text-primary font-bold uppercase tracking-[3px] text-[13px]">{t('testimonials.badge')}</span>
           <h2 className="text-secondary text-[30px] md:text-[42px] font-extrabold leading-tight mt-2">
-            {cmsData?.testi_title || t('testimonials.title')}
+            {showCmsTitle ? cmsData.testi_title : t('testimonials.title')}
           </h2>
           <p className="text-body text-[16px] mt-4 leading-relaxed">
-            {cmsData?.testi_subtitle || t('testimonials.desc')}
+            {showCmsSubtitle ? cmsData.testi_subtitle : t('testimonials.desc')}
           </p>
         </div>
 

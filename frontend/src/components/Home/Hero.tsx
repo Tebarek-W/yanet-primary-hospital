@@ -125,6 +125,11 @@ const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
   const { t } = useTranslation();
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
+  const showCmsTitle = cmsData?.hero_title && cmsData.hero_title !== "Advanced Healthcare Made Personal";
+  const showCmsSubtitle = cmsData?.hero_subtitle && cmsData.hero_subtitle !== "Providing world-class medical care with compassion and excellence.";
+  const showCmsBgImage = cmsData?.hero_bg_image && cmsData.hero_bg_image !== "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d";
+  const showCmsCta = cmsData?.hero_cta_text && cmsData.hero_cta_text !== "Book Appointment";
+
   return (
     <section className="relative h-[700px] lg:h-[800px] flex items-start pt-[100px] lg:pt-[120px] overflow-hidden bg-secondary">
       {/* Dynamic Background with improved overlay */}
@@ -134,7 +139,7 @@ const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
         transition={{ duration: 2, ease: "easeOut" }}
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url("${cmsData?.hero_bg_image || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop'}")`,
+          backgroundImage: `url("${showCmsBgImage ? cmsData.hero_bg_image : 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop'}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -170,7 +175,7 @@ const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
               transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
               className="text-white mb-[20px] leading-[1.1] font-extrabold tracking-tighter !text-[30px] md:!text-[42px] lg:!text-[52px]"
             >
-              {cmsData?.hero_title ? (
+              {showCmsTitle ? (
                 cmsData.hero_title
               ) : (
                 <>
@@ -185,7 +190,7 @@ const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-[14px] md:text-[16px] mb-[35px] text-white/80 leading-[1.6] font-light max-w-[550px]"
             >
-              {cmsData?.hero_subtitle || t('hero.desc')}
+              {showCmsSubtitle ? cmsData.hero_subtitle : t('hero.desc')}
             </motion.p>
 
             <motion.div 
@@ -198,7 +203,7 @@ const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
                 onClick={onAppointmentClick}
                 className="btn-primary flex items-center gap-3 group shadow-xl shadow-primary/20"
               >
-                {cmsData?.hero_cta_text || t('hero.cta_appointment')}
+                {showCmsCta ? cmsData.hero_cta_text : t('hero.cta_appointment')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               

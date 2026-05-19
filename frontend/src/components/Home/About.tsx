@@ -19,6 +19,12 @@ const About = ({ cmsData }: AboutProps) => {
     t('about.points.blood')
   ];
 
+  const showCmsTitle = cmsData?.about_preview_title && cmsData.about_preview_title !== "About Yanet Hospital";
+  const showCmsDesc = cmsData?.about_preview_desc && 
+    cmsData.about_preview_desc !== "Yanet Primary Hospital is a state-of-the-art facility offering comprehensive healthcare services with exceptional customer care, specialized medical units, and diagnostic imaging." &&
+    cmsData.about_preview_desc !== "Yanet Primary Hospital is a state-of-the-art facility...";
+  const showCmsImage = cmsData?.about_preview_image && cmsData.about_preview_image !== "https://images.unsplash.com/photo-1538108149393-cebb60368140";
+
   return (
     <section id="about" className="pb-[60px] pt-[30px] lg:pt-[50px] overflow-hidden bg-white relative">
       {/* Decorative Background Elements */}
@@ -37,7 +43,7 @@ const About = ({ cmsData }: AboutProps) => {
             {/* Main Image */}
             <div className="relative z-10 rounded-[30px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] group">
               <img 
-                src={cmsData?.about_preview_image || "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop"} 
+                src={showCmsImage ? cmsData.about_preview_image : "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop"} 
                 alt="About Medical" 
                 className="w-full h-auto transition-transform duration-1000 group-hover:scale-110"
               />
@@ -90,7 +96,7 @@ const About = ({ cmsData }: AboutProps) => {
                 {t('common.since', { year: '2020' })}
               </span>
               <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">
-                {cmsData?.about_preview_title ? (
+                {showCmsTitle ? (
                   cmsData.about_preview_title
                 ) : (
                   <>
@@ -99,7 +105,7 @@ const About = ({ cmsData }: AboutProps) => {
                 )}
               </h2>
               <p className="text-body text-[15px] md:text-[16px] leading-relaxed opacity-90">
-                {cmsData?.about_preview_desc || t('about.desc')}
+                {showCmsDesc ? cmsData.about_preview_desc : t('about.desc')}
               </p>
             </div>
 
