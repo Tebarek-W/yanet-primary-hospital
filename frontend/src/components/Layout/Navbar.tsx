@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Menu, X, ChevronDown, User, Languages, Phone, Compass } from 'lucide-react';
+import { Menu, X, ChevronDown, User, Phone, Compass, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { branchesData } from '../../data/branchesData';
+import { useAuth } from '../../context/AuthContext';
+import AuthModal from '../Auth/AuthModal';
+
 
 // Flag SVGs for language switcher
 const EthiopianFlag = () => (
@@ -36,11 +39,14 @@ interface NavbarProps {
 
 const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const { t, i18n } = useTranslation();
+  const { isAuthenticated, logout } = useAuth();
   const isAmharic = (i18n.language || 'en').startsWith('am');
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'signup'>('login');
   const location = useLocation();
 
   useEffect(() => {
@@ -67,8 +73,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
   const navLinks: NavLink[] = [
     { name: t('nav.home'), href: '/' },
-    { 
-      name: isAmharic ? 'ስለ ሆስፒታሉ' : 'About Us', 
+    {
+      name: isAmharic ? 'ስለ ሆስፒታሉ' : 'About Us',
       href: '#',
       hasDropdown: true,
       dropdownItems: [
@@ -78,9 +84,9 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
       ]
     },
     { name: t('nav.services'), href: '/services' },
-    { 
-      name: t('nav.branches'), 
-      href: '#', 
+    {
+      name: t('nav.branches'),
+      href: '#',
       hasDropdown: true,
       dropdownItems: [
         ...branchesData.map((b) => ({
@@ -93,8 +99,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
         }
       ]
     },
-    { 
-      name: isAmharic ? 'ሚዲያ እና መረጃ' : 'Media & News', 
+    {
+      name: isAmharic ? 'ሚዲያ እና መረጃ' : 'Media & News',
       href: '#',
       hasDropdown: true,
       dropdownItems: [
@@ -106,11 +112,10 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   ];
 
   return (
-    <nav className={`w-full transition-all duration-500 z-[100] ${
-      isSticky 
-        ? 'sticky-header' 
+    <nav className={`w-full transition-all duration-500 z-[100] ${isSticky
+        ? 'sticky-header'
         : 'bg-transparent py-[25px] border-b border-white/5'
-    }`}>
+      }`}>
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -149,31 +154,27 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                 >
                   {hasDropdown ? (
                     <div className="flex items-center gap-[4px] cursor-pointer">
-                      <span 
-                        className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[4px] ${
-                          activeDropdown === link.name ? 'text-primary' :
-                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                        }`}
+                      <span
+                        className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[4px] ${activeDropdown === link.name ? 'text-primary' :
+                            isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                          }`}
                       >
                         {link.name}
                         <ChevronDown className={`w-[14px] h-[14px] transition-transform duration-300 ${activeDropdown === link.name ? 'rotate-180 text-primary' : ''}`} />
-                        <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
-                          activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
-                        }`}></span>
+                        <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${activeDropdown === link.name ? 'w-full' : 'w-0 group-hover:w-full'
+                          }`}></span>
                       </span>
                     </div>
                   ) : (
-                    <Link 
-                      to={link.href} 
-                      className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${
-                        location.pathname === link.href ? 'text-primary' :
-                        isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                      }`}
+                    <Link
+                      to={link.href}
+                      className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${location.pathname === link.href ? 'text-primary' :
+                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                        }`}
                     >
                       {link.name}
-                      <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${
-                        location.pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
-                      }`}></span>
+                      <span className={`absolute bottom-[-6px] left-0 h-[2px] bg-primary transition-all duration-300 ${location.pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}></span>
                     </Link>
                   )}
 
@@ -209,7 +210,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
           <div className="hidden lg:flex items-center gap-[20px]">
             {/* Language Switcher */}
-            <button 
+            <button
               onClick={toggleLanguage}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 transition-all hover:bg-primary hover:border-primary group ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
@@ -220,17 +221,48 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             {/* Virtual Tour Link */}
             <Link
               to="/virtual-tour"
-              className={`flex items-center gap-1.5 font-bold text-[12px] px-4 py-2 rounded-full border transition-all duration-300 ${
-                isSticky
+              className={`flex items-center gap-1.5 font-bold text-[12px] px-4 py-2 rounded-full border transition-all duration-300 ${isSticky
                   ? 'border-primary/30 text-primary hover:bg-primary hover:text-white'
                   : 'border-white/20 text-white/90 hover:bg-white/10 hover:text-white'
-              }`}
+                }`}
             >
               <Compass className="w-3.5 h-3.5" />
               {isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Tour'}
             </Link>
 
-            <motion.button 
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/portal"
+                  className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                    }`}
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Patient Portal
+                </Link>
+                <button
+                  onClick={logout}
+                  className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-red-650 hover:text-red-705' : 'text-red-400 hover:text-red-500'
+                    }`}
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+
+                <button
+                  onClick={() => { setAuthModalTab('signup'); setIsAuthModalOpen(true); }}
+                  className={`font-bold text-[12px] transition-all ${isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                    }`}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
+
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onAppointmentClick}
@@ -243,8 +275,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
           {/* Mobile Menu Toggle */}
           <div className="flex items-center gap-4 lg:hidden">
-             {/* Mobile Language Switcher */}
-             <button 
+            {/* Mobile Language Switcher */}
+            <button
               onClick={toggleLanguage}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 ${isSticky ? 'text-secondary border-gray-200' : 'text-white'}`}
             >
@@ -252,7 +284,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               <span className="text-[12px] font-black uppercase tracking-wider">{(i18n.language || 'en').startsWith('am') ? 'EN' : 'AM'}</span>
             </button>
 
-            <button 
+            <button
               className={`p-[10px] rounded-full hover:bg-white/10 transition-colors ${isSticky ? 'text-secondary' : 'text-white'}`}
               onClick={() => setIsOpen(!isOpen)}
             >
@@ -280,14 +312,13 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                       <div className="w-full">
                         <button
                           onClick={() => setActiveMobileDropdown(activeMobileDropdown === link.name ? null : link.name)}
-                          className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${
-                            activeMobileDropdown === link.name ? 'text-primary bg-primary/5' : 'text-secondary'
-                          }`}
+                          className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center w-full text-left ${activeMobileDropdown === link.name ? 'text-primary bg-primary/5' : 'text-secondary'
+                            }`}
                         >
                           <span>{link.name}</span>
                           <ChevronDown className={`w-[20px] h-[20px] transition-transform duration-300 ${activeMobileDropdown === link.name ? 'rotate-180' : ''}`} />
                         </button>
-                        
+
                         <AnimatePresence>
                           {activeMobileDropdown === link.name && (
                             <motion.div
@@ -298,9 +329,9 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                               className="overflow-hidden bg-gray-50/50 rounded-[10px] mt-1 ml-4"
                             >
                               {link.dropdownItems?.map((item) => (
-                                <Link 
-                                  key={item.name} 
-                                  to={item.href} 
+                                <Link
+                                  key={item.name}
+                                  to={item.href}
                                   className="font-medium text-[15px] py-[10px] px-[20px] block hover:text-primary transition-colors text-secondary/85"
                                   onClick={() => {
                                     setIsOpen(false);
@@ -315,11 +346,10 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                         </AnimatePresence>
                       </div>
                     ) : (
-                      <Link 
-                        to={link.href} 
-                        className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center ${
-                          location.pathname === link.href ? 'text-primary bg-primary/5' : 'text-secondary'
-                        }`}
+                      <Link
+                        to={link.href}
+                        className={`font-semibold text-[18px] py-[12px] px-[20px] rounded-[10px] hover:bg-primary/5 hover:text-primary transition-all flex justify-between items-center ${location.pathname === link.href ? 'text-primary bg-primary/5' : 'text-secondary'
+                          }`}
                         onClick={() => setIsOpen(false)}
                       >
                         {link.name}
@@ -328,8 +358,8 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   </div>
                 );
               })}
-              <div className="mt-[15px] px-[20px]">
-                <button 
+              <div className="mt-[15px] px-[20px] flex flex-col gap-3">
+                <button
                   onClick={() => {
                     setIsOpen(false);
                     onAppointmentClick();
@@ -338,10 +368,56 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                 >
                   {t('nav.appointment')}
                 </button>
+
+                {isAuthenticated ? (
+                  <div className="flex gap-2 w-full">
+                    <Link
+                      to="/portal"
+                      className="flex-1 py-[12px] bg-secondary hover:bg-secondary-dark text-white font-bold rounded-[10px] flex items-center justify-center gap-2 text-center text-sm shadow-md"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      Portal
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        logout();
+                      }}
+                      className="flex-1 py-[12px] border border-red-200 text-red-600 font-bold rounded-[10px] flex items-center justify-center gap-2 text-sm transition-all hover:bg-red-50"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2 w-full">
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        setAuthModalTab('login');
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="flex-1 py-[12px] border border-gray-200 text-secondary font-bold rounded-[10px] text-sm text-center"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        setAuthModalTab('signup');
+                        setIsAuthModalOpen(true);
+                      }}
+                      className="flex-1 py-[12px] bg-secondary text-white font-bold rounded-[10px] text-sm text-center shadow-md"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="mt-[10px] px-[20px]">
-                <a 
-                  href={`tel:${t('common.emergency_call').replace(/\s+/g, '')}`} 
+                <a
+                  href={`tel:${t('common.emergency_call').replace(/\s+/g, '')}`}
                   className="w-full py-[12px] bg-red-600 hover:bg-red-750 text-white font-bold rounded-[10px] flex items-center justify-center gap-2 shadow-lg shadow-red-600/20 transition-all text-center"
                   onClick={() => setIsOpen(false)}
                 >
@@ -353,6 +429,12 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialTab={authModalTab}
+      />
     </nav>
   );
 };
