@@ -3,7 +3,11 @@ import { Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const About = () => {
+interface AboutProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const About = ({ cmsData }: AboutProps) => {
   const { t } = useTranslation();
   
   const points = [
@@ -33,7 +37,7 @@ const About = () => {
             {/* Main Image */}
             <div className="relative z-10 rounded-[30px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] group">
               <img 
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop" 
+                src={cmsData?.about_preview_image || "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop"} 
                 alt="About Medical" 
                 className="w-full h-auto transition-transform duration-1000 group-hover:scale-110"
               />
@@ -85,9 +89,17 @@ const About = () => {
               <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-[13px] font-bold uppercase tracking-wider mb-4 inline-block">
                 {t('common.since', { year: '2020' })}
               </span>
-              <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">{t('about.title_main')} <span className="text-primary italic">{t('about.title_span')}</span></h2>
+              <h2 className="text-secondary text-[28px] md:text-[40px] leading-[1.2] mb-6">
+                {cmsData?.about_preview_title ? (
+                  cmsData.about_preview_title
+                ) : (
+                  <>
+                    {t('about.title_main')} <span className="text-primary italic">{t('about.title_span')}</span>
+                  </>
+                )}
+              </h2>
               <p className="text-body text-[15px] md:text-[16px] leading-relaxed opacity-90">
-                {t('about.desc')}
+                {cmsData?.about_preview_desc || t('about.desc')}
               </p>
             </div>
 

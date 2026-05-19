@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface FeaturesProps {
   onAppointmentClick: () => void;
+  cmsData?: Record<string, any> | null;
 }
 
-const Features = ({ onAppointmentClick }: FeaturesProps) => {
+const Features = ({ onAppointmentClick, cmsData }: FeaturesProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const isAmharic = i18n.language?.startsWith('am');
@@ -15,10 +16,10 @@ const Features = ({ onAppointmentClick }: FeaturesProps) => {
   const ctas = [
     {
       icon: <Calendar className="w-8 h-8 text-primary" />,
-      title: isAmharic ? 'ቀጠሮ ያስይዙ' : 'Book Appointment',
-      desc: isAmharic 
+      title: cmsData?.qa_booking_title || (isAmharic ? 'ቀጠሮ ያስይዙ' : 'Book Appointment'),
+      desc: cmsData?.qa_booking_desc || (isAmharic 
         ? 'ከአጠቃላይ እና ስፔሻሊስት ዶክተሮቻችን ጋር ቀጠሮዎን በመስመር ላይ በቀላሉ ያስይዙ።' 
-        : 'Schedule an online consultation or in-person visit with our medical team.',
+        : 'Schedule an online consultation or in-person visit with our medical team.'),
       btnText: isAmharic ? 'ቀጠሮ ይያዙ' : 'Book Now',
       action: onAppointmentClick,
       colorClass: 'bg-[#E0F7F7]/90 border-primary/10 hover:bg-primary/15',
@@ -30,10 +31,10 @@ const Features = ({ onAppointmentClick }: FeaturesProps) => {
     },
     {
       icon: <UserCheck className="w-8 h-8 text-primary" />,
-      title: isAmharic ? 'ዶክተር ያግኙ' : 'Find a Doctor',
-      desc: isAmharic 
+      title: cmsData?.qa_hours_title || (isAmharic ? 'ዶክተር ያግኙ' : 'Find a Doctor'),
+      desc: cmsData?.qa_hours_desc || (isAmharic 
         ? 'የእኛን የልዩ ባለሙያ ዶክተሮች ዝርዝር ይመልከቱ እና ለእርስዎ የሚስማማውን ባለሙያ ይምረጡ።' 
-        : 'Meet our highly qualified team of specialized doctors and choose the right expert.',
+        : 'Meet our highly qualified team of specialized doctors and choose the right expert.'),
       btnText: isAmharic ? 'ዶክተሮችን ይመልከቱ' : 'Meet Specialists',
       action: () => navigate('/doctors'),
       colorClass: 'bg-[#E0F7F7]/90 border-primary/10 hover:bg-primary/15',
@@ -45,12 +46,12 @@ const Features = ({ onAppointmentClick }: FeaturesProps) => {
     },
     {
       icon: <PhoneCall className="w-8 h-8 text-red-500 animate-pulse-soft" />,
-      title: isAmharic ? 'ድንገተኛ አገልግሎቶች' : 'Emergency Services',
-      desc: isAmharic 
+      title: cmsData?.qa_emergency_title || (isAmharic ? 'ድንገተኛ አገልግሎቶች' : 'Emergency Services'),
+      desc: cmsData?.qa_emergency_desc || (isAmharic 
         ? 'በ24/7 የድንገተኛ አደጋ እና የመጀመሪያ ደረጃ የህክምና እርዳታ ቡድን በፍጥነት ይድረሱ።' 
-        : '24/7 immediate trauma care and critical response hotline. Reach our unit instantly.',
-      btnText: t('common.emergency_call'),
-      action: () => window.open(`tel:${t('common.emergency_call').replace(/\s+/g, '')}`),
+        : '24/7 immediate trauma care and critical response hotline. Reach our unit instantly.'),
+      btnText: cmsData?.qa_emergency_phone || t('common.emergency_call'),
+      action: () => window.open(`tel:${(cmsData?.qa_emergency_phone || t('common.emergency_call')).replace(/\s+/g, '')}`),
       colorClass: 'bg-red-50/90 border-red-200/50 hover:bg-red-100/70',
       textColorClass: 'text-red-950',
       descColorClass: 'text-red-900/70',
