@@ -118,9 +118,10 @@ const SolarSystem = () => {
 
 interface HeroProps {
   onAppointmentClick: () => void;
+  cmsData?: Record<string, any> | null;
 }
 
-const Hero = ({ onAppointmentClick }: HeroProps) => {
+const Hero = ({ onAppointmentClick, cmsData }: HeroProps) => {
   const { t } = useTranslation();
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
@@ -133,7 +134,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
         transition={{ duration: 2, ease: "easeOut" }}
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop")',
+          backgroundImage: `url("${cmsData?.hero_bg_image || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop'}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -169,7 +170,13 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
               className="text-white mb-[20px] leading-[1.1] font-extrabold tracking-tighter !text-[30px] md:!text-[42px] lg:!text-[52px]"
             >
-              {t('hero.title_part1')} <span className="gradient-text">{t('hero.title_span')}</span> <br /> {t('hero.title_part2')}
+              {cmsData?.hero_title ? (
+                cmsData.hero_title
+              ) : (
+                <>
+                  {t('hero.title_part1')} <span className="gradient-text">{t('hero.title_span')}</span> <br /> {t('hero.title_part2')}
+                </>
+              )}
             </motion.h1>
 
             <motion.p 
@@ -178,7 +185,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-[14px] md:text-[16px] mb-[35px] text-white/80 leading-[1.6] font-light max-w-[550px]"
             >
-              {t('hero.desc')}
+              {cmsData?.hero_subtitle || t('hero.desc')}
             </motion.p>
 
             <motion.div 
@@ -191,7 +198,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
                 onClick={onAppointmentClick}
                 className="btn-primary flex items-center gap-3 group shadow-xl shadow-primary/20"
               >
-                {t('hero.cta_appointment')}
+                {cmsData?.hero_cta_text || t('hero.cta_appointment')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </button>
               

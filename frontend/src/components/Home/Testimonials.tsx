@@ -3,11 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const Testimonials = () => {
+interface TestimonialsProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const Testimonials = ({ cmsData }: TestimonialsProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const testimonials = [
+  const defaultTestimonials = [
     {
       name: isAmharic ? "ሳራ ጄ." : "Sarah J.",
       role: isAmharic ? "እናት እና የንግድ ባለቤት" : "Mother & Business Owner",
@@ -55,6 +59,24 @@ const Testimonials = () => {
     }
   ];
 
+  let testimonials = defaultTestimonials;
+  if (cmsData?.testi_data) {
+    try {
+      const parsed = JSON.parse(cmsData.testi_data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        testimonials = parsed.map((item: any, index: number) => ({
+          name: item.name || `User ${index + 1}`,
+          role: item.role || 'Patient',
+          text: item.text || '',
+          stars: item.stars || 5,
+          image: item.image || `https://images.unsplash.com/photo-${index === 0 ? '1494790108377-be9c29b29330' : index === 1 ? '1507003211169-0a1dd7228f2d' : '1500648767791-00dcc994a43e'}?q=80&w=150&auto=format&fit=crop`
+        }));
+      }
+    } catch (e) {
+      console.warn("Failed to parse testimonials data from CMS:", e);
+    }
+  }
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [orbitRotation, setOrbitRotation] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -100,9 +122,11 @@ const Testimonials = () => {
       <div className="container-custom relative z-10">
         <div className="section-title text-center max-w-[700px] mx-auto mb-[60px]">
           <span className="text-primary font-bold uppercase tracking-[3px] text-[13px]">{t('testimonials.badge')}</span>
-          <h2 className="text-secondary text-[30px] md:text-[42px] font-extrabold leading-tight mt-2">{t('testimonials.title')}</h2>
+          <h2 className="text-secondary text-[30px] md:text-[42px] font-extrabold leading-tight mt-2">
+            {cmsData?.testi_title || t('testimonials.title')}
+          </h2>
           <p className="text-body text-[16px] mt-4 leading-relaxed">
-            {t('testimonials.desc')}
+            {cmsData?.testi_subtitle || t('testimonials.desc')}
           </p>
         </div>
 
