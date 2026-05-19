@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';

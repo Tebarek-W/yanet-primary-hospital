@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Calendar, ArrowRight, Heart, Stethoscope, Activity, Plus, Phone } from 'lucide-react';
+import { Play, ArrowRight, Heart, Stethoscope, Activity, Plus, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import VideoModal from './VideoModal';
 

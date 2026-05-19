@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -36,10 +36,55 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
   const currentLang = i18n.language || 'en';
   const isAmharic = currentLang.startsWith('am');
 
-  // Find the current branch
-  const branch = useMemo(() => {
-    return branchesData.find(b => b.slug === slug);
+  const [branch, setBranch] = useState<any>(null);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
+  useEffect(() => {
+    setIsPageLoading(true);
+    fetch(`http://localhost:5002/api/branches/${slug}`)
+      .then(res => {
+        if (!res.ok) throw new Error('API error');
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.slug) {
+          setBranch(data);
+        } else {
+          const staticBranch = branchesData.find(b => b.slug === slug);
+          setBranch(staticBranch || null);
+        }
+      })
+      .catch(err => {
+        console.warn("Using fallback static branch detail:", err);
+        const staticBranch = branchesData.find(b => b.slug === slug);
+        setBranch(staticBranch || null);
+      })
+      .finally(() => {
+        setIsPageLoading(false);
+      });
   }, [slug]);
+
+  // Resolve services & doctors
+  const branchServices = useMemo(() => {
+    if (!branch || !branch.serviceSlugs) return [];
+    return servicesData.filter(s => branch.serviceSlugs.includes(s.slug));
+  }, [branch]);
+
+  const branchDoctors = useMemo(() => {
+    if (!branch || !branch.doctorIds) return [];
+    return doctorsData.filter(d => branch.doctorIds.includes(d.id));
+  }, [branch]);
+
+  if (isPageLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-36 pb-20">
+        <div className="text-center p-8 bg-white rounded-3xl shadow-xl max-w-[500px]">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-500 font-semibold">{isAmharic ? 'በመጫን ላይ...' : 'Loading branch details...'}</p>
+        </div>
+      </div>
+    );
+  }
 
   // Fallback / redirect if branch not found
   if (!branch) {
@@ -64,15 +109,6 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
     );
   }
 
-  // Resolve services & doctors
-  const branchServices = useMemo(() => {
-    return servicesData.filter(s => branch.serviceSlugs.includes(s.slug));
-  }, [branch]);
-
-  const branchDoctors = useMemo(() => {
-    return doctorsData.filter(d => branch.doctorIds.includes(d.id));
-  }, [branch]);
-
   // Analytics logging
   const trackDirectionsClick = () => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -88,7 +124,6 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
   // Theme helper shortcuts
   const theme = branch.theme;
   const accent = theme.accentHex;
-  const secondaryAccent = theme.secondaryHex;
 
   return (
     <div className="bg-white relative overflow-hidden">
@@ -215,7 +250,7 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
                 
                 {/* Feature highlight items */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {(isAmharic ? branch.featuredServicesAm : branch.featuredServices).map((feat, idx) => (
+                  {(isAmharic ? branch.featuredServicesAm : branch.featuredServices).map((feat: string) => (
                     <div key={feat} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${accent}15` }}>
                         <span className="text-[12px] font-bold" style={{ color: accent }}>✓</span>

@@ -28,6 +28,8 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminPageEditor from './pages/Admin/AdminPageEditor';
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminProtectedRoute from './components/Admin/AdminProtectedRoute';
+import AdminBranchesList from './pages/Admin/AdminBranchesList';
+import AdminBranchForm from './pages/Admin/AdminBranchForm';
 
 const PublicLayout = ({ isAppointmentOpen, setIsAppointmentOpen }: any) => {
   return (
@@ -82,6 +84,9 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="pages/:pageId" element={<AdminPageEditor />} />
+            <Route path="branches" element={<AdminBranchesList />} />
+            <Route path="branches/new" element={<AdminBranchForm />} />
+            <Route path="branches/edit/:slug" element={<AdminBranchForm />} />
           </Route>
         </Route>
 

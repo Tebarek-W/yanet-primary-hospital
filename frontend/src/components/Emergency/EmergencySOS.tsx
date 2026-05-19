@@ -16,17 +16,11 @@ const EmergencySOS: React.FC = () => {
     setIsLocating(true);
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat1 = position.coords.latitude;
-          const lon1 = position.coords.longitude;
-          
+        () => {
           let nearest = branchesData[0];
           let minDistance = Infinity;
 
           branchesData.forEach(branch => {
-            // Extract coordinates from mapUrl or use a fallback. 
-            // In a real app, branchesData should explicitly have lat/lng fields.
-            // For now, we simulate finding the nearest and open Google Maps search for them.
             const distance = Math.random() * 10; // Dummy distance for simulation
             if (distance < minDistance) {
               minDistance = distance;
@@ -37,7 +31,8 @@ const EmergencySOS: React.FC = () => {
           setIsLocating(false);
           const branchName = i18n.language.startsWith('am') ? nearest.nameAm : nearest.name;
           alert(`Nearest branch is ${branchName}. Opening map...`);
-          window.open(nearest.mapUrl, '_blank');
+          const mapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(nearest.city + ' ' + nearest.name)}`;
+          window.open(mapSearchUrl, '_blank');
         },
         (error) => {
           console.error("Error getting location", error);

@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { HeartPulse, Activity, Stethoscope, Microscope, Brain, Baby, Plus, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { HeartPulse, Activity, Stethoscope, Microscope, Brain, Baby, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Services = () => {
