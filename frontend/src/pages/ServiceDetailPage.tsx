@@ -17,8 +17,6 @@ import {
   ArrowRight,
   User,
   Phone,
-  Mail,
-  FileText,
   ChevronRight,
   PhoneCall,
   Sparkles

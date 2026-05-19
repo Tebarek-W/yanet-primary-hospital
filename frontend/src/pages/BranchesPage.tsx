@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -10,23 +10,40 @@ import { doctorsData } from '../data/doctorsData';
 import { servicesData } from '../data/servicesData';
 
 const BranchesPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const currentLang = i18n.language || 'en';
   const isAmharic = currentLang.startsWith('am');
 
+  const [branches, setBranches] = useState(branchesData);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('All');
   const [selectedService, setSelectedService] = useState('All');
 
+  useEffect(() => {
+    fetch('http://localhost:5002/api/branches')
+      .then(res => {
+        if (!res.ok) throw new Error('API down');
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setBranches(data);
+        }
+      })
+      .catch(err => {
+        console.warn("Using fallback static branchesData:", err);
+      });
+  }, []);
+
   // Extract all unique cities for filtering
   const cities = useMemo(() => {
-    const uniqueCities = new Set(branchesData.map(b => b.city));
+    const uniqueCities = new Set(branches.map(b => b.city));
     return ['All', ...Array.from(uniqueCities)];
-  }, []);
+  }, [branches]);
 
   // Filter branches based on search and selected options
   const filteredBranches = useMemo(() => {
-    return branchesData.filter((branch) => {
+    return branches.filter((branch) => {
       // 1. City Filter
       if (selectedCity !== 'All' && branch.city !== selectedCity) {
         return false;
@@ -73,7 +90,7 @@ const BranchesPage = () => {
 
       return true;
     });
-  }, [searchQuery, selectedCity, selectedService]);
+  }, [searchQuery, selectedCity, selectedService, branches]);
 
   return (
     <div className="bg-white relative overflow-hidden">
@@ -127,7 +144,7 @@ const BranchesPage = () => {
                 >
                   <option value="All">{isAmharic ? 'ሁሉም ከተሞች' : 'All Cities'}</option>
                   {cities.filter(c => c !== 'All').map((city) => {
-                    const branch = branchesData.find(b => b.city === city);
+                    const branch = branches.find(b => b.city === city);
                     const cityNameAm = branch ? branch.cityAm : city;
                     return (
                       <option key={city} value={city}>

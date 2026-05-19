@@ -49,7 +49,7 @@ const Timeline = () => {
             {/* Connecting line */}
             <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2 lg:top-0 lg:bottom-0 lg:left-1/2 lg:w-0.5 lg:h-full lg:-translate-x-1/2 z-0 hidden sm:block" />
 
-            {yearsList.map((year, index) => {
+            {yearsList.map((year) => {
               const isActive = selectedYear === year;
               return (
                 <button

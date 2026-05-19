@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Mail, MapPin, MessageSquare } from 'lucide-react';
+import { ArrowRight, Phone, Mail, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 

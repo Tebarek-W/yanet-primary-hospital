@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Target, Eye, ShieldCheck, Stethoscope, HeartPulse, Activity } from 'lucide-react';
+import { ShieldCheck, Stethoscope, HeartPulse, Activity } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const MissionVision = () => {

@@ -75,7 +75,7 @@ const Partnerships = () => {
 
               {/* Partners list inside the category */}
               <div className="flex flex-col gap-3 flex-grow">
-                {group.partners.map((partnerKey, partnerIdx) => (
+                {group.partners.map((partnerKey) => (
                   <motion.div
                     key={partnerKey}
                     whileHover={{ x: 5 }}
