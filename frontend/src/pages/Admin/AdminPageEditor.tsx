@@ -300,14 +300,28 @@ const AdminPageEditor: React.FC = () => {
     if (schema) {
       setActiveTab(schema.tabs[0]);
       
-      // Initialize form data
+      // Initialize form data with schema defaults
       const initialData: Record<string, any> = {};
       Object.values(schema.fields).forEach((tabFields: any) => {
         tabFields.forEach((field: any) => {
           initialData[field.id] = field.value;
         });
       });
-      setFormData(initialData);
+      
+      // Fetch live data from backend to override defaults
+      fetch(`http://localhost:5000/api/pages/${pageId}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            setFormData({ ...initialData, ...data });
+          } else {
+            setFormData(initialData);
+          }
+        })
+        .catch(err => {
+          console.error("Failed to fetch page data from API", err);
+          setFormData(initialData);
+        });
     }
   }, [pageId, schema]);
 
@@ -320,14 +334,29 @@ const AdminPageEditor: React.FC = () => {
     );
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsSaving(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/pages/${pageId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        setIsSuccess(true);
+        setTimeout(() => setIsSuccess(false), 3000);
+      } else {
+        alert("Failed to save changes to the database.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error communicating with the CMS server.");
+    } finally {
       setIsSaving(false);
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
-    }, 1000);
+    }
   };
 
   const handleInputChange = (id: string, value: string) => {
