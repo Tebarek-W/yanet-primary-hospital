@@ -114,7 +114,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/">
+          <Link to="/" className="-ml-2 lg:-ml-6 xl:-ml-8 transition-all">
             <motion.div 
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-[8px] group cursor-pointer"

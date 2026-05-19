@@ -9,7 +9,7 @@ const TopHeader = () => {
       <div className="container-custom">
         <div className="flex justify-between items-center">
           {/* Contact Info */}
-          <div className="flex items-center gap-[25px]">
+          <div className="flex items-center gap-[25px] -ml-2 lg:-ml-6 xl:-ml-8 transition-all">
             <div className="flex items-center gap-[8px] text-[#5d666e] text-[10px] font-bold">
               <Clock className="w-[13px] h-[13px] text-primary" />
               <span>{t('nav.home') === 'መነሻ' ? 'ሰኞ-አርብ 9am-5pm' : 'Mon-Fri 9am-5pm'}</span>

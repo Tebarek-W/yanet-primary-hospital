@@ -169,7 +169,7 @@ const Hero = ({ onAppointmentClick }: HeroProps) => {
               transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.4 }}
               className="text-white mb-[20px] leading-[1.1] font-extrabold tracking-tighter !text-[30px] md:!text-[42px] lg:!text-[52px]"
             >
-              {t('hero.title_part1')} <span className="gradient-text">{t('hero.title_span')}</span> {t('hero.title_part2')}
+              {t('hero.title_part1')} <span className="gradient-text">{t('hero.title_span')}</span> <br /> {t('hero.title_part2')}
             </motion.h1>
 
             <motion.p 
