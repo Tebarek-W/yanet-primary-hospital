@@ -21,12 +21,15 @@ import CareersPage from './pages/CareersPage';
 import ScrollToTop from './components/Layout/ScrollToTop';
 import ChatBot from './components/Chat/ChatBot';
 import EmergencySOS from './components/Emergency/EmergencySOS';
+import { AuthProvider } from './context/AuthContext';
+import PatientPortal from './pages/PatientPortal';
+
 
 function App() {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
   return (
-    <>
+    <AuthProvider>
       <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <header className="absolute top-0 left-0 w-full z-[100]">
@@ -49,6 +52,7 @@ function App() {
             <Route path="/doctors/:id" element={<DoctorDetail />} />
             <Route path="/virtual-tour" element={<VirtualTourPage />} />
             <Route path="/careers" element={<CareersPage />} />
+            <Route path="/portal" element={<PatientPortal />} />
           </Routes>
         </main>
 
@@ -61,7 +65,7 @@ function App() {
         <ChatBot />
         <EmergencySOS />
       </div>
-    </>
+    </AuthProvider>
   );
 }
 
