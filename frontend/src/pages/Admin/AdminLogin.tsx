@@ -10,22 +10,35 @@ const AdminLogin: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Simulate API call
-    setTimeout(() => {
-      // Very basic validation for mock purposes
-      if (email && password.length >= 6) {
+    try {
+      const response = await fetch('http://localhost:5002/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
         localStorage.setItem('yanet_admin_auth', 'true');
+        localStorage.setItem('yanet_admin_token', data.token);
         navigate('/admin');
       } else {
-        setError('Invalid credentials. Please enter a valid email and password (min 6 chars).');
-        setIsLoading(false);
+        setError(data.message || 'Invalid credentials.');
       }
-    }, 1000);
+    } catch (err) {
+      console.error(err);
+      setError('Error communicating with the auth server.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

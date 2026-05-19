@@ -309,7 +309,7 @@ const AdminPageEditor: React.FC = () => {
       });
       
       // Fetch live data from backend to override defaults
-      fetch(`http://localhost:5000/api/pages/${pageId}`)
+      fetch(`http://localhost:5002/api/pages/${pageId}`)
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (data) {
@@ -337,7 +337,7 @@ const AdminPageEditor: React.FC = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/pages/${pageId}`, {
+      const response = await fetch(`http://localhost:5002/api/pages/${pageId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
