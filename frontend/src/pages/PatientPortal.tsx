@@ -1,334 +1,488 @@
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { 
-  User, Calendar, FileText, Pill, CreditCard, LogOut, 
-  Bell, FileDown, PlusCircle, CheckCircle2, Clock 
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import PageBanner from '../components/Layout/PageBanner';
+import { X, LogOut } from 'lucide-react';
+
+// Import Modular Portal Components
+import { PatientLogin } from '../components/PatientPortal/PatientLogin';
+import { PortalSidebar } from '../components/PatientPortal/PortalSidebar';
+import { PortalHeader } from '../components/PatientPortal/PortalHeader';
+import { PortalOverview } from '../components/PatientPortal/PortalOverview';
+import { PortalAppointments } from '../components/PatientPortal/PortalAppointments';
+import { PortalRecords } from '../components/PatientPortal/PortalRecords';
+import { PortalPrescriptions } from '../components/PatientPortal/PortalPrescriptions';
+import { PortalMessages } from '../components/PatientPortal/PortalMessages';
+import { PortalSettings } from '../components/PatientPortal/PortalSettings';
+
+// Shared interfaces
+interface Appointment {
+  id: string;
+  doctor: string;
+  specialty: string;
+  date: string;
+  time: string;
+  status: 'upcoming' | 'completed' | 'cancelled';
+}
+
+interface LabResult {
+  id: string;
+  testName: string;
+  date: string;
+  doctor: string;
+  value: string;
+  range: string;
+  status: 'Normal' | 'High' | 'Low';
+}
+
+interface Prescription {
+  id: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  doctor: string;
+  refills: number;
+  takenToday: boolean;
+}
+
+interface Message {
+  id: string;
+  sender: 'patient' | 'doctor';
+  text: string;
+  time: string;
+}
+
+interface Doctor {
+  name: string;
+  specialty: string;
+  avatar: string;
+  chatHistory: Message[];
+}
 
 const PatientPortal: React.FC = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'appointments' | 'records' | 'prescriptions' | 'billing'>('overview');
+  const { user, login, logout, isAuthenticated } = useAuth();
+  
+  // Dashboard Core Navigation States
+  const [activeTab, setActiveTab] = useState<'overview' | 'appointments' | 'records' | 'prescriptions' | 'messages' | 'settings'>('overview');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  
+  // Interactive Search & Selection States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDoctorIndex, setSelectedDoctorIndex] = useState(0);
+  const [chatInput, setChatInput] = useState('');
+  const [appointmentFilter, setAppointmentFilter] = useState<'all' | 'upcoming' | 'completed'>('all');
+  
+  // Settings Preferences States
+  const [phoneInput, setPhoneInput] = useState('+251 911 123456');
+  const [weightInput, setWeightInput] = useState('72');
+  const [heightInput, setHeightInput] = useState('178');
+  const [darkMode, setDarkMode] = useState(false);
+  const [smsAlerts, setSmsAlerts] = useState(true);
+  const [emailAlerts, setEmailAlerts] = useState(true);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  // Notifications state
+  const [notifications, setNotifications] = useState([
+    { id: '1', title: 'New Lab Result Authorized', message: 'Your Complete Blood Count report has been signed by Dr. Tebarek.', time: '10 mins ago', read: false },
+    { id: '2', title: 'Consultation Confirmed', message: 'Your appointment request with Dr. Birhanu has been scheduled.', time: '2 hours ago', read: true },
+    { id: '3', title: 'Prescription Refill Approved', message: 'Lisinopril 10mg refill request was authorized by Dr. Tebarek.', time: '1 day ago', read: true },
+  ]);
 
-  // Mock Data
-  const appointments = [
+  // Dynamic Appointments state
+  const [appointments, setAppointments] = useState<Appointment[]>([
     { id: '1', doctor: 'Dr. Birhanu Mengiste', specialty: 'General Surgery', date: 'May 25, 2026', time: '10:00 AM', status: 'upcoming' },
     { id: '2', doctor: 'Dr. Tebarek Liyana', specialty: 'Cardiology', date: 'April 12, 2026', time: '02:30 PM', status: 'completed' },
     { id: '3', doctor: 'Dr. Sarah J.', specialty: 'Pediatrics', date: 'January 18, 2026', time: '09:00 AM', status: 'completed' }
-  ];
+  ]);
 
-  const medicalRecords = [
-    { id: 'R1', type: 'Complete Blood Count (CBC)', date: 'April 12, 2026', doctor: 'Dr. Tebarek Liyana', status: 'Ready' },
-    { id: 'R2', type: 'Electrocardiogram (ECG)', date: 'April 12, 2026', doctor: 'Dr. Tebarek Liyana', status: 'Ready' },
-    { id: 'R3', type: 'Chest X-Ray', date: 'January 18, 2026', doctor: 'Dr. Sarah J.', status: 'Ready' }
-  ];
+  // Static Lab Records
+  const [labResults] = useState<LabResult[]>([
+    { id: 'R1', testName: 'Complete Blood Count (CBC)', date: 'April 12, 2026', doctor: 'Dr. Tebarek Liyana', value: '14.5 g/dL', range: '13.5 - 17.5 g/dL', status: 'Normal' },
+    { id: 'R2', testName: 'Electrocardiogram (ECG)', date: 'April 12, 2026', doctor: 'Dr. Tebarek Liyana', value: '72 bpm (Normal Sinus)', range: '60 - 100 bpm', status: 'Normal' },
+    { id: 'R3', testName: 'Fasting Blood Glucose', date: 'April 12, 2026', doctor: 'Dr. Tebarek Liyana', value: '110 mg/dL', range: '70 - 99 mg/dL', status: 'High' },
+    { id: 'R4', testName: 'Thyroid Stimulating Hormone (TSH)', date: 'January 18, 2026', doctor: 'Dr. Sarah J.', value: '2.4 uIU/mL', range: '0.4 - 4.0 uIU/mL', status: 'Normal' },
+    { id: 'R5', testName: 'Chest X-Ray Screen', date: 'January 18, 2026', doctor: 'Dr. Sarah J.', value: 'Clear Lung Fields', range: 'Clear', status: 'Normal' }
+  ]);
 
-  const prescriptions = [
-    { name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily', doctor: 'Dr. Tebarek Liyana', refills: 2 },
-    { name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily', doctor: 'Dr. Sarah J.', refills: 0 },
-    { name: 'Atorvastatin', dosage: '20mg', frequency: 'Once daily at bedtime', doctor: 'Dr. Tebarek Liyana', refills: 5 }
-  ];
+  // Prescriptions checklist state
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([
+    { id: 'P1', name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily in the morning', doctor: 'Dr. Tebarek Liyana', refills: 2, takenToday: false },
+    { id: 'P2', name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily with food', doctor: 'Dr. Sarah J.', refills: 0, takenToday: true },
+    { id: 'P3', name: 'Atorvastatin', dosage: '20mg', frequency: 'Once daily at bedtime', doctor: 'Dr. Tebarek Liyana', refills: 5, takenToday: false }
+  ]);
 
-  const billing = [
-    { id: 'INV-1024', description: 'Consultation & Lab Works', date: 'April 12, 2026', amount: '1,200 ETB', status: 'Paid' },
-    { id: 'INV-0988', description: 'Pediatric Visit', date: 'January 18, 2026', amount: '450 ETB', status: 'Paid' }
-  ];
+  // Care Team direct messaging channels state
+  const [doctors, setDoctors] = useState<Doctor[]>([
+    {
+      name: 'Dr. Birhanu Mengiste',
+      specialty: 'General Surgery',
+      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=200',
+      chatHistory: [
+        { id: 'm1', sender: 'doctor', text: 'Hello, how is the healing progressing after your minor surgery?', time: '09:30 AM' },
+        { id: 'm2', sender: 'patient', text: 'Hello Dr. Birhanu, the incision is healing clean and pain is completely gone.', time: '09:45 AM' },
+        { id: 'm3', sender: 'doctor', text: 'Excellent. Keep the area sterile and let us know if you observe any swelling.', time: '10:00 AM' }
+      ]
+    },
+    {
+      name: 'Dr. Tebarek Liyana',
+      specialty: 'Cardiology',
+      avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=200',
+      chatHistory: [
+        { id: 'm4', sender: 'doctor', text: 'Hello Abebe, I reviewed your lipid panel. Your glucose is slightly elevated.', time: 'Yesterday' },
+        { id: 'm5', sender: 'patient', text: 'Thank you, Doctor. Do I need to adjust Atorvastatin dose?', time: 'Yesterday' },
+        { id: 'm6', sender: 'doctor', text: 'Let’s maintain 20mg for now but focus on a low-sodium, heart-healthy diet for the next 4 weeks.', time: 'Yesterday' }
+      ]
+    },
+    {
+      name: 'Dr. Sarah J.',
+      specialty: 'Pediatrics',
+      avatar: 'https://images.unsplash.com/photo-1594824813573-246434e33963?auto=format&fit=crop&q=80&w=200',
+      chatHistory: [
+        { id: 'm7', sender: 'doctor', text: 'Hi Abebe, I have approved the refill request for the active pediatric prescription.', time: 'May 15' }
+      ]
+    }
+  ]);
+
+  // Handle Dynamic Messages & Doctor responses
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const currentDoc = doctors[selectedDoctorIndex];
+    const newMsg: Message = {
+      id: `m-custom-${Date.now()}`,
+      sender: 'patient',
+      text: chatInput,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const updatedDocs = [...doctors];
+    updatedDocs[selectedDoctorIndex] = {
+      ...currentDoc,
+      chatHistory: [...currentDoc.chatHistory, newMsg]
+    };
+    setDoctors(updatedDocs);
+    setChatInput('');
+
+    // Simulate direct physician answer after 1.5 seconds
+    setTimeout(() => {
+      const responses = [
+        `I have received your inquiry and noted the updates in your health file. Please continue monitoring.`,
+        `That appears well within safe clinical parameters. Maintain your therapy as outlined.`,
+        `We will examine this in detail during your next in-person clinic visit. If it is an emergency, call 911.`,
+        `Direct message logged. Ensure to drink plenty of fluids and take active medications as scheduled.`,
+      ];
+      const randomReply = responses[Math.floor(Math.random() * responses.length)];
+      
+      const doctorReply: Message = {
+        id: `m-reply-${Date.now()}`,
+        sender: 'doctor',
+        text: randomReply,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      const updatedDocsWithReply = [...updatedDocs];
+      updatedDocsWithReply[selectedDoctorIndex] = {
+        ...currentDoc,
+        chatHistory: [...updatedDocs[selectedDoctorIndex].chatHistory, doctorReply]
+      };
+      setDoctors(updatedDocsWithReply);
+
+      // Trigger standard system notification
+      const newNotify = {
+        id: `n-${Date.now()}`,
+        title: `Message from ${currentDoc.name}`,
+        message: randomReply.substring(0, 50) + '...',
+        time: 'Just now',
+        read: false
+      };
+      setNotifications(prev => [newNotify, ...prev]);
+    }, 1500);
+  };
+
+  // Toggle Medication checklist taken state
+  const toggleMedication = (id: string) => {
+    setPrescriptions(prev => prev.map(p => 
+      p.id === id ? { ...p, takenToday: !p.takenToday } : p
+    ));
+  };
+
+  // Cancel dynamic consultation
+  const handleCancelAppointment = (id: string) => {
+    setAppointments(prev => prev.map(a => 
+      a.id === id ? { ...a, status: 'cancelled' } : a
+    ));
+  };
+
+  // Schedule dynamic consultation
+  const handleBookAppointmentSubmit = (doctorName: string, date: string, time: string) => {
+    const doctorDetails: Record<string, string> = {
+      'Dr. Birhanu Mengiste': 'General Surgery',
+      'Dr. Tebarek Liyana': 'Cardiology',
+      'Dr. Sarah J.': 'Pediatrics'
+    };
+
+    const newApp: Appointment = {
+      id: `app-${Date.now()}`,
+      doctor: doctorName,
+      specialty: doctorDetails[doctorName] || 'General Practitioner',
+      date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      time: time,
+      status: 'upcoming'
+    };
+
+    setAppointments(prev => [newApp, ...prev]);
+  };
+
+  const markAllNotificationsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const getGreeting = () => {
+    const hrs = new Date().getHours();
+    if (hrs < 12) return 'Good morning';
+    if (hrs < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const handleSaveSettings = () => {
+    alert('Portal settings and biological configurations saved successfully.');
+  };
+
+  // Keep dark theme body background synchronized
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <PageBanner 
-        title="Patient Portal" 
-        breadcrumbs={[{ label: 'Patient Portal' }]}
-        image="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000"
-      />
-
-      <div className="container-custom py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div className={`min-h-screen text-slate-800 font-sans selection:bg-primary/10 antialiased transition-colors duration-200 ${
+      darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'
+    }`}>
+      
+      <AnimatePresence mode="wait">
+        {!isAuthenticated ? (
           
-          {/* Sidebar Nav */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100 text-center">
-              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-primary/20">
-                <User className="w-10 h-10 text-primary" />
-              </div>
-              <h3 className="text-xl font-extrabold text-gray-900">{user?.name}</h3>
-              <p className="text-xs font-semibold text-primary mt-1">Medical ID: YH-90210</p>
-              
-              <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-1 text-sm text-gray-500 font-medium">
-                <span>{user?.email}</span>
-                <span>{user?.phone}</span>
-              </div>
-            </div>
+          /* 1. LOGIN SECTION - Clean Simple Centered Clinical Card */
+          <PatientLogin login={login} />
+          
+        ) : (
+          
+          /* 2. AUTHENTICATED PORTAL MODULE - Modular SaaS-style Workspace */
+          <motion.div 
+            key="dashboard-page"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={`min-h-screen flex overflow-hidden ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'}`}
+          >
+            {/* Collapsible Sidebar Navigation */}
+            <PortalSidebar 
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              sidebarCollapsed={sidebarCollapsed}
+              setSidebarCollapsed={setSidebarCollapsed}
+              logout={logout}
+              appointmentsCount={appointments.filter(a => a.status === 'upcoming').length}
+              userName={user?.name || 'Abebe Kebede'}
+            />
 
-            <div className="bg-white rounded-3xl p-3 shadow-xl shadow-gray-200/50 border border-gray-100 flex flex-col gap-1">
-              {[
-                { id: 'overview', label: 'Dashboard Overview', icon: User },
-                { id: 'appointments', label: 'My Appointments', icon: Calendar },
-                { id: 'records', label: 'Medical Records', icon: FileText },
-                { id: 'prescriptions', label: 'Prescriptions', icon: Pill },
-                { id: 'billing', label: 'Billing & Invoices', icon: CreditCard }
-              ].map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm transition-all ${
-                      activeTab === tab.id 
-                        ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                        : 'text-gray-600 hover:text-primary hover:bg-primary/5'
+            {/* Mobile Drawer Overlay Switcher */}
+            <AnimatePresence>
+              {mobileMenuOpen && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-40 md:hidden"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <motion.div 
+                    initial={{ x: -260 }}
+                    animate={{ x: 0 }}
+                    exit={{ x: -260 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className={`w-64 h-full flex flex-col justify-between p-5 text-left ${
+                      darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
                     }`}
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <Icon className="w-4.5 h-4.5" />
-                    {tab.label}
-                  </button>
-                );
-              })}
-              <button 
-                onClick={logout}
-                className="flex items-center gap-3.5 px-4 py-3 rounded-2xl font-bold text-sm text-red-600 hover:bg-red-50 transition-all mt-4 border-t border-gray-100"
-              >
-                <LogOut className="w-4.5 h-4.5" />
-                Logout
-              </button>
-            </div>
-          </div>
-
-          {/* Main Dashboard Panel */}
-          <div className="lg:col-span-3">
-            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100 min-h-[500px]">
-              
-              {/* Tab: Overview */}
-              {activeTab === 'overview' && (
-                <div className="space-y-8 animate-fade-in">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                      <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Hello, {user?.name.split(' ')[0]}</h2>
-                      <p className="text-gray-500 mt-1">Here is a quick overview of your medical health record status.</p>
-                    </div>
-                    <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 px-4 py-2.5 rounded-2xl text-blue-600">
-                      <Bell className="w-5 h-5 animate-bounce-soft" />
-                      <span className="text-xs font-bold">1 New Lab Result Available</span>
-                    </div>
-                  </div>
-
-                  {/* Summary Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-primary/5 to-primary-light/5 border border-primary/10 rounded-2xl p-6">
-                      <div className="flex justify-between items-start">
-                        <Calendar className="w-8 h-8 text-primary" />
-                        <span className="text-[10px] font-extrabold uppercase bg-primary/10 text-primary px-2.5 py-1 rounded-full">Next Visit</span>
-                      </div>
-                      <h4 className="text-lg font-bold text-gray-900 mt-4">May 25, 2026</h4>
-                      <p className="text-xs text-gray-500 mt-1">Dr. Birhanu M. • 10:00 AM</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-secondary/5 to-secondary/10 border border-secondary/10 rounded-2xl p-6">
-                      <div className="flex justify-between items-start">
-                        <FileText className="w-8 h-8 text-secondary" />
-                        <span className="text-[10px] font-extrabold uppercase bg-secondary/10 text-secondary px-2.5 py-1 rounded-full">Reports</span>
-                      </div>
-                      <h4 className="text-lg font-bold text-gray-900 mt-4">3 Available</h4>
-                      <p className="text-xs text-gray-500 mt-1">Last uploaded: April 12</p>
-                    </div>
-
-                    <div className="bg-gradient-to-br from-amber-500/5 to-amber-600/5 border border-amber-500/10 rounded-2xl p-6">
-                      <div className="flex justify-between items-start">
-                        <Pill className="w-8 h-8 text-amber-500" />
-                        <span className="text-[10px] font-extrabold uppercase bg-amber-500/10 text-amber-600 px-2.5 py-1 rounded-full">Prescriptions</span>
-                      </div>
-                      <h4 className="text-lg font-bold text-gray-900 mt-4">2 Active Medications</h4>
-                      <p className="text-xs text-gray-500 mt-1">Lisinopril, Atorvastatin</p>
-                    </div>
-                  </div>
-
-                  {/* Upcoming Appointments Short List */}
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Upcoming Appointments</h3>
-                    <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
-                      {appointments.filter(a => a.status === 'upcoming').map(app => (
-                        <div key={app.id} className="p-5 flex justify-between items-center bg-white hover:bg-gray-50/50 transition-all">
-                          <div>
-                            <h4 className="font-bold text-gray-900">{app.doctor}</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">{app.specialty}</p>
+                      <div className="flex justify-between items-center mb-6">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-poppins font-extrabold shadow-sm shrink-0">
+                            <span>Y</span>
                           </div>
-                          <div className="text-right">
-                            <p className="font-bold text-gray-900 text-sm">{app.date}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">{app.time}</p>
-                          </div>
+                          <span className={`text-md font-bold tracking-tight font-poppins ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                            Yanet<span className="text-primary font-bold">Portal</span>
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab: Appointments */}
-              {activeTab === 'appointments' && (
-                <div className="space-y-6 animate-fade-in">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">Appointments Schedule</h2>
-                      <p className="text-sm text-gray-500 mt-0.5">Manage and track your schedule with our specialist doctors.</p>
-                    </div>
-                    <button className="flex items-center gap-1.5 bg-primary text-white font-bold px-4 py-2.5 rounded-xl hover:bg-primary-dark transition-all text-xs">
-                      <PlusCircle className="w-4 h-4" /> Book Appointment
-                    </button>
-                  </div>
-
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
-                    {appointments.map(app => (
-                      <div key={app.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-start gap-4">
-                          <div className={`p-3 rounded-xl shrink-0 ${
-                            app.status === 'upcoming' ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-gray-400'
-                          }`}>
-                            <Calendar className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900">{app.doctor}</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">{app.specialty}</p>
-                            <p className="text-xs text-gray-450 mt-2 flex items-center gap-1">
-                              <Clock className="w-3.5 h-3.5" /> {app.date} at {app.time}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 self-end md:self-center">
-                          {app.status === 'upcoming' ? (
-                            <>
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100">
-                                <CheckCircle2 className="w-3.5 h-3.5" /> Scheduled
-                              </span>
-                              <button className="text-xs font-bold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-all border border-transparent hover:border-red-100">
-                                Cancel
-                              </button>
-                            </>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gray-50 text-gray-500 border border-gray-100">
-                              Completed
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Tab: Medical Records */}
-              {activeTab === 'records' && (
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Medical Reports & Labs</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Securely view and download your health reports.</p>
-                  </div>
-
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
-                    {medicalRecords.map(rec => (
-                      <div key={rec.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-start gap-4">
-                          <div className="p-3 bg-secondary/10 text-secondary rounded-xl shrink-0">
-                            <FileText className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900">{rec.type}</h4>
-                            <p className="text-xs text-gray-500 mt-0.5">Ordered by: {rec.doctor}</p>
-                            <p className="text-xs text-gray-400 mt-2">Available since: {rec.date}</p>
-                          </div>
-                        </div>
-
-                        <button className="self-end md:self-center flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold px-4 py-2.5 rounded-xl transition-all text-xs border border-gray-200">
-                          <FileDown className="w-4 h-4" /> Download PDF
+                        <button onClick={() => setMobileMenuOpen(false)} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+                          <X className="w-5 h-5 text-slate-400" />
                         </button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
-              {/* Tab: Prescriptions */}
-              {activeTab === 'prescriptions' && (
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Current Medications</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Track your active prescriptions and refills.</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {prescriptions.map((pres, idx) => (
-                      <div key={idx} className="border border-gray-100 rounded-2xl p-6 bg-white shadow-sm hover:shadow-md transition-all">
-                        <div className="flex justify-between items-start">
-                          <h4 className="font-extrabold text-lg text-gray-900">{pres.name}</h4>
-                          <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase ${
-                            pres.refills > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                          }`}>
-                            {pres.refills > 0 ? `${pres.refills} Refills Left` : 'No Refills'}
-                          </span>
-                        </div>
-                        <div className="mt-4 space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Dosage:</span>
-                            <span className="font-bold text-gray-700">{pres.dosage}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Frequency:</span>
-                            <span className="font-bold text-gray-700">{pres.frequency}</span>
-                          </div>
-                          <div className="flex justify-between pt-2 border-t border-gray-50">
-                            <span className="text-gray-400 text-xs">Prescribed by:</span>
-                            <span className="font-semibold text-gray-600 text-xs">{pres.doctor}</span>
-                          </div>
-                        </div>
+                      <div className={`p-3 border rounded-xl mb-5 text-left ${
+                        darkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-200'
+                      }`}>
+                        <h4 className={`text-xs font-bold font-poppins ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                          {user?.name || 'Abebe Kebede'}
+                        </h4>
+                        <p className="text-[10px] text-slate-400 font-semibold mt-0.5">Medical ID: YH-90210</p>
                       </div>
-                    ))}
-                  </div>
-                </div>
+
+                      <nav className="space-y-1">
+                        {[
+                          { id: 'overview', label: 'Overview Summary' },
+                          { id: 'appointments', label: 'Book Consultations' },
+                          { id: 'records', label: 'Diagnostic Records' },
+                          { id: 'prescriptions', label: 'Active Medications' },
+                          { id: 'messages', label: 'Secure Inbox' },
+                          { id: 'settings', label: 'Portal Settings' },
+                        ].map((item) => {
+                          const isActive = activeTab === item.id;
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={() => {
+                                setActiveTab(item.id as any);
+                                setMobileMenuOpen(false);
+                              }}
+                              className={`w-full rounded-lg transition-all font-semibold text-xs py-3 px-4 text-left border border-transparent ${
+                                isActive 
+                                  ? 'bg-primary text-white shadow-md font-bold' 
+                                  : darkMode
+                                  ? 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                              }`}
+                            >
+                              {item.label}
+                            </button>
+                          );
+                        })}
+                      </nav>
+                    </div>
+
+                    <button
+                      onClick={logout}
+                      className="flex items-center gap-2.5 w-full rounded-lg transition-colors font-semibold text-xs py-3 px-4 text-red-505 hover:bg-red-50 dark:hover:bg-red-950/20 text-left border border-transparent"
+                    >
+                      <LogOut className="w-4 h-4 text-red-500" />
+                      <span>Log Out</span>
+                    </button>
+                  </motion.div>
+                </motion.div>
               )}
+            </AnimatePresence>
 
-              {/* Tab: Billing */}
-              {activeTab === 'billing' && (
-                <div className="space-y-6 animate-fade-in">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Billing History</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Review invoices and payment receipts.</p>
-                  </div>
+            {/* Dashboard Content Container */}
+            <div className="flex-1 flex flex-col h-screen overflow-y-auto">
+              
+              {/* Dynamic Header */}
+              <PortalHeader 
+                activeTab={activeTab}
+                setMobileMenuOpen={setMobileMenuOpen}
+                notifications={notifications}
+                notificationsOpen={notificationsOpen}
+                setNotificationsOpen={setNotificationsOpen}
+                markAllNotificationsRead={markAllNotificationsRead}
+                profileDropdownOpen={profileDropdownOpen}
+                setProfileDropdownOpen={setProfileDropdownOpen}
+                userName={user?.name || 'Abebe Kebede'}
+                userEmail={user?.email || 'patient@example.com'}
+                logout={logout}
+                setActiveTab={setActiveTab}
+                darkMode={darkMode}
+              />
 
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden divide-y divide-gray-100">
-                    {billing.map(invoice => (
-                      <div key={invoice.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-start gap-4">
-                          <div className="p-3 bg-amber-500/10 text-amber-600 rounded-xl shrink-0">
-                            <CreditCard className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900">{invoice.description}</h4>
-                            <p className="text-xs text-gray-400 mt-1">Invoice ID: {invoice.id} • {invoice.date}</p>
-                          </div>
-                        </div>
+              {/* Dynamic Workspace content switchboard */}
+              <main className="flex-grow p-4 sm:p-6 overflow-y-auto">
+                <AnimatePresence mode="wait">
+                  
+                  {activeTab === 'overview' && (
+                    <PortalOverview 
+                      userName={user?.name || 'Abebe Kebede'}
+                      getGreeting={getGreeting}
+                      appointments={appointments}
+                      prescriptions={prescriptions}
+                      doctors={doctors}
+                      toggleMedication={toggleMedication}
+                      handleCancelAppointment={handleCancelAppointment}
+                      setActiveTab={setActiveTab}
+                      setSelectedDoctorIndex={setSelectedDoctorIndex}
+                      darkMode={darkMode}
+                    />
+                  )}
 
-                        <div className="flex items-center gap-6 self-end md:self-center">
-                          <span className="font-extrabold text-gray-900">{invoice.amount}</span>
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Paid
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                  {activeTab === 'appointments' && (
+                    <PortalAppointments 
+                      appointments={appointments}
+                      doctors={doctors}
+                      appointmentFilter={appointmentFilter}
+                      setAppointmentFilter={setAppointmentFilter}
+                      handleCancelAppointment={handleCancelAppointment}
+                      handleBookAppointmentSubmit={handleBookAppointmentSubmit}
+                      darkMode={darkMode}
+                    />
+                  )}
 
+                  {activeTab === 'records' && (
+                    <PortalRecords 
+                      labResults={labResults}
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
+                      darkMode={darkMode}
+                    />
+                  )}
+
+                  {activeTab === 'prescriptions' && (
+                    <PortalPrescriptions 
+                      prescriptions={prescriptions}
+                      toggleMedication={toggleMedication}
+                      darkMode={darkMode}
+                    />
+                  )}
+
+                  {activeTab === 'messages' && (
+                    <PortalMessages 
+                      doctors={doctors}
+                      selectedDoctorIndex={selectedDoctorIndex}
+                      setSelectedDoctorIndex={setSelectedDoctorIndex}
+                      chatInput={chatInput}
+                      setChatInput={setChatInput}
+                      handleSendMessage={handleSendMessage}
+                      darkMode={darkMode}
+                    />
+                  )}
+
+                  {activeTab === 'settings' && (
+                    <PortalSettings 
+                      phoneInput={phoneInput}
+                      setPhoneInput={setPhoneInput}
+                      heightInput={heightInput}
+                      setHeightInput={setHeightInput}
+                      weightInput={weightInput}
+                      setWeightInput={setWeightInput}
+                      darkMode={darkMode}
+                      setDarkMode={setDarkMode}
+                      smsAlerts={smsAlerts}
+                      setSmsAlerts={setSmsAlerts}
+                      emailAlerts={emailAlerts}
+                      setEmailAlerts={setEmailAlerts}
+                      handleSaveSettings={handleSaveSettings}
+                    />
+                  )}
+
+                </AnimatePresence>
+              </main>
             </div>
-          </div>
-
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
