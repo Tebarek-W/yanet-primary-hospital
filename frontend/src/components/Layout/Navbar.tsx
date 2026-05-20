@@ -4,8 +4,7 @@ import { Menu, X, ChevronDown, User, Phone, Compass, LogOut, UserCircle } from '
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { branchesData } from '../../data/branchesData';
-import { useAuth } from '../../context/AuthContext';
-import AuthModal from '../Auth/AuthModal';
+
 
 
 // Flag SVGs for language switcher
