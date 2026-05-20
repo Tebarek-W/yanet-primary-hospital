@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, Image as ImageIcon, Trash2, ArrowLeft, CheckCircle2, Type, Layout, Settings } from 'lucide-react';
+import { 
+  Save, Image as ImageIcon, Trash2, ArrowLeft, CheckCircle2, Type, Layout, Settings,
+  Users, Calendar, Search, Zap, Award, Info, BookOpen, MapPin, Phone, Clock, Briefcase, Heart, MessageSquare
+} from 'lucide-react';
 import { motion } from 'framer-motion';
+import AdminDoctorCrud from '../../components/Admin/AdminDoctorCrud';
 
 // Mock schema data for different pages
 const pageSchemas: Record<string, any> = {
@@ -210,8 +214,9 @@ const pageSchemas: Record<string, any> = {
   },
   doctors: {
     title: 'Doctors Directory',
-    tabs: ['Hero Section', 'Directory Settings', 'Booking Integration', 'SEO'],
+    tabs: ['Manage Doctors', 'Hero Section', 'Directory Settings', 'Booking Integration', 'SEO'],
     fields: {
+      'Manage Doctors': [],
       'Hero Section': [
         { id: 'doc_title', label: 'Page Headline', type: 'text', value: 'Our Medical Specialists' },
         { id: 'doc_desc', label: 'Subtitle', type: 'textarea', value: 'Meet our dedicated team of expert doctors and specialists.' },
@@ -282,6 +287,27 @@ const pageSchemas: Record<string, any> = {
       ]
     }
   }
+};
+
+const getTabIcon = (tab: string) => {
+  const normalized = tab.toLowerCase();
+  if (normalized.includes('doctor') || normalized.includes('leadership') || normalized.includes('member') || normalized.includes('team')) return Users;
+  if (normalized.includes('hero') || normalized.includes('banner') || normalized.includes('preview')) return Layout;
+  if (normalized.includes('seo') || normalized.includes('meta')) return Search;
+  if (normalized.includes('setting') || normalized.includes('config') || normalized.includes('integration') || normalized.includes('tour')) return Settings;
+  if (normalized.includes('book') || normalized.includes('appointment') || normalized.includes('schedule')) return Calendar;
+  if (normalized.includes('action') || normalized.includes('quick')) return Zap;
+  if (normalized.includes('value') || normalized.includes('mission') || normalized.includes('vision') || normalized.includes('award')) return Award;
+  if (normalized.includes('info') || normalized.includes('about') || normalized.includes('overview') || normalized.includes('faq')) return Info;
+  if (normalized.includes('blog') || normalized.includes('news') || normalized.includes('post') || normalized.includes('article')) return BookOpen;
+  if (normalized.includes('map') || normalized.includes('branch') || normalized.includes('location') || normalized.includes('address')) return MapPin;
+  if (normalized.includes('phone') || normalized.includes('contact') || normalized.includes('email') || normalized.includes('support')) return Phone;
+  if (normalized.includes('hour') || normalized.includes('time') || normalized.includes('clock') || normalized.includes('date')) return Clock;
+  if (normalized.includes('career') || normalized.includes('job') || normalized.includes('work') || normalized.includes('opening')) return Briefcase;
+  if (normalized.includes('service') || normalized.includes('pricing') || normalized.includes('department')) return Heart;
+  if (normalized.includes('testimonial') || normalized.includes('story') || normalized.includes('review') || normalized.includes('comment')) return MessageSquare;
+  if (normalized.includes('image') || normalized.includes('media') || normalized.includes('photo') || normalized.includes('gallery')) return ImageIcon;
+  return Type;
 };
 
 const AdminPageEditor: React.FC = () => {
@@ -364,7 +390,7 @@ const AdminPageEditor: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className={`space-y-6 transition-all duration-300 mx-auto ${pageId === 'doctors' && activeTab === 'Manage Doctors' ? 'max-w-7xl' : 'max-w-5xl'}`}>
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
@@ -409,96 +435,96 @@ const AdminPageEditor: React.FC = () => {
       )}
 
       {/* Editor Layout */}
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col gap-6">
         
-        {/* Tabs Sidebar */}
-        <div className="lg:w-64 shrink-0">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-2 lg:sticky lg:top-24">
-            <div className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible custom-scrollbar pb-2 lg:pb-0">
-              {schema.tabs.map((tab: string) => {
-                let Icon = Type;
-                if (tab === 'SEO') Icon = Settings;
-                if (tab.includes('Image') || tab.includes('Media')) Icon = ImageIcon;
+        {/* Top Horizontal Navigation Tabs */}
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-2.5 transition-all">
+          <div className="flex flex-row gap-2 overflow-x-auto custom-scrollbar pb-2 pt-0.5 px-0.5">
+            {schema.tabs.map((tab: string) => {
+              const Icon = getTabIcon(tab);
 
-                return (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all text-left whitespace-nowrap shrink-0 lg:w-full ${
-                      activeTab === tab 
-                        ? 'bg-primary/10 text-primary' 
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
-                  >
-                    <Icon className="w-4.5 h-4.5 shrink-0" />
-                    {tab}
-                  </button>
-                );
-              })}
-            </div>
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl font-bold text-sm transition-all whitespace-nowrap shrink-0 ${
+                    activeTab === tab 
+                      ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:scale-[1.01]'
+                  }`}
+                >
+                  <Icon className={`w-4.5 h-4.5 shrink-0 transition-colors ${activeTab === tab ? 'text-white' : 'text-gray-400'}`} />
+                  <span>{tab}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Editor Form Area */}
-        <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 min-h-[500px]">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 min-h-[500px]">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 pb-4 border-b border-gray-100">
             <Layout className="w-5 h-5 text-gray-400" />
             {activeTab} Settings
           </h3>
 
           <div className="space-y-6">
-            {schema.fields[activeTab]?.map((field: any) => (
-              <div key={field.id} className="space-y-2">
-                <label className="block text-xs font-extrabold text-gray-500 uppercase tracking-wider">
-                  {field.label}
-                </label>
-                
-                {field.type === 'text' && (
-                  <input
-                    type="text"
-                    value={formData[field.id] || ''}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
-                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm"
-                  />
-                )}
+            {pageId === 'doctors' && activeTab === 'Manage Doctors' ? (
+              <AdminDoctorCrud />
+            ) : (
+              schema.fields[activeTab]?.map((field: any) => (
+                <div key={field.id} className="space-y-2">
+                  <label className="block text-xs font-extrabold text-gray-500 uppercase tracking-wider">
+                    {field.label}
+                  </label>
+                  
+                  {field.type === 'text' && (
+                    <input
+                      type="text"
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleInputChange(field.id, e.target.value)}
+                      className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm"
+                    />
+                  )}
 
-                {field.type === 'textarea' && (
-                  <textarea
-                    rows={4}
-                    value={formData[field.id] || ''}
-                    onChange={(e) => handleInputChange(field.id, e.target.value)}
-                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm resize-none custom-scrollbar"
-                  />
-                )}
+                  {field.type === 'textarea' && (
+                    <textarea
+                      rows={4}
+                      value={formData[field.id] || ''}
+                      onChange={(e) => handleInputChange(field.id, e.target.value)}
+                      className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm resize-none custom-scrollbar"
+                    />
+                  )}
 
-                {field.type === 'image' && (
-                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 bg-gray-50 flex flex-col items-center justify-center text-center hover:border-primary/50 transition-colors cursor-pointer group">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                      <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-primary transition-colors" />
-                    </div>
-                    <p className="font-bold text-gray-700">Click to upload new image</p>
-                    <p className="text-xs text-gray-500 mt-1">SVG, PNG, JPG or GIF (max. 5MB)</p>
-                    
-                    {formData[field.id] && (
-                      <div className="mt-4 relative rounded-xl overflow-hidden border border-gray-200">
-                        <img src={formData[field.id]} alt="Preview" className="w-full max-w-sm h-32 object-cover" />
-                        <div className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Trash2 className="w-4 h-4" />
-                        </div>
+                  {field.type === 'image' && (
+                    <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 bg-gray-50 flex flex-col items-center justify-center text-center hover:border-primary/50 transition-colors cursor-pointer group">
+                      <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                        <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-primary transition-colors" />
                       </div>
-                    )}
-                  </div>
-                )}
+                      <p className="font-bold text-gray-700">Click to upload new image</p>
+                      <p className="text-xs text-gray-500 mt-1">SVG, PNG, JPG or GIF (max. 5MB)</p>
+                      
+                      {formData[field.id] && (
+                        <div className="mt-4 relative rounded-xl overflow-hidden border border-gray-200">
+                          <img src={formData[field.id]} alt="Preview" className="w-full max-w-sm h-32 object-cover" />
+                          <div className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Trash2 className="w-4 h-4" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-                {field.type === 'info' && (
-                  <div className="bg-blue-50 border border-blue-100 text-blue-700 px-6 py-4 rounded-2xl font-medium text-sm">
-                    {field.value}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {field.type === 'info' && (
+                    <div className="bg-blue-50 border border-blue-100 text-blue-700 px-6 py-4 rounded-2xl font-medium text-sm">
+                      {field.value}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
 
-            {schema.fields[activeTab]?.length === 0 && (
+            {!(pageId === 'doctors' && activeTab === 'Manage Doctors') && schema.fields[activeTab]?.length === 0 && (
               <p className="text-gray-400 text-center py-12 font-medium">No configurable fields in this section.</p>
             )}
           </div>

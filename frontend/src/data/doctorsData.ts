@@ -20,7 +20,7 @@ export interface Doctor {
   biographyAm: string;
 }
 
-export const doctorsData: Doctor[] = [
+const staticDoctors: Doctor[] = [
   {
     id: '1',
     name: "Dr. Dawit Yilma",
@@ -206,3 +206,65 @@ export const doctorsData: Doctor[] = [
     biographyAm: "ዶ/ር ኤልያስ ሃይሌ ታካሚዎች ውስብስብ የነርቭ ችግሮችን እንዲያሸንፉ ይረዳሉ።"
   }
 ];
+
+const getDoctors = (): Doctor[] => {
+  if (typeof window === 'undefined') return staticDoctors;
+  const stored = localStorage.getItem('yanet_doctors');
+  if (!stored) {
+    localStorage.setItem('yanet_doctors', JSON.stringify(staticDoctors));
+    return staticDoctors;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch (e) {
+    return staticDoctors;
+  }
+};
+
+export const doctorsData: Doctor[] = new Proxy([] as Doctor[], {
+  get(target, prop, receiver) {
+    const doctors = getDoctors();
+    const value = Reflect.get(doctors, prop, receiver);
+    if (typeof value === 'function') {
+      return value.bind(doctors);
+    }
+    return value;
+  },
+  set(target, prop, value, receiver) {
+    const doctors = getDoctors();
+    const result = Reflect.set(doctors, prop, value, receiver);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yanet_doctors', JSON.stringify(doctors));
+    }
+    return result;
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    const doctors = getDoctors();
+    return Reflect.getOwnPropertyDescriptor(doctors, prop);
+  },
+  defineProperty(target, prop, descriptor) {
+    const doctors = getDoctors();
+    const result = Reflect.defineProperty(doctors, prop, descriptor);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yanet_doctors', JSON.stringify(doctors));
+    }
+    return result;
+  },
+  deleteProperty(target, prop) {
+    const doctors = getDoctors();
+    const result = Reflect.deleteProperty(doctors, prop);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yanet_doctors', JSON.stringify(doctors));
+    }
+    return result;
+  },
+  ownKeys(target) {
+    const doctors = getDoctors();
+    return Reflect.ownKeys(doctors);
+  },
+  has(target, prop) {
+    const doctors = getDoctors();
+    return Reflect.has(doctors, prop);
+  }
+});
+

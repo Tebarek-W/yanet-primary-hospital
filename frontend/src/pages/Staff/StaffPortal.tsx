@@ -57,7 +57,7 @@ export const StaffPortal: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true); // Default to dark for premium look
+  const [darkMode, setDarkMode] = useState(false); // Default to light mode
 
   // Notifications state
   const [notifications, setNotifications] = useState([
