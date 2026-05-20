@@ -55,7 +55,6 @@ const PublicLayout = ({ isAppointmentOpen, setIsAppointmentOpen }: any) => {
           <Route path="/doctors/:id" element={<DoctorDetail />} />
           <Route path="/virtual-tour" element={<VirtualTourPage />} />
           <Route path="/careers" element={<CareersPage />} />
-          <Route path="/portal" element={<PatientPortal />} />
           <Route path="/patient-guide" element={<PatientGuidePage />} />
         </Routes>
       </main>
@@ -91,6 +90,9 @@ function App() {
             <Route path="branches/edit/:slug" element={<AdminBranchForm />} />
           </Route>
         </Route>
+
+        {/* Patient Portal (Standalone) */}
+        <Route path="/patient" element={<PatientPortal />} />
 
         {/* Public Routes */}
         <Route path="/*" element={
