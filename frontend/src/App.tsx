@@ -24,6 +24,7 @@ import ChatBot from './components/Chat/ChatBot';
 import EmergencySOS from './components/Emergency/EmergencySOS';
 import { AuthProvider } from './context/AuthContext';
 import PatientPortal from './pages/PatientPortal';
+import { StaffPortal } from './pages/Staff/StaffPortal';
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminPageEditor from './pages/Admin/AdminPageEditor';
@@ -93,6 +94,9 @@ function App() {
 
         {/* Patient Portal (Standalone) */}
         <Route path="/patient" element={<PatientPortal />} />
+
+        {/* Staff Portal (Standalone) */}
+        <Route path="/staff" element={<StaffPortal />} />
 
         {/* Public Routes */}
         <Route path="/*" element={
