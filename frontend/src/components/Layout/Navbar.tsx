@@ -108,6 +108,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
         { name: isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Virtual Tour', href: '/virtual-tour' }
       ]
     },
+    { name: isAmharic ? 'የታካሚ መመሪያ' : 'Patient Guide', href: '/patient-guide' },
     { name: t('nav.contact'), href: '/contact' },
   ];
 
@@ -230,36 +231,15 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
               {isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Tour'}
             </Link>
 
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/portal"
-                  className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                    }`}
-                >
-                  <User className="w-3.5 h-3.5" />
-                  Patient Portal
-                </Link>
-                <button
-                  onClick={logout}
-                  className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-red-650 hover:text-red-705' : 'text-red-400 hover:text-red-500'
-                    }`}
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-
-                <button
-                  onClick={() => { setAuthModalTab('signup'); setIsAuthModalOpen(true); }}
-                  className={`font-bold text-[12px] transition-all ${isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
-                    }`}
-                >
-                  Sign Up
-                </button>
-              </>
+            {isAuthenticated && (
+              <button
+                onClick={logout}
+                className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-red-650 hover:text-red-705' : 'text-red-400 hover:text-red-500'
+                  }`}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Logout
+              </button>
             )}
 
             <motion.button
@@ -371,14 +351,6 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
 
                 {isAuthenticated ? (
                   <div className="flex gap-2 w-full">
-                    <Link
-                      to="/portal"
-                      className="flex-1 py-[12px] bg-secondary hover:bg-secondary-dark text-white font-bold rounded-[10px] flex items-center justify-center gap-2 text-center text-sm shadow-md"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      Portal
-                    </Link>
                     <button
                       onClick={() => {
                         setIsOpen(false);
@@ -401,16 +373,6 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                       className="flex-1 py-[12px] border border-gray-200 text-secondary font-bold rounded-[10px] text-sm text-center"
                     >
                       Login
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsOpen(false);
-                        setAuthModalTab('signup');
-                        setIsAuthModalOpen(true);
-                      }}
-                      className="flex-1 py-[12px] bg-secondary text-white font-bold rounded-[10px] text-sm text-center shadow-md"
-                    >
-                      Sign Up
                     </button>
                   </div>
                 )}

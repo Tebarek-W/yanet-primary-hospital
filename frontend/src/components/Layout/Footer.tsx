@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isAmharic = (i18n.language || 'en').startsWith('am');
 
   const quickLinks = [
     { name: t('nav.about'), href: "/about" },
     { name: t('nav.services'), href: "/services" },
     { name: t('nav.doctors'), href: "/#doctors" },
+    { name: isAmharic ? 'የታካሚ መመሪያ' : 'Patient Guide', href: '/patient-guide' },
     { name: t('nav.blog'), href: "/blog" },
     { name: t('nav.careers', 'Careers'), href: "/careers" },
     { name: t('nav.contact'), href: "/contact" }
