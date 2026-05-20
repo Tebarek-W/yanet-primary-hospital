@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, User, Phone, Compass, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, User, Phone, Compass, LogOut, UserCircle } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { branchesData } from '../../data/branchesData';
@@ -39,14 +39,11 @@ interface NavbarProps {
 
 const Navbar = ({ onAppointmentClick }: NavbarProps) => {
   const { t, i18n } = useTranslation();
-  const { isAuthenticated, logout } = useAuth();
   const isAmharic = (i18n.language || 'en').startsWith('am');
   const [isSticky, setIsSticky] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'login' | 'signup'>('login');
   const location = useLocation();
 
   useEffect(() => {
@@ -100,28 +97,24 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
       ]
     },
     {
-      name: isAmharic ? 'ሚዲያ እና መረጃ' : 'Media & News',
-      href: '#',
-      hasDropdown: true,
-      dropdownItems: [
-        { name: t('nav.blog'), href: '/blog' },
-        { name: isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Virtual Tour', href: '/virtual-tour' }
-      ]
+      name: isAmharic ? 'ብሎግ' : 'Blog',
+      href: '/blog'
     },
+
     { name: isAmharic ? 'የታካሚ መመሪያ' : 'Patient Guide', href: '/patient-guide' },
     { name: t('nav.contact'), href: '/contact' },
   ];
 
   return (
     <nav className={`w-full transition-all duration-500 z-[100] ${isSticky
-        ? 'sticky-header'
-        : 'bg-transparent py-[25px] border-b border-white/5'
+      ? 'sticky-header'
+      : 'bg-transparent py-[25px] border-b border-white/5'
       }`}>
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="-ml-2 lg:-ml-6 xl:-ml-8 transition-all">
-            <motion.div 
+            <motion.div
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-[8px] group cursor-pointer"
             >
@@ -157,7 +150,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                     <div className="flex items-center gap-[4px] cursor-pointer">
                       <span
                         className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[4px] ${activeDropdown === link.name ? 'text-primary' :
-                            isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
                           }`}
                       >
                         {link.name}
@@ -170,7 +163,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                     <Link
                       to={link.href}
                       className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${location.pathname === link.href ? 'text-primary' :
-                          isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
+                        isSticky ? 'text-secondary hover:text-primary' : 'text-white/90 hover:text-white'
                         }`}
                     >
                       {link.name}
@@ -223,34 +216,40 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
             <Link
               to="/virtual-tour"
               className={`flex items-center gap-1.5 font-bold text-[12px] px-4 py-2 rounded-full border transition-all duration-300 ${isSticky
-                  ? 'border-primary/30 text-primary hover:bg-primary hover:text-white'
-                  : 'border-white/20 text-white/90 hover:bg-white/10 hover:text-white'
+                ? 'border-primary/30 text-primary hover:bg-primary hover:text-white'
+                : 'border-white/20 text-white/90 hover:bg-white/10 hover:text-white'
                 }`}
             >
               <Compass className="w-3.5 h-3.5" />
               {isAmharic ? 'ቨርቹዋል ጉብኝት' : '360° Tour'}
             </Link>
 
-            {isAuthenticated && (
-              <button
-                onClick={logout}
-                className={`font-bold text-[12px] transition-all duration-300 relative group flex items-center gap-[6px] ${isSticky ? 'text-red-650 hover:text-red-705' : 'text-red-400 hover:text-red-500'
-                  }`}
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                Logout
-              </button>
-            )}
+
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={onAppointmentClick}
-              className="btn-primary flex items-center gap-2 !py-[8px] !px-[22px] !text-[12px]"
+              className="btn-primary flex items-center gap-1 !py-[5px] !px-[14px] !text-[11px]"
             >
-              <User className="w-4 h-4" />
+              <User className="w-3 h-3" />
               {t('nav.appointment')}
             </motion.button>
+
+            {/* Patient Portal Avatar */}
+            <Link
+              to="/patient"
+              className={`relative group flex items-center justify-center w-[38px] h-[38px] rounded-full border-2 transition-all duration-300 ${isSticky
+                ? 'border-primary/30 text-primary hover:bg-primary hover:text-white hover:border-primary'
+                : 'border-white/30 text-white/90 hover:bg-white/15 hover:text-white hover:border-white/60'
+                }`}
+              title="Patient Portal"
+            >
+              <UserCircle className="w-5 h-5" />
+              <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] font-bold bg-secondary text-white px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Patient Portal
+              </span>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -349,33 +348,15 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
                   {t('nav.appointment')}
                 </button>
 
-                {isAuthenticated ? (
-                  <div className="flex gap-2 w-full">
-                    <button
-                      onClick={() => {
-                        setIsOpen(false);
-                        logout();
-                      }}
-                      className="flex-1 py-[12px] border border-red-200 text-red-600 font-bold rounded-[10px] flex items-center justify-center gap-2 text-sm transition-all hover:bg-red-50"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-2 w-full">
-                    <button
-                      onClick={() => {
-                        setIsOpen(false);
-                        setAuthModalTab('login');
-                        setIsAuthModalOpen(true);
-                      }}
-                      className="flex-1 py-[12px] border border-gray-200 text-secondary font-bold rounded-[10px] text-sm text-center"
-                    >
-                      Login
-                    </button>
-                  </div>
-                )}
+                <Link
+                  to="/patient"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full py-[12px] border border-primary/20 bg-primary/5 text-primary font-bold rounded-[10px] flex items-center justify-center gap-2 text-sm transition-all hover:bg-primary/10"
+                >
+                  <UserCircle className="w-5 h-5" />
+                  Patient Portal
+                </Link>
+
               </div>
               <div className="mt-[10px] px-[20px]">
                 <a
@@ -392,11 +373,7 @@ const Navbar = ({ onAppointmentClick }: NavbarProps) => {
         )}
       </AnimatePresence>
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        initialTab={authModalTab}
-      />
+
     </nav>
   );
 };
