@@ -17,6 +17,7 @@ import VirtualTourPage from './pages/VirtualTourPage';
 import BranchesPage from './pages/BranchesPage';
 import BranchDetailPage from './pages/BranchDetailPage';
 import CareersPage from './pages/CareersPage';
+import PatientGuidePage from './pages/PatientGuidePage';
 
 import ScrollToTop from './components/Layout/ScrollToTop';
 import ChatBot from './components/Chat/ChatBot';
@@ -55,6 +56,7 @@ const PublicLayout = ({ isAppointmentOpen, setIsAppointmentOpen }: any) => {
           <Route path="/virtual-tour" element={<VirtualTourPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/portal" element={<PatientPortal />} />
+          <Route path="/patient-guide" element={<PatientGuidePage />} />
         </Routes>
       </main>
 
