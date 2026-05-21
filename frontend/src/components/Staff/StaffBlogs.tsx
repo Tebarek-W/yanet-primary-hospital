@@ -97,7 +97,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
   });
 
   return (
-    <div className="space-y-6 text-left">
+    <div className="flex flex-col gap-5 flex-1 text-left">
       {/* Page Title Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
@@ -336,7 +336,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
           </div>
 
           {/* Blogs Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {filteredBlogs.length === 0 ? (
               <div className={`p-10 rounded-2xl border text-center md:col-span-2 ${
                 darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'

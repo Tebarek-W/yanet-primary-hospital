@@ -44,12 +44,12 @@ export const StaffOverview: React.FC<StaffOverviewProps> = ({
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-5 flex-1">
       {/* Welcome Banner */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`p-6 md:p-8 rounded-3xl relative overflow-hidden text-left ${
+        className={`p-6 lg:p-7 rounded-3xl relative overflow-hidden text-left shadow-sm ${
           darkMode 
             ? 'bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800' 
             : 'bg-gradient-to-r from-primary/10 via-primary/5 to-primary/20 border border-primary/10'
@@ -74,7 +74,7 @@ export const StaffOverview: React.FC<StaffOverviewProps> = ({
       </motion.div>
 
       {/* Stats Cards - Sleek 2 column layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -106,7 +106,7 @@ export const StaffOverview: React.FC<StaffOverviewProps> = ({
       </div>
 
       {/* Action cards & widgets grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
         {/* Workspace Operations Quick Actions */}
         <div className={`p-6 rounded-2xl border text-left lg:col-span-2 ${

@@ -60,7 +60,7 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
   );
 
   return (
-    <div className={`rounded-2xl border flex overflow-hidden h-[calc(100vh-210px)] min-h-[500px] text-left ${
+    <div className={`rounded-2xl border flex flex-1 overflow-hidden min-h-[500px] text-left shadow-sm ${
       darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
     }`}>
       

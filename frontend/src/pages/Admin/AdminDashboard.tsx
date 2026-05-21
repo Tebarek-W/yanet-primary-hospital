@@ -50,74 +50,68 @@ const AdminDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 pb-10 max-w-[1400px] mx-auto">
+    <div className="flex flex-col gap-8 pb-10 w-full">
       
-      {/* Welcome Banner - Professional Solid Look */}
-      <div className="bg-[#0A1128] rounded-2xl p-8 md:p-10 shadow-sm border border-gray-800 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        {/* Subtle geometric overlay */}
-        <div className="absolute right-0 top-0 h-full w-1/3 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
-        
-        <div className="relative z-10">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">Welcome to CMS Dashboard</h2>
-          <p className="text-gray-400 font-medium max-w-2xl text-sm md:text-base">
+      {/* Welcome Banner - Premium flat minimalist typography style */}
+      <div className="py-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">Welcome to CMS Dashboard</h2>
+          <p className="text-gray-500 font-medium max-w-4xl text-sm md:text-base leading-relaxed">
             Manage your hospital's digital presence with enterprise-grade control. Update pages, configure services, and monitor patient engagement from a unified interface.
           </p>
         </div>
         <Link 
           to="/" 
           target="_blank" 
-          className="relative z-10 shrink-0 flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 rounded-xl font-semibold transition-colors border border-gray-200 shadow-sm text-sm"
+          className="shrink-0 flex items-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-900 px-5 py-3 rounded-xl font-bold transition-all border border-gray-200 text-sm shadow-sm"
         >
-          <Eye className="w-4 h-4" />
+          <Eye className="w-4 h-4 text-gray-500" />
           View Live Site
         </Link>
       </div>
 
-      {/* Stats Grid - Crisp Minimalist */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stats Row - Flat and clean */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border-b border-gray-100 pb-8">
         {stats.map((stat, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between"
+            className="flex items-center gap-4 p-2"
           >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-10 h-10 ${stat.bg} ${stat.color} rounded-lg flex items-center justify-center`}>
-                <stat.icon className="w-5 h-5" />
-              </div>
-              <TrendingUp className="w-4 h-4 text-gray-300" />
+            <div className={`w-12 h-12 shrink-0 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center shadow-inner`}>
+              <stat.icon className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-              <p className="text-sm font-semibold text-gray-500 mt-1">{stat.title}</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{stat.title}</p>
+              <h3 className="text-2xl font-black text-gray-900 mt-0.5">{stat.value}</h3>
             </div>
           </motion.div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         
-        {/* Quick Edit Links - Clean Table/Grid */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="border-b border-gray-200 px-6 py-5 flex items-center justify-between bg-gray-50/50">
-              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+        {/* Quick Edit Links - Flat Grid */}
+        <div className="lg:col-span-2 space-y-6">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+              <h3 className="text-lg font-extrabold text-gray-900 flex items-center gap-2">
                 <LayoutTemplate className="w-5 h-5 text-gray-500" />
                 Page Management
               </h3>
               <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">{quickPages.length} Pages</span>
             </div>
             
-            <div className="p-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {quickPages.map((page, idx) => (
                 <Link 
                   key={idx}
                   to={page.path}
-                  className="group flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
+                  className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50/80 transition-all border border-gray-100/60"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 border border-gray-200/50 group-hover:bg-white group-hover:border-gray-300 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center shrink-0 border border-gray-200/50 group-hover:bg-white group-hover:border-gray-300 transition-colors">
                     <page.icon className="w-5 h-5 text-gray-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -132,16 +126,16 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Recent Activity - Timeline Structure */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden h-full flex flex-col">
-            <div className="border-b border-gray-200 px-6 py-5 bg-gray-50/50">
-              <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
+        <div className="space-y-6">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+              <h3 className="text-lg font-extrabold text-gray-900 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-gray-500" />
                 Audit Log
               </h3>
             </div>
             
-            <div className="p-6 flex-1">
+            <div className="flex-1">
               <div className="space-y-6">
                 {recentActivity.map((activity, idx) => (
                   <div key={activity.id} className="flex gap-4 relative">
@@ -165,8 +159,8 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 border-t border-gray-100 bg-gray-50/50 mt-auto">
-              <button className="w-full py-2 text-primary hover:text-secondary text-sm font-bold transition-colors">
+            <div className="pt-6 mt-8 border-t border-gray-100">
+              <button className="w-full py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-gray-700 text-xs font-bold transition-all">
                 View Full Log
               </button>
             </div>

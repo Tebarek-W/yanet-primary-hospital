@@ -210,7 +210,7 @@ const AdminBranchForm: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 bg-white rounded-3xl border border-gray-100 shadow-sm">
+      <div className="flex flex-col items-center justify-center py-32">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
         <p className="text-gray-500 font-semibold">Loading branch details...</p>
       </div>
@@ -218,9 +218,9 @@ const AdminBranchForm: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="flex flex-col gap-6 w-full flex-1">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-gray-100">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/admin/branches')}
@@ -266,7 +266,7 @@ const AdminBranchForm: React.FC = () => {
         
         {/* Sidebar Sections Selector */}
         <div className="lg:w-56 shrink-0">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-150 p-2 lg:sticky lg:top-24 space-y-1">
+          <div className="lg:sticky lg:top-24 space-y-1">
             <button
               onClick={() => setActiveSection('basic')}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all text-left w-full ${
@@ -306,8 +306,8 @@ const AdminBranchForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Editor Settings Card */}
-        <div className="flex-1 bg-white rounded-3xl shadow-sm border border-gray-150 p-6 md:p-8 min-h-[500px]">
+        {/* Editor Settings Area */}
+        <div className="flex-1 min-h-[500px]">
           <form onSubmit={handleSave} className="space-y-6">
             
             {/* Section 1: Basic info */}
