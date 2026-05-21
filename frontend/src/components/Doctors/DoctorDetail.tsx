@@ -1,12 +1,15 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
 import { 
   Phone, Mail, Facebook, Twitter, Linkedin, Instagram, 
   CheckCircle2, Clock, Calendar, ArrowRight, User, 
   Star, MessageSquare, Briefcase
 } from 'lucide-react';
 import { doctorsData } from '../../data/doctorsData';
+import type { Doctor } from '../../data/doctorsData';
+import { api } from '../../utils/api';
 import Breadcrumb from '../About/Breadcrumb';
 
 const DoctorDetailPage = () => {
@@ -14,7 +17,27 @@ const DoctorDetailPage = () => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const doctor = doctorsData.find(d => d.id === id);
+  const [doctor, setDoctor] = useState<Doctor | null | undefined>(undefined);
+
+  useEffect(() => {
+    if (!id) { setDoctor(null); return; }
+    api.doctors.getById(id)
+      .then((data: Doctor) => setDoctor(data))
+      .catch(() => {
+        // Fallback to static data if server is offline
+        const found = doctorsData.find(d => d.id === id);
+        setDoctor(found ?? null);
+      });
+  }, [id]);
+
+  // Loading state
+  if (doctor === undefined) {
+    return (
+      <div className="pt-[200px] pb-[100px] flex justify-center">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!doctor) {
     return (

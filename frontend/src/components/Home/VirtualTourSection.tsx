@@ -3,9 +3,15 @@ import { Play, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const VirtualTourSection = () => {
+const VirtualTourSection = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
+
+  const tourImage = cmsData?.vt_widget_image || 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200&q=80';
+  const tourTitle = cmsData?.vt_widget_title || (isAmharic ? 'ያኔት ሆስፒታልን ቪርቹዋሊ ያስሱ' : 'Explore Yanet Virtually');
+  const tourDesc  = cmsData?.vt_widget_desc  || (isAmharic
+    ? 'ወደ ሆስፒታሉ ሳይሄዱ ዘመናዊ ክፍሎቻችንን፣ ሐኪሞቻችንን እና አካባቢያችንን በ360° ጉብኝት ያስሱ።'
+    : 'Take an immersive 360° walk through our modern wards, operating theatres, labs, and patient lounges — before your first visit.');
 
   return (
     <section className="relative py-20 bg-secondary overflow-hidden">
@@ -35,16 +41,14 @@ const VirtualTourSection = () => {
 
             <h2 className="text-white text-[34px] md:text-[44px] font-bold leading-tight mb-5">
               {isAmharic ? (
-                <>ያኔት ሆስፒታልን <span className="text-primary">ቪርቹዋሊ</span> ያስሱ</>
+                <>{tourTitle.split(' ').slice(0, -1).join(' ')} <span className="text-primary">{tourTitle.split(' ').slice(-1)}</span></>
               ) : (
                 <>Explore Yanet <span className="text-primary">Virtually</span></>
               )}
             </h2>
 
             <p className="text-white/55 text-[15px] leading-relaxed mb-8 max-w-[480px] mx-auto lg:mx-0">
-              {isAmharic
-                ? 'ወደ ሆስፒታሉ ሳይሄዱ ዘመናዊ ክፍሎቻችንን፣ ሐኪሞቻችንን እና አካባቢያችንን በ360° ጉብኝት ያስሱ።'
-                : 'Take an immersive 360° walk through our modern wards, operating theatres, labs, and patient lounges — before your first visit.'}
+              {tourDesc}
             </p>
 
             <Link

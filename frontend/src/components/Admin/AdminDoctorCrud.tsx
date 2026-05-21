@@ -5,8 +5,9 @@ import {
   Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { doctorsData } from '../../data/doctorsData';
+import { doctorsData } from '../../data/doctorsData'; // fallback static data
 import type { Doctor } from '../../data/doctorsData';
+import { api } from '../../utils/api';
 
 const AdminDoctorCrud: React.FC = () => {
   // Reactive list of doctors
@@ -26,22 +27,23 @@ const AdminDoctorCrud: React.FC = () => {
   // Custom alerts/toasts
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
 
-  // Load doctors from proxy (localStorage backed) on mount
+  // Load doctors from API on mount, fallback to static data if server is offline
+  const fetchDoctors = async () => {
+    try {
+      const data = await api.doctors.getAll();
+      setDoctors(Array.isArray(data) ? data : [...doctorsData]);
+    } catch {
+      setDoctors([...doctorsData]);
+    }
+  };
+
   useEffect(() => {
-    setDoctors([...doctorsData]);
+    fetchDoctors();
   }, []);
 
   const triggerToast = (message: string, type: 'success' | 'danger' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  };
-
-  // Save changes back to proxy/localStorage
-  const persistDoctors = (updatedList: Doctor[]) => {
-    // Clear array and push all to trigger Proxy 'set'
-    doctorsData.length = 0;
-    updatedList.forEach(doc => doctorsData.push(doc));
-    setDoctors([...doctorsData]);
   };
 
   // Handle Delete operation
@@ -50,13 +52,17 @@ const AdminDoctorCrud: React.FC = () => {
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!doctorToDelete) return;
-    const updated = doctors.filter(doc => doc.id !== doctorToDelete.id);
-    persistDoctors(updated);
+    try {
+      await api.doctors.delete(doctorToDelete.id);
+      setDoctors(prev => prev.filter(d => d.id !== doctorToDelete.id));
+      triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
+    } catch {
+      triggerToast('Failed to delete doctor. Please check the server connection.', 'danger');
+    }
     setIsDeleteConfirmOpen(false);
     setDoctorToDelete(null);
-    triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
   };
 
   // Open Edit or Add modal
@@ -92,28 +98,31 @@ const AdminDoctorCrud: React.FC = () => {
   };
 
   // Save add/edit form
-  const handleSaveDoctor = (e: React.FormEvent) => {
+  const handleSaveDoctor = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingDoctor || !editingDoctor.name || !editingDoctor.id) {
       triggerToast('Please provide a valid doctor name.', 'danger');
       return;
     }
 
-    const updatedDoctor = editingDoctor as Doctor;
-    const exists = doctors.some(d => d.id === updatedDoctor.id);
-    let updatedList: Doctor[];
+    const doctorPayload = editingDoctor as Doctor;
+    const exists = doctors.some(d => d.id === doctorPayload.id);
 
-    if (exists) {
-      updatedList = doctors.map(d => d.id === updatedDoctor.id ? updatedDoctor : d);
-      triggerToast(`Profile for ${updatedDoctor.name} updated successfully.`);
-    } else {
-      updatedList = [...doctors, updatedDoctor];
-      triggerToast(`Doctor ${updatedDoctor.name} added to the registry.`);
+    try {
+      if (exists) {
+        const saved: Doctor = await api.doctors.update(doctorPayload.id, doctorPayload);
+        setDoctors(prev => prev.map(d => d.id === saved.id ? saved : d));
+        triggerToast(`Profile for ${doctorPayload.name} updated successfully.`);
+      } else {
+        const saved: Doctor = await api.doctors.create(doctorPayload);
+        setDoctors(prev => [...prev, saved]);
+        triggerToast(`Doctor ${doctorPayload.name} added to the registry.`);
+      }
+      setIsEditModalOpen(false);
+      setEditingDoctor(null);
+    } catch {
+      triggerToast('Failed to save doctor profile. Please check the server connection.', 'danger');
     }
-
-    persistDoctors(updatedList);
-    setIsEditModalOpen(false);
-    setEditingDoctor(null);
   };
 
   // Lists management inside form (Education, Experience, Skills)

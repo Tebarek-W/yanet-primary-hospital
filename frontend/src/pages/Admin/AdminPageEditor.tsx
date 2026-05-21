@@ -6,12 +6,13 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import AdminDoctorCrud from '../../components/Admin/AdminDoctorCrud';
+import { API_BASE } from '../../utils/api';
 
-// Mock schema data for different pages
+// CMS schema data for all pages
 const pageSchemas: Record<string, any> = {
   home: {
     title: 'Home Page',
-    tabs: ['Hero Section', 'Quick Actions', 'About Preview', 'Services Preview', 'Testimonials', 'Doctors Preview', 'News Preview', 'SEO'],
+    tabs: ['Hero Section', 'Quick Actions', 'About Preview', 'Stats Bar', 'Why Choose Us', 'Services Preview', 'Campaign Banner', 'Testimonials', 'Virtual Tour Widget', 'Doctors Preview', 'News Preview', 'SEO'],
     fields: {
       'Hero Section': [
         { id: 'hero_title', label: 'Main Headline', type: 'text', value: 'Advanced Healthcare Made Personal' },
@@ -37,6 +38,43 @@ const pageSchemas: Record<string, any> = {
         { id: 'stat_1_label', label: 'Stat 1 Label', type: 'text', value: 'Specialist Doctors' },
         { id: 'stat_2_value', label: 'Stat 2 Value', type: 'text', value: '10k+' },
         { id: 'stat_2_label', label: 'Stat 2 Label', type: 'text', value: 'Happy Patients' },
+      ],
+      'Stats Bar': [
+        { id: 'stats_patients_target', label: 'Patients Served (count-up target)', type: 'text', value: '124582' },
+        { id: 'stats_doctors_target', label: 'Doctors & Staff (count-up target)', type: 'text', value: '184' },
+        { id: 'stats_branches_target', label: 'Hospital Branches (count-up target)', type: 'text', value: '6' },
+      ],
+      'Why Choose Us': [
+        { id: 'why_phone', label: 'Contact Phone Number', type: 'text', value: '+251 11 123 4567' },
+        { id: 'why_address', label: 'Hospital Address', type: 'text', value: 'Bole Road, Addis Ababa, Ethiopia' },
+        { id: 'why_hours', label: 'Opening Hours', type: 'text', value: 'Mon - Sun: 24 Hours' },
+        { id: 'why_stat1_title', label: 'Stat Card 1 Title', type: 'text', value: '50+ Specialist Doctors' },
+        { id: 'why_stat1_desc', label: 'Stat Card 1 Description', type: 'text', value: 'Board-certified specialists across all departments.' },
+        { id: 'why_stat2_title', label: 'Stat Card 2 Title', type: 'text', value: 'Award Winning' },
+        { id: 'why_stat2_desc', label: 'Stat Card 2 Description', type: 'text', value: 'Nationally recognized for clinical excellence.' },
+        { id: 'why_stat3_title', label: 'Stat Card 3 Title', type: 'text', value: '24/7 Service' },
+        { id: 'why_stat3_desc', label: 'Stat Card 3 Description', type: 'text', value: 'Round-the-clock emergency and outpatient care.' },
+        { id: 'why_stat4_title', label: 'Stat Card 4 Title', type: 'text', value: 'Modern Technology' },
+        { id: 'why_stat4_desc', label: 'Stat Card 4 Description', type: 'text', value: 'State-of-the-art diagnostic and surgical equipment.' },
+      ],
+      'Campaign Banner': [
+        { id: 'campaign_1_badge', label: 'Slide 1 Badge Text', type: 'text', value: 'Flu Season Alert' },
+        { id: 'campaign_1_title', label: 'Slide 1 Title', type: 'text', value: 'Protect Yourself This Flu Season' },
+        { id: 'campaign_1_desc', label: 'Slide 1 Description', type: 'textarea', value: 'Get your annual flu vaccination at any Yanet branch. Walk-ins welcome.' },
+        { id: 'campaign_1_cta', label: 'Slide 1 CTA Button Text', type: 'text', value: 'Book Vaccination' },
+        { id: 'campaign_2_badge', label: 'Slide 2 Badge Text', type: 'text', value: 'Wellness Program' },
+        { id: 'campaign_2_title', label: 'Slide 2 Title', type: 'text', value: 'Annual Wellness Checkup Package' },
+        { id: 'campaign_2_desc', label: 'Slide 2 Description', type: 'textarea', value: 'Comprehensive health screening for adults. Early detection saves lives.' },
+        { id: 'campaign_2_cta', label: 'Slide 2 CTA Button Text', type: 'text', value: 'Book Checkup' },
+        { id: 'campaign_3_badge', label: 'Slide 3 Badge Text', type: 'text', value: 'Maternal Health' },
+        { id: 'campaign_3_title', label: 'Slide 3 Title', type: 'text', value: 'Maternal & Newborn Care Program' },
+        { id: 'campaign_3_desc', label: 'Slide 3 Description', type: 'textarea', value: 'Expert prenatal, delivery, and postnatal care for mothers and babies.' },
+        { id: 'campaign_3_cta', label: 'Slide 3 CTA Button Text', type: 'text', value: 'Learn More' },
+      ],
+      'Virtual Tour Widget': [
+        { id: 'vt_widget_image', label: 'Preview Thumbnail Image URL', type: 'image', value: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200&q=80' },
+        { id: 'vt_widget_title', label: 'Section Title', type: 'text', value: 'Explore Yanet Virtually' },
+        { id: 'vt_widget_desc', label: 'Section Description', type: 'textarea', value: 'Take an immersive 360° walk through our modern wards, operating theatres, labs, and patient lounges.' },
       ],
       'Services Preview': [
         { id: 'srv_preview_title', label: 'Section Title', type: 'text', value: 'Our Medical Services' },
@@ -64,7 +102,7 @@ const pageSchemas: Record<string, any> = {
   },
   about: {
     title: 'About Us',
-    tabs: ['Hero Section', 'Company Overview', 'Mission & Vision', 'Core Values', 'Timeline', 'Leadership', 'SEO'],
+    tabs: ['Hero Section', 'Company Overview', 'Mission & Vision', 'Core Values', 'Counter Stats', 'Timeline', 'Leadership', 'Medical Camp', 'Certifications', 'Partnerships', 'SEO'],
     fields: {
       'Hero Section': [
         { id: 'about_hero_title', label: 'Page Headline', type: 'text', value: 'About Yanet Hospital' },
@@ -88,13 +126,65 @@ const pageSchemas: Record<string, any> = {
         { id: 'value_3_title', label: 'Value 3 Title', type: 'text', value: 'Integrity' },
         { id: 'value_3_desc', label: 'Value 3 Description', type: 'textarea', value: 'We maintain transparency and ethical practices.' },
       ],
+      'Counter Stats': [
+        { id: 'counter_doctors_target', label: 'Doctors & Staff Count', type: 'text', value: '540' },
+        { id: 'counter_success_target', label: 'Successful Procedures Count', type: 'text', value: '990' },
+        { id: 'counter_presence_target', label: 'Community Presence Count', type: 'text', value: '3500' },
+        { id: 'counter_experience_target', label: 'Years of Experience Count', type: 'text', value: '6' },
+      ],
       'Timeline': [
-        { id: 'timeline_title', label: 'Section Title', type: 'text', value: 'Our History' },
-        { id: 'timeline_json', label: 'Timeline Data (JSON format)', type: 'textarea', value: '[{"year":"2020", "event":"Hospital Founded"}]' }
+        { id: 'timeline_title', label: 'Section Badge Text', type: 'text', value: 'Our History' },
+        { id: 'timeline_json', label: 'Timeline Milestones (JSON — array of {year, event})', type: 'textarea', value: '[{"year":"2020","event":"Hospital Founded"},{"year":"2021","event":"Expanded to 3 branches"},{"year":"2022","event":"Launched ICU & Cardiology"},{"year":"2023","event":"International Partnerships"},{"year":"2024","event":"Digital Health Platform"},{"year":"2025","event":"National Excellence Award"}]' },
       ],
       'Leadership': [
         { id: 'leadership_title', label: 'Section Title', type: 'text', value: 'Our Management Team' },
-        { id: 'leadership_desc', label: 'Description', type: 'textarea', value: 'Guided by experienced medical professionals.' },
+        { id: 'leadership_desc', label: 'Section Description', type: 'textarea', value: 'Guided by experienced medical professionals.' },
+        { id: 'leader_1_name', label: 'Leader 1 Name', type: 'text', value: 'Dr. Tebarek Liyana' },
+        { id: 'leader_1_role', label: 'Leader 1 Role', type: 'text', value: 'Chief Executive Officer' },
+        { id: 'leader_1_bio', label: 'Leader 1 Bio', type: 'textarea', value: 'Visionary leader with 15+ years in healthcare management.' },
+        { id: 'leader_1_image', label: 'Leader 1 Photo URL', type: 'image', value: '/doctor_new.png' },
+        { id: 'leader_1_email', label: 'Leader 1 Email', type: 'text', value: 'tebarek@yanethospital.com' },
+        { id: 'leader_2_name', label: 'Leader 2 Name', type: 'text', value: 'Dr. Birhanu Mengiste' },
+        { id: 'leader_2_role', label: 'Leader 2 Role', type: 'text', value: 'Medical Director' },
+        { id: 'leader_2_bio', label: 'Leader 2 Bio', type: 'textarea', value: 'Senior physician specializing in internal medicine and hospital operations.' },
+        { id: 'leader_2_image', label: 'Leader 2 Photo URL', type: 'image', value: '/doctors/doctor1.png' },
+        { id: 'leader_2_email', label: 'Leader 2 Email', type: 'text', value: 'birhanu@yanethospital.com' },
+        { id: 'leader_3_name', label: 'Leader 3 Name', type: 'text', value: 'Sister Tigist Hailu' },
+        { id: 'leader_3_role', label: 'Leader 3 Role', type: 'text', value: 'Chief Nursing Officer' },
+        { id: 'leader_3_bio', label: 'Leader 3 Bio', type: 'textarea', value: 'Dedicated nursing leader with expertise in patient care standards.' },
+        { id: 'leader_3_image', label: 'Leader 3 Photo URL', type: 'image', value: '/doctors/doctor4.png' },
+        { id: 'leader_3_email', label: 'Leader 3 Email', type: 'text', value: 'tigist@yanethospital.com' },
+        { id: 'leader_4_name', label: 'Leader 4 Name', type: 'text', value: 'Samuel Bekele' },
+        { id: 'leader_4_role', label: 'Leader 4 Role', type: 'text', value: 'Chief Operations Officer' },
+        { id: 'leader_4_bio', label: 'Leader 4 Bio', type: 'textarea', value: 'Operations expert ensuring seamless hospital workflows and patient experience.' },
+        { id: 'leader_4_image', label: 'Leader 4 Photo URL', type: 'image', value: '/doctors/doctor3.png' },
+        { id: 'leader_4_email', label: 'Leader 4 Email', type: 'text', value: 'samuel@yanethospital.com' },
+      ],
+      'Medical Camp': [
+        { id: 'camp_image', label: 'Medical Camp Image URL', type: 'image', value: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1000' },
+        { id: 'camp_title', label: 'Section Title', type: 'text', value: 'Free Medical Camp Services' },
+        { id: 'camp_desc', label: 'Section Description', type: 'textarea', value: 'Yanet Primary Hospital regularly organizes free medical camps to serve underserved communities.' },
+      ],
+      'Certifications': [
+        { id: 'cert_badge', label: 'Section Badge Text', type: 'text', value: 'Accreditations' },
+        { id: 'cert_title', label: 'Section Title', type: 'text', value: 'Our Certifications & Accreditations' },
+        { id: 'cert_desc', label: 'Section Description', type: 'textarea', value: 'Yanet Primary Hospital holds internationally recognized certifications.' },
+        { id: 'cert_1_title', label: 'Cert 1 Title', type: 'text', value: 'FMHACA Licensed' },
+        { id: 'cert_1_desc', label: 'Cert 1 Description', type: 'textarea', value: 'Fully licensed by the Ethiopian Food, Medicine and Healthcare Administration and Control Authority.' },
+        { id: 'cert_2_title', label: 'Cert 2 Title', type: 'text', value: 'ISO 9001:2015' },
+        { id: 'cert_2_desc', label: 'Cert 2 Description', type: 'textarea', value: 'Certified for quality management systems in healthcare service delivery.' },
+        { id: 'cert_3_title', label: 'Cert 3 Title', type: 'text', value: 'National Quality Standard' },
+        { id: 'cert_3_desc', label: 'Cert 3 Description', type: 'textarea', value: 'Meets all Ethiopian national healthcare quality benchmarks.' },
+        { id: 'cert_4_title', label: 'Cert 4 Title', type: 'text', value: 'Ethiopian Medical Association' },
+        { id: 'cert_4_desc', label: 'Cert 4 Description', type: 'textarea', value: 'Recognized member of the Ethiopian Medical Association.' },
+      ],
+      'Partnerships': [
+        { id: 'partner_badge', label: 'Section Badge Text', type: 'text', value: 'Our Partners' },
+        { id: 'partner_title', label: 'Section Title', type: 'text', value: 'Trusted Partnerships & Collaborations' },
+        { id: 'partner_desc', label: 'Section Description', type: 'textarea', value: 'We collaborate with leading institutions to deliver the best care.' },
+        { id: 'partner_insurers', label: 'Insurance Partners (comma-separated)', type: 'text', value: 'Nyala Insurance, Medhin Insurance, United Insurance, Awash Insurance' },
+        { id: 'partner_hospitals', label: 'Hospital Partners (comma-separated)', type: 'text', value: 'Black Lion Hospital, Hawassa University Hospital' },
+        { id: 'partner_ngos', label: 'NGO / International Partners (comma-separated)', type: 'text', value: 'Ethiopian Red Cross, USAID Ethiopia' },
       ],
       'SEO': [
         { id: 'meta_title', label: 'Meta Title', type: 'text', value: 'About Us | Yanet Primary Hospital' },
@@ -242,23 +332,25 @@ const pageSchemas: Record<string, any> = {
       'Hero Section': [
         { id: 'vt_title', label: 'Page Headline', type: 'text', value: 'Take a 360° Virtual Tour' },
         { id: 'vt_desc', label: 'Subtitle', type: 'textarea', value: 'Explore our state-of-the-art facilities from the comfort of your home.' },
+        { id: 'vt_hero_image', label: 'Hero Background Image', type: 'image', value: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200&q=80' },
       ],
       'Tour Settings': [
-        { id: 'vt_embed_url', label: 'Matterport / 360 Tour Embed URL', type: 'text', value: 'https://my.matterport.com/show/?m=xxx' },
-        { id: 'vt_autoplay', label: 'Autoplay Tour', type: 'text', value: 'false' },
+        { id: 'vt_embed_url', label: 'Panoee / Matterport Embed URL', type: 'text', value: 'https://tour.panoee.net/iframe/69d5076793f8052809dbec8b' },
+        { id: 'vt_autoplay', label: 'Autoplay Tour on Load (true/false)', type: 'text', value: 'false' },
       ],
       'Highlights': [
         { id: 'vt_highlights_title', label: 'Highlights Section Title', type: 'text', value: 'Key Areas to Explore' },
-        { id: 'vt_areas', label: 'Highlighted Areas (JSON)', type: 'textarea', value: '[{"name":"ICU", "time":"0:45"}]' },
+        { id: 'vt_areas', label: 'Highlighted Areas (JSON — array of {name, time})', type: 'textarea', value: '[{"name":"ICU Ward","time":"0:45"},{"name":"Operating Theatre","time":"1:20"},{"name":"Pediatrics","time":"2:10"}]' },
       ],
       'SEO': [
         { id: 'meta_title', label: 'Meta Title', type: 'text', value: 'Virtual Tour | Yanet Primary Hospital' },
+        { id: 'meta_desc', label: 'Meta Description', type: 'textarea', value: 'Take a 360° virtual tour of Yanet Primary Hospital facilities.' },
       ]
     }
   },
   careers: {
     title: 'Careers',
-    tabs: ['Hero Section', 'Why Join Us', 'Current Openings', 'Application Form', 'SEO'],
+    tabs: ['Hero Section', 'Why Join Us', 'HR Contact', 'Current Openings', 'Application Form', 'SEO'],
     fields: {
       'Hero Section': [
         { id: 'car_title', label: 'Page Headline', type: 'text', value: 'Join Our Medical Team' },
@@ -273,6 +365,16 @@ const pageSchemas: Record<string, any> = {
         { id: 'ben_2_desc', label: 'Benefit 2 Description', type: 'textarea', value: 'Comprehensive health coverage for you and your family.' },
         { id: 'ben_3', label: 'Benefit 3 Headline', type: 'text', value: 'Continuous Training' },
         { id: 'ben_3_desc', label: 'Benefit 3 Description', type: 'textarea', value: 'Regular workshops and professional development opportunities.' },
+        { id: 'ben_4', label: 'Benefit 4 Headline', type: 'text', value: 'Career Growth' },
+        { id: 'ben_4_desc', label: 'Benefit 4 Description', type: 'textarea', value: 'Clear promotion pathways and leadership development programs.' },
+      ],
+      'HR Contact': [
+        { id: 'hr_email', label: 'HR Email Address', type: 'text', value: 'hr@yanetprimaryhospital.com' },
+        { id: 'hr_phone', label: 'HR Phone Number', type: 'text', value: '+251 11 123 4568' },
+        { id: 'hr_address', label: 'HR Office Address (English)', type: 'textarea', value: 'Main Branch, 3rd Floor, HR & Administration Suite, Addis Ababa, Ethiopia' },
+        { id: 'hr_address_am', label: 'HR Office Address (Amharic)', type: 'textarea', value: 'ዋና ቅርንጫፍ፣ 3ኛ ፎቅ፣ የሰው ሀብት እና አስተዳደር ቢሮ፣ አዲስ አበባ፣ ኢትዮጵያ' },
+        { id: 'hr_hours', label: 'Working Hours (English)', type: 'text', value: 'Mon - Fri: 8:30 AM - 5:00 PM' },
+        { id: 'hr_hours_am', label: 'Working Hours (Amharic)', type: 'text', value: 'ሰኞ - አርብ: 2:30 ሰዓት - 11:00 ሰዓት' },
       ],
       'Current Openings': [
         { id: 'jobs_title', label: 'Section Title', type: 'text', value: 'Open Positions' },
@@ -284,6 +386,7 @@ const pageSchemas: Record<string, any> = {
       ],
       'SEO': [
         { id: 'meta_title', label: 'Meta Title', type: 'text', value: 'Careers & Jobs | Yanet Primary Hospital' },
+        { id: 'meta_desc', label: 'Meta Description', type: 'textarea', value: 'Join the Yanet Primary Hospital team. View open positions and internship programs.' },
       ]
     }
   }
@@ -335,7 +438,7 @@ const AdminPageEditor: React.FC = () => {
       });
       
       // Fetch live data from backend to override defaults
-      fetch(`http://localhost:5002/api/pages/${pageId}`)
+      fetch(`${API_BASE}/pages/${pageId}`)
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (data) {
@@ -363,7 +466,7 @@ const AdminPageEditor: React.FC = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch(`http://localhost:5002/api/pages/${pageId}`, {
+      const response = await fetch(`${API_BASE}/pages/${pageId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, ArrowRight, Tag, Facebook, Twitter, Linkedin, Link2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { blogArticles } from '../../data/blogData';
+import type { BlogArticle } from '../../data/blogData';
+import { api } from '../../utils/api';
 
 const CATEGORIES_EN = ['All', 'Cardiology', 'Nutrition', 'Pediatrics', 'Surgery', 'Mental Health', 'Preventive Care'];
 const CATEGORIES_AM = ['ሁሉም', 'ልብ', 'አመጋገብ', 'ህፃናት', 'ቀዶ ጥገና', 'አዕምሮ ጤና', 'ፕሪቬንቲቭ'];
@@ -66,8 +68,19 @@ const HealthBlog = () => {
   const categories = isAmharic ? CATEGORIES_AM : CATEGORIES_EN;
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [articles, setArticles] = useState<BlogArticle[]>([...blogArticles]);
 
-  const filtered = blogArticles.filter(a => {
+  useEffect(() => {
+    api.blog.getAll()
+      .then((data: BlogArticle[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setArticles(data);
+        }
+      })
+      .catch(() => { /* use fallback */ });
+  }, []);
+
+  const filtered = articles.filter(a => {
     const cat = isAmharic ? a.categoryAm : a.categoryEn;
     const title = isAmharic ? a.titleAm : a.titleEn;
     const matchesCat = activeCategory === categories[0] || cat === activeCategory;

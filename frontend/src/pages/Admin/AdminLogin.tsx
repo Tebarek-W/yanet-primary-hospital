@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, ChevronRight, ShieldAlert } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { API_BASE } from '../../utils/api';
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const AdminLogin: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5002/api/auth/login', {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

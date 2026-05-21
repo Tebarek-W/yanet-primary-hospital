@@ -45,3 +45,100 @@ model Branch {
   updatedAt          DateTime @updatedAt
 }
 
+model Doctor {
+  id          String   @id
+  name        String
+  nameAm      String
+  roleKey     String
+  specialty   String
+  image       String   @db.Text
+  desc        String   @db.Text
+  descAm      String   @db.Text
+  email       String
+  phone       String
+  location    String
+  education   Json
+  educationAm Json
+  experience  Json
+  experienceAm Json
+  skills      Json
+  skillsAm    Json
+  biography   String   @db.Text
+  biographyAm String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  slug        String   @id
+  category    String
+  iconName    String
+  title       String
+  titleAm     String
+  desc        String   @db.Text
+  descAm      String   @db.Text
+  fullDesc    String   @db.LongText
+  fullDescAm  String   @db.LongText
+  specialty   String
+  treatments  Json
+  treatmentsAm Json
+  equipment   Json
+  equipmentAm Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id            String   @id
+  categoryEn    String
+  categoryAm    String
+  titleEn       String
+  titleAm       String
+  excerptEn     String   @db.Text
+  excerptAm     String   @db.Text
+  image         String   @db.Text
+  dateEn        String
+  dateAm        String
+  authorId      String
+  authorNameEn  String
+  authorNameAm  String
+  readMin       Int
+  contentEn     String   @db.LongText
+  contentAm     String   @db.LongText
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model JobVacancy {
+  id           String   @id
+  title        String
+  titleAm      String
+  department   String
+  departmentAm String
+  location     String
+  locationAm   String
+  type         String
+  typeAm       String
+  experience   String
+  experienceAm String
+  desc         String   @db.Text
+  descAm       String   @db.Text
+  reqs         Json
+  reqsAm       Json
+  postedDate   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model InternshipProgram {
+  id        String   @id
+  title     String
+  titleAm   String
+  duration  String
+  durationAm String
+  desc      String   @db.Text
+  descAm    String   @db.Text
+  icon      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

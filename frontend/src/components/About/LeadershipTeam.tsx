@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { Mail, Linkedin, Twitter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const LeadershipTeam = () => {
+interface LeadershipTeamProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const LeadershipTeam = ({ cmsData }: LeadershipTeamProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
@@ -45,10 +49,10 @@ const LeadershipTeam = () => {
             {t('about_leadership.badge')}
           </span>
           <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">
-            {t('about_leadership.title')}
+            {cmsData?.leadership_title || t('about_leadership.title')}
           </h2>
           <p className="relative z-10 text-[#5d666e] mt-3 max-w-[650px] mx-auto text-[14px]">
-            {t('about_leadership.desc')}
+            {cmsData?.leadership_desc || t('about_leadership.desc')}
           </p>
         </div>
 

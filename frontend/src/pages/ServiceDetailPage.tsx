@@ -24,6 +24,7 @@ import {
 import { servicesData } from '../data/servicesData';
 import { doctorsData } from '../data/doctorsData';
 import Breadcrumb from '../components/About/Breadcrumb';
+import { api } from '../utils/api';
 
 interface ServiceDetailPageProps {
   onAppointmentClick: () => void;
@@ -51,8 +52,37 @@ const ServiceDetailPage = ({ onAppointmentClick }: ServiceDetailPageProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  // Find current service details
-  const service = servicesData.find(s => s.slug === slug);
+  // Find current service details - initialized to fallback immediately
+  const [service, setService] = useState<any>(() => servicesData.find(s => s.slug === slug));
+  const [doctors, setDoctors] = useState<any[]>(doctorsData);
+
+  useEffect(() => {
+    if (!slug) return;
+    
+    // Fetch dynamic service details
+    api.services.getBySlug(slug)
+      .then(data => {
+        if (data && data.slug) {
+          setService(data);
+        }
+      })
+      .catch(err => {
+        console.warn("Using fallback static service details:", err);
+        const staticService = servicesData.find(s => s.slug === slug);
+        setService(staticService || null);
+      });
+  }, [slug]);
+
+  useEffect(() => {
+    // Fetch dynamic doctors list
+    api.doctors.getAll()
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDoctors(data);
+        }
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
 
   // Lead Conversion Form States
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', date: '', message: '' });
@@ -69,9 +99,9 @@ const ServiceDetailPage = ({ onAppointmentClick }: ServiceDetailPageProps) => {
   if (!service) return null;
 
   // Query matching doctors based on specialty
-  const relatedDoctors = doctorsData.filter(doc => doc.specialty === service.specialty);
+  const relatedDoctors = doctors.filter(doc => doc.specialty === service.specialty);
   // Fallback to general doctors if no specific specialty match (e.g. Pharmacy, Ambulance, Lab)
-  const displayDoctors = relatedDoctors.length > 0 ? relatedDoctors : doctorsData.slice(0, 3);
+  const displayDoctors = relatedDoctors.length > 0 ? relatedDoctors : doctors.slice(0, 3);
 
   // Handle sidebar form submission (Lead Capture)
   const handleSubmit = (e: React.FormEvent) => {

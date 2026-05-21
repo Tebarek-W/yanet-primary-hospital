@@ -1,15 +1,26 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { blogArticles } from '../../data/blogData';
+import type { BlogArticle } from '../../data/blogData';
+import { api } from '../../utils/api';
 
 const Blog = () => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  // Get the first 3 articles to showcase on the home page
-  const blogsToShow = blogArticles.slice(0, 3);
+  const [blogsToShow, setBlogsToShow] = useState<BlogArticle[]>(blogArticles.slice(0, 3));
+
+  // Fetch latest 3 posts from API; fallback to static
+  useEffect(() => {
+    api.blog.getAll()
+      .then((data: BlogArticle[]) => {
+        if (Array.isArray(data) && data.length > 0) setBlogsToShow(data.slice(0, 3));
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
 
   return (
     <section id="blog" className="pt-[60px] pb-[60px]">

@@ -3,7 +3,11 @@ import { ArrowRight, Phone, Mail, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const ContactHero = () => {
+interface ContactHeroProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const ContactHero = ({ cmsData }: ContactHeroProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
@@ -15,7 +19,7 @@ const ContactHero = () => {
           initial={{ scale: 1.2, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.3 }}
           transition={{ duration: 1.5 }}
-          src="https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2070&auto=format&fit=crop" 
+          src={cmsData?.cont_img || "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2070&auto=format&fit=crop"} 
           alt="Contact Hero" 
           className="w-full h-full object-cover"
         />

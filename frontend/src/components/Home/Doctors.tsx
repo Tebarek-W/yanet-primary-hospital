@@ -1,16 +1,27 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { User, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import DoctorCard from '../Doctors/DoctorCard';
 import { doctorsData } from '../../data/doctorsData';
+import type { Doctor } from '../../data/doctorsData';
+import { api } from '../../utils/api';
 import drKirubelImage from '../../assets/Dr._Kirubel_Abraham.jpg';
 
 const Doctors = () => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  // Display top 4 doctors on home page
-  const homeDoctors = doctorsData.slice(0, 4);
+  const [homeDoctors, setHomeDoctors] = useState<Doctor[]>(doctorsData.slice(0, 4));
+
+  // Fetch live doctors from API; slice first 4 for home page
+  useEffect(() => {
+    api.doctors.getAll()
+      .then((data: Doctor[]) => {
+        if (Array.isArray(data) && data.length > 0) setHomeDoctors(data.slice(0, 4));
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
 
   return (
     <section id="doctors" className="section-padding bg-light-bg/20 overflow-hidden">
