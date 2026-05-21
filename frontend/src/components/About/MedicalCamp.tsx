@@ -2,9 +2,11 @@ import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const MedicalCamp = () => {
+const MedicalCamp = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
+
+  const campImage = cmsData?.camp_image || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1000';
 
   const objectives = [
     isAmharic ? "ለቀዶ ጥገና ተገቢ የሆኑ ጉዳዮችን በነፃ መመዝገብ" : "Free Registration of Deserving Cases for Surgeries",
@@ -70,7 +72,7 @@ const MedicalCamp = () => {
           >
             <div className="rounded-[10px] overflow-hidden shadow-xl border-4 border-white">
               <img 
-                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=1000" 
+                src={campImage}
                 alt="Ethiopian Healthcare Team" 
                 className="w-full h-auto"
               />

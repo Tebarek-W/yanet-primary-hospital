@@ -4,8 +4,9 @@ import { Clock, Calendar, ChevronLeft, ArrowUp, Info, User, HelpCircle } from 'l
 import { useTranslation } from 'react-i18next';
 import { blogArticles } from '../data/blogData';
 import type { BlogArticle } from '../data/blogData';
-import { fetchDoctors } from '../data/doctorsData';
+import { doctorsData } from '../data/doctorsData';
 import type { Doctor } from '../data/doctorsData';
+import { api } from '../utils/api';
 
 interface MedicalTipBoxProps {
   children: React.ReactNode;
@@ -32,8 +33,42 @@ const BlogDetailPage = () => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const [article, setArticle] = useState<BlogArticle | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [article, setArticle] = useState<BlogArticle | null | undefined>(undefined);
+  const [relatedDoctor, setRelatedDoctor] = useState<Doctor | null>(null);
+
+  // Fetch article and related doctor from API
+  useEffect(() => {
+    if (!id) {
+      setArticle(null);
+      return;
+    }
+    setArticle(undefined);
+
+    api.blog.getById(id)
+      .then(async (data: BlogArticle) => {
+        setArticle(data);
+        if (data.authorId) {
+          try {
+            const doc = await api.doctors.getById(data.authorId);
+            setRelatedDoctor(doc);
+          } catch {
+            const staticDoc = doctorsData.find(d => d.id === data.authorId);
+            setRelatedDoctor(staticDoc || null);
+          }
+        }
+      })
+      .catch(() => {
+        // Fallback to static blog articles
+        const found = blogArticles.find(a => a.id === id);
+        if (found) {
+          setArticle(found);
+          const staticDoc = doctorsData.find(d => d.id === found.authorId);
+          setRelatedDoctor(staticDoc || null);
+        } else {
+          setArticle(null);
+        }
+      });
+  }, [id]);
 
   // Scroll to top on mount and fetch article
   useEffect(() => {
@@ -122,10 +157,11 @@ const BlogDetailPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [article, isAmharic]);
 
-  if (loading) {
+  // Loading indicator
+  if (article === undefined) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center pt-28">
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -151,8 +187,7 @@ const BlogDetailPage = () => {
     );
   }
 
-  // Query related doctor details
-  const relatedDoctor = allDoctors.find(d => d.id === article.authorId);
+  // relatedDoctor is now managed via state variables
 
   // Extract headings for Table of Contents
   const extractHeadings = (content: string) => {

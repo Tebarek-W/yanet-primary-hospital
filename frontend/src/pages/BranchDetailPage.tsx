@@ -12,6 +12,7 @@ import { branchesData } from '../data/branchesData';
 import { fetchDoctors } from '../data/doctorsData';
 import type { Doctor } from '../data/doctorsData';
 import { servicesData } from '../data/servicesData';
+import { api } from '../utils/api';
 import CTABanner from '../components/About/CTABanner';
 
 // Resolve service icons dynamically
@@ -43,11 +44,8 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
 
   useEffect(() => {
     setIsPageLoading(true);
-    fetch(`http://localhost:5002/api/branches/${slug}`)
-      .then(res => {
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-      })
+    if (!slug) return;
+    api.branches.getBySlug(slug)
       .then(data => {
         if (data && data.slug) {
           setBranch(data);

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartPulse, Activity, Stethoscope, Brain, Baby, Eye, FlaskConical, Pill, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ServicesHero from '../components/Services/ServicesHero';
 import { servicesData } from '../data/servicesData';
+import type { ServiceDetails } from '../data/servicesData';
+import { api } from '../utils/api';
 
 interface ServicesPageProps {
   onAppointmentClick: () => void;
@@ -29,9 +31,20 @@ const getIcon = (name: string) => {
 const ServicesPage = ({ onAppointmentClick }: ServicesPageProps) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'department' | 'service'>('department');
+  const [services, setServices] = useState<ServiceDetails[]>([...servicesData]);
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const filteredServices = servicesData.filter(s => s.category === activeTab);
+  useEffect(() => {
+    api.services.getAll()
+      .then((data: ServiceDetails[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data);
+        }
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
+
+  const filteredServices = services.filter(s => s.category === activeTab);
 
   return (
     <>

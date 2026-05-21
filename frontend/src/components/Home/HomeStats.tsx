@@ -3,11 +3,10 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Users, UserCheck, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const HomeStats = () => {
+const HomeStats = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   
-  // Trigger count-up when 20% of the section enters the viewport
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   const [patients, setPatients] = useState(0);
@@ -19,10 +18,10 @@ const HomeStats = () => {
   useEffect(() => {
     if (!isInView) return;
 
-    const duration = 1600; // Smooth 1.6 second count-up duration
-    const targetPatients = 124582;
-    const targetDoctors = 184;
-    const targetBranches = 6;
+    const targetPatients = cmsData?.stats_patients_target ? parseInt(cmsData.stats_patients_target) : 124582;
+    const targetDoctors  = cmsData?.stats_doctors_target  ? parseInt(cmsData.stats_doctors_target)  : 184;
+    const targetBranches = cmsData?.stats_branches_target ? parseInt(cmsData.stats_branches_target) : 6;
+    const duration = 1600;
     
     let animationFrameId: number;
     const startTime = performance.now();

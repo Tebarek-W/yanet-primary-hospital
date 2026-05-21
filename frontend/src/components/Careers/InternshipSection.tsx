@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Stethoscope, HeartPulse, Briefcase, GraduationCap, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { internshipPrograms } from '../../data/careersData';
+import type { InternshipProgram } from '../../data/careersData';
+import { api } from '../../utils/api';
 
 const InternshipSection: React.FC = () => {
   const { t, i18n } = useTranslation();
   const isAmharic = i18n.language.startsWith('am');
+  const [programs, setPrograms] = useState<InternshipProgram[]>([...internshipPrograms]);
+
+  useEffect(() => {
+    api.careers.getInternships()
+      .then((data: InternshipProgram[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setPrograms(data);
+        }
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
 
   const getIcon = (name: string) => {
     switch (name) {
@@ -33,7 +46,7 @@ const InternshipSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {internshipPrograms.map((prog, idx) => {
+          {programs.map((prog, idx) => {
             const title = isAmharic ? prog.titleAm : prog.title;
             const desc = isAmharic ? prog.descAm : prog.desc;
             const duration = isAmharic ? prog.durationAm : prog.duration;

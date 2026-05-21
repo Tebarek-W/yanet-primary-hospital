@@ -9,6 +9,7 @@ import { branchesData } from '../data/branchesData';
 import { fetchDoctors } from '../data/doctorsData';
 import type { Doctor } from '../data/doctorsData';
 import { servicesData } from '../data/servicesData';
+import { api } from '../utils/api';
 
 const BranchesPage = () => {
   const { i18n } = useTranslation();
@@ -22,11 +23,7 @@ const BranchesPage = () => {
   const [selectedService, setSelectedService] = useState('All');
 
   useEffect(() => {
-    fetch('http://localhost:5002/api/branches')
-      .then(res => {
-        if (!res.ok) throw new Error('API down');
-        return res.json();
-      })
+    api.branches.getAll()
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           setBranches(data);

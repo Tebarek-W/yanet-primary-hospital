@@ -93,8 +93,13 @@ const CounterItem = ({ icon, target, label, delay, suffix = "+" }: { icon: any, 
   );
 };
 
-const CounterStats = () => {
+const CounterStats = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
+
+  const doctorsTarget    = cmsData?.counter_doctors_target    ? parseInt(cmsData.counter_doctors_target)    : 540;
+  const successTarget    = cmsData?.counter_success_target    ? parseInt(cmsData.counter_success_target)    : 990;
+  const presenceTarget   = cmsData?.counter_presence_target   ? parseInt(cmsData.counter_presence_target)   : 3500;
+  const experienceTarget = cmsData?.counter_experience_target ? parseInt(cmsData.counter_experience_target) : 6;
 
   return (
     <section className="relative section-padding bg-[#f9fdfe] overflow-hidden">
@@ -109,30 +114,10 @@ const CounterStats = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <CounterItem 
-            icon={<Users className="w-7 h-7" />} 
-            target={540} 
-            label={t('counter.doctors')} 
-            delay={0.1} 
-          />
-          <CounterItem 
-            icon={<UserCheck className="w-7 h-7" />} 
-            target={990} 
-            label={t('counter.success')} 
-            delay={0.2} 
-          />
-          <CounterItem 
-            icon={<Award className="w-7 h-7" />} 
-            target={3500} 
-            label={t('counter.presence')} 
-            delay={0.3} 
-          />
-          <CounterItem 
-            icon={<HeartPulse className="w-7 h-7" />} 
-            target={6} 
-            label={t('counter.experience')} 
-            delay={0.4} 
-          />
+          <CounterItem icon={<Users className="w-7 h-7" />}     target={doctorsTarget}    label={t('counter.doctors')}    delay={0.1} />
+          <CounterItem icon={<UserCheck className="w-7 h-7" />} target={successTarget}    label={t('counter.success')}    delay={0.2} />
+          <CounterItem icon={<Award className="w-7 h-7" />}     target={presenceTarget}   label={t('counter.presence')}   delay={0.3} />
+          <CounterItem icon={<HeartPulse className="w-7 h-7" />} target={experienceTarget} label={t('counter.experience')} delay={0.4} />
         </div>
       </div>
     </section>
