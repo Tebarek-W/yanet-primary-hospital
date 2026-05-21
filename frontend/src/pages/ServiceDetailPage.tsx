@@ -22,7 +22,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
-import { doctorsData } from '../data/doctorsData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 import Breadcrumb from '../components/About/Breadcrumb';
 import { api } from '../utils/api';
 
@@ -88,11 +89,14 @@ const ServiceDetailPage = ({ onAppointmentClick }: ServiceDetailPageProps) => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', date: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
 
   // Redirect if service not found
   useEffect(() => {
     if (!service) {
       navigate('/services');
+    } else {
+      fetchDoctors().then(data => setAllDoctors(data));
     }
   }, [service, navigate]);
 

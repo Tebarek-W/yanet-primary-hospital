@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,8 @@ import Breadcrumb from '../About/Breadcrumb';
 const DoctorDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const isAmharic = t('nav.home') === 'መነሻ';
 
   const [doctor, setDoctor] = useState<Doctor | null | undefined>(undefined);

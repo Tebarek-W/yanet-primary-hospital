@@ -9,7 +9,8 @@ import {
   UserCheck, ArrowRight, Star, Heart
 } from 'lucide-react';
 import { branchesData } from '../data/branchesData';
-import { doctorsData } from '../data/doctorsData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 import { servicesData } from '../data/servicesData';
 import { api } from '../utils/api';
 import CTABanner from '../components/About/CTABanner';
@@ -38,6 +39,7 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
   const isAmharic = currentLang.startsWith('am');
 
   const [branch, setBranch] = useState<any>(null);
+  const [branchDoctors, setBranchDoctors] = useState<Doctor[]>([]);
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   useEffect(() => {
@@ -60,17 +62,18 @@ const BranchDetailPage = ({ onAppointmentClick }: { onAppointmentClick?: () => v
       .finally(() => {
         setIsPageLoading(false);
       });
+
+      // Fetch doctors for this branch
+      fetch(`http://localhost:5002/api/doctors?branch=${slug}`)
+        .then(res => res.json())
+        .then(data => setBranchDoctors(data))
+        .catch(err => console.error("Failed to fetch doctors:", err));
   }, [slug]);
 
-  // Resolve services & doctors
+  // Resolve services
   const branchServices = useMemo(() => {
     if (!branch || !branch.serviceSlugs) return [];
     return servicesData.filter(s => branch.serviceSlugs.includes(s.slug));
-  }, [branch]);
-
-  const branchDoctors = useMemo(() => {
-    if (!branch || !branch.doctorIds) return [];
-    return doctorsData.filter(d => branch.doctorIds.includes(d.id));
   }, [branch]);
 
   if (isPageLoading) {

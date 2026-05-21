@@ -11,6 +11,7 @@ const ITEMS_PER_PAGE = 8;
 
 const DoctorsList = () => {
   const { t } = useTranslation();
+  const [doctorsData, setDoctorsData] = useState<Doctor[]>([]);
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
