@@ -23,14 +23,12 @@ interface ChatChannel {
 interface StaffMessagesProps {
   channels: ChatChannel[];
   onSendMessage: (channelId: string, text: string) => void;
-  onReceiveSimulatedReply: (channelId: string, replyText: string) => void;
   darkMode: boolean;
 }
 
 export const StaffMessages: React.FC<StaffMessagesProps> = ({
   channels,
   onSendMessage,
-  onReceiveSimulatedReply,
   darkMode
 }) => {
   const [activeChannelId, setActiveChannelId] = useState(channels[0]?.id || '');
@@ -53,27 +51,7 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
     if (!chatInput.trim() || !activeChannelId) return;
 
     onSendMessage(activeChannelId, chatInput.trim());
-    const sentText = chatInput.trim();
     setChatInput('');
-
-    // Trigger typing effect
-    setIsTyping(true);
-
-    // Simulated patient reply after 1.5-2 seconds
-    setTimeout(() => {
-      setIsTyping(false);
-      
-      const responses = [
-        `Thank you for the prescription adjustment, Doctor. I've noted the guidelines.`,
-        `The pain has completely settled. Should I continue with the daily dosages?`,
-        `I will log into the Patient Portal today and upload my latest laboratory results as you requested.`,
-        `Understood, Doctor. I'll make sure to schedule a follow-up test next week.`,
-        `I am feeling much better today. Thank you for the care!`,
-      ];
-      
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      onReceiveSimulatedReply(activeChannelId, randomResponse);
-    }, 1800);
   };
 
   const filteredChannels = channels.filter(chan =>
@@ -102,7 +80,9 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search messages..."
-                className="w-full bg-slate-950/40 border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-white text-[11px] font-semibold focus:outline-none focus:border-primary placeholder-slate-550"
+                className={`w-full border rounded-xl pl-9 pr-4 py-2.5 text-[11px] font-semibold focus:outline-none focus:border-primary ${
+                  darkMode ? 'bg-slate-950/40 border-slate-800 text-white placeholder-slate-550' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                }`}
               />
             </div>
           </div>
@@ -161,7 +141,7 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
         </div>
 
         {/* Security verification notice */}
-        <div className="p-4 border-t border-slate-850 bg-slate-950/30 flex items-start gap-2.5">
+        <div className={`p-4 border-t flex items-start gap-2.5 ${darkMode ? 'border-slate-850 bg-slate-950/30' : 'border-slate-200 bg-slate-50'}`}>
           <Shield className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
           <p className="text-[9px] text-slate-500 leading-relaxed font-semibold">
             Point-to-point encryption verified. Telehealth logs are archived under HIPAA healthcare parameters.
@@ -171,7 +151,7 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
 
       {/* Message Chat Room Pane */}
       {activeChannel ? (
-        <div className="flex-1 flex flex-col justify-between h-full bg-slate-950/10">
+        <div className={`flex-1 flex flex-col justify-between h-full ${darkMode ? 'bg-slate-950/10' : 'bg-slate-50/50'}`}>
           
           {/* Chat room Header */}
           <div className={`p-4 border-b flex justify-between items-center shrink-0 ${
@@ -266,7 +246,9 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder="Type secure medical advice or instructions..."
-              className="flex-grow bg-slate-950/60 border border-slate-800 rounded-xl px-4 py-3.5 text-white text-xs font-semibold placeholder-slate-550 focus:outline-none focus:border-primary"
+              className={`flex-grow border rounded-xl px-4 py-3.5 text-xs font-semibold focus:outline-none focus:border-primary ${
+                darkMode ? 'bg-slate-950/60 border-slate-800 text-white placeholder-slate-550' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+              }`}
             />
             <button
               type="submit"
@@ -278,10 +260,10 @@ export const StaffMessages: React.FC<StaffMessagesProps> = ({
 
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center p-10 text-center">
+        <div className={`flex-1 flex flex-col items-center justify-center p-10 text-center ${darkMode ? '' : 'bg-slate-50/50'}`}>
           <AlertCircle className="w-12 h-12 text-slate-500 mb-3" />
-          <h4 className="text-sm font-bold text-white">No Message Channel Selected</h4>
-          <p className="text-xs text-slate-400 mt-1">Select a patient card to begin secure messaging.</p>
+          <h4 className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-slate-900'}`}>No Message Channel Selected</h4>
+          <p className={`text-xs mt-1 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Select a patient card to begin secure messaging.</p>
         </div>
       )}
 

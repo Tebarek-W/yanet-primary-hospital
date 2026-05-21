@@ -51,7 +51,8 @@ const DoctorDetailPage = () => {
   const skills = isAmharic ? doctor.skillsAm : doctor.skills;
 
   const infoItems = [
-    { label: 'Specialty', values: skills, icon: <ArrowRight className="w-4 h-4 text-primary" /> },
+    { label: 'Specialty', value: doctor.specialty, icon: <ArrowRight className="w-4 h-4 text-primary" /> },
+    { label: 'Expertise', values: skills, icon: <ArrowRight className="w-4 h-4 text-primary" /> },
     { label: 'Education', values: education, icon: <ArrowRight className="w-4 h-4 text-primary" /> },
     { label: 'Experience', values: experience, icon: <ArrowRight className="w-4 h-4 text-primary" /> },
     { label: 'Address', value: doctor.location, icon: <ArrowRight className="w-4 h-4 text-primary" /> },

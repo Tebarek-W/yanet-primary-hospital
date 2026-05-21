@@ -93,16 +93,31 @@ export const StaffPortal: React.FC = () => {
       });
       if (blogsRes.ok) {
         const blogsData = await blogsRes.json();
-        setBlogs(blogsData);
+        const currentStaffStr = localStorage.getItem('yanet_staff_user');
+        const currentStaff = currentStaffStr ? JSON.parse(currentStaffStr) : null;
+        const formattedBlogs = blogsData.map((b: any) => ({
+          ...b,
+          author: b.author || currentStaff?.name || 'Consultant Doctor'
+        }));
+        setBlogs(formattedBlogs);
       }
 
       // Fetch Channels
+      await fetchChannels();
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    }
+  };
+
+  const fetchChannels = async () => {
+    const token = localStorage.getItem('yanet_staff_token');
+    if (!token) return;
+    try {
       const channelsRes = await fetch('http://localhost:5002/api/messages/me', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (channelsRes.ok) {
         const channelsData = await channelsRes.json();
-        // ensure id is string if it comes as int, but let's keep it as string
         const formattedChannels = channelsData.map((c: any) => ({
           ...c,
           id: c.id.toString(),
@@ -111,9 +126,22 @@ export const StaffPortal: React.FC = () => {
         setChannels(formattedChannels);
       }
     } catch (err) {
-      console.error('Failed to fetch data:', err);
+      console.error('Failed to fetch channels:', err);
     }
   };
+
+  // Poll channels every 5 seconds if staff is logged in
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (staff) {
+      interval = setInterval(() => {
+        fetchChannels();
+      }, 5000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [staff]);
 
   // Theme Sync on dark mode state change
   useEffect(() => {
@@ -223,51 +251,6 @@ export const StaffPortal: React.FC = () => {
       }
     } catch (err) {
       console.error('Failed to send message:', err);
-    }
-  };
-
-  const handleReceiveSimulatedReply = async (channelId: string, replyText: string) => {
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const token = localStorage.getItem('yanet_staff_token');
-
-    try {
-      const res = await fetch('http://localhost:5002/api/messages/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ channelId, text: replyText, time: timeStr, sender: 'patient' })
-      });
-
-      if (res.ok) {
-        const replyMsg = await res.json();
-        replyMsg.id = replyMsg.id.toString();
-
-        setChannels(prev => prev.map(chan => {
-          if (chan.id.toString() === channelId.toString()) {
-            return {
-              ...chan,
-              lastActive: timeStr,
-              history: [...chan.history, replyMsg]
-            };
-          }
-          return chan;
-        }));
-
-        // Trigger Notification
-        const targetChan = channels.find(c => c.id.toString() === channelId.toString());
-        const newNotify = {
-          id: `n-msg-${Date.now()}`,
-          title: `Reply from ${targetChan?.patientName || 'Patient'}`,
-          message: replyText.substring(0, 45) + '...',
-          time: 'Just now',
-          read: false
-        };
-        setNotifications(prev => [newNotify, ...prev]);
-      }
-    } catch (err) {
-      console.error('Failed to simulate reply:', err);
     }
   };
 
@@ -415,7 +398,7 @@ export const StaffPortal: React.FC = () => {
                     <StaffOverview
                       doctorName={staff.name}
                       messagesCount={channels.filter(c => c.unread).length}
-                      blogsCount={blogs.filter(b => b.author === staff.name).length}
+                      blogsCount={blogs.length}
                       setActiveTab={setActiveTab}
                       darkMode={darkMode}
                     />
@@ -434,7 +417,6 @@ export const StaffPortal: React.FC = () => {
                     <StaffMessages
                       channels={channels}
                       onSendMessage={handleSendMessage}
-                      onReceiveSimulatedReply={handleReceiveSimulatedReply}
                       darkMode={darkMode}
                     />
                   )}
