@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { User, ArrowRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import DoctorCard from '../Doctors/DoctorCard';
 import { doctorsData } from '../../data/doctorsData';
 import type { Doctor } from '../../data/doctorsData';
@@ -11,7 +10,6 @@ import drKirubelImage from '../../assets/Dr._Kirubel_Abraham.jpg';
 
 const Doctors = () => {
   const { t } = useTranslation();
-  const [homeDoctors, setHomeDoctors] = useState<Doctor[]>([]);
   const isAmharic = t('nav.home') === 'መነሻ';
 
   const [homeDoctors, setHomeDoctors] = useState<Doctor[]>(doctorsData.slice(0, 4));
