@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Calendar, User, ArrowRight, Tag, Facebook, Twitter, Linkedin, Link2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -66,8 +66,45 @@ const HealthBlog = () => {
   const categories = isAmharic ? CATEGORIES_AM : CATEGORIES_EN;
   const [activeCategory, setActiveCategory] = useState(categories[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [allBlogs, setAllBlogs] = useState(blogArticles);
 
-  const filtered = blogArticles.filter(a => {
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch('http://localhost:5002/api/blogs');
+        if (res.ok) {
+          const data = await res.json();
+          const dbBlogs = data.map((b: any) => ({
+            id: 'db-' + b.id.toString(),
+            categoryEn: b.category,
+            categoryAm: b.categoryAm || b.category,
+            titleEn: b.title,
+            titleAm: b.titleAm || b.title,
+            excerptEn: b.content.substring(0, 120) + '...',
+            excerptAm: b.contentAm ? b.contentAm.substring(0, 120) + '...' : b.content.substring(0, 120) + '...',
+            image: b.image,
+            dateEn: b.date,
+            dateAm: b.date, // You could format this to Amharic if needed
+            authorId: b.authorId.toString(),
+            authorNameEn: b.doctor ? b.doctor.name : 'Consultant Doctor',
+            authorNameAm: b.doctor && b.doctor.nameAm ? b.doctor.nameAm : (b.doctor ? b.doctor.name : 'አማካሪ ዶክተር'),
+            readMin: Math.ceil(b.content.split(' ').length / 200) || 5,
+            contentEn: b.content,
+            contentAm: b.contentAm || b.content,
+          }));
+          
+          // Merge avoiding duplicates if any, but since DB IDs are numbers and static are strings like '1', '2' they won't overlap if we're careful.
+          // Let's just prepend DB blogs to static blogs.
+          setAllBlogs([...dbBlogs, ...blogArticles]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch blogs:', err);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
+  const filtered = allBlogs.filter(a => {
     const cat = isAmharic ? a.categoryAm : a.categoryEn;
     const title = isAmharic ? a.titleAm : a.titleEn;
     const matchesCat = activeCategory === categories[0] || cat === activeCategory;

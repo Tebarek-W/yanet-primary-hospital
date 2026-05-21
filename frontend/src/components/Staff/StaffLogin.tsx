@@ -15,22 +15,22 @@ export const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
 
   const presets = [
     {
-      name: 'Dr. Tebarek Liyana',
-      email: 'dr.tebarek@yanethospital.com',
+      name: 'Dr. Dawit Yilma',
+      email: 'dawit.yilma@yanet.com',
       role: 'Chief Cardiologist',
-      avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=200',
+      avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2070&auto=format&fit=crop',
     },
     {
-      name: 'Dr. Birhanu Mengiste',
-      email: 'dr.birhanu@yanethospital.com',
-      role: 'General Surgeon',
-      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=200',
+      name: 'Dr. Hana Gebre',
+      email: 'hana.gebre@yanet.com',
+      role: 'Pediatrician',
+      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2000&auto=format&fit=crop',
     }
   ];
 
   const handlePresetSelect = (preset: typeof presets[0]) => {
     setEmail(preset.email);
-    setPassword('yanetpass123');
+    setPassword('yanetstaff123');
     setError('');
   };
 

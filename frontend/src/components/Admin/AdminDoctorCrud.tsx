@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Search, Filter, Plus, Edit2, Trash2, Globe, Mail, Phone, 
   MapPin, X, PlusCircle, Check, Award, GraduationCap, 
-  Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle
+  Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle, Key
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { doctorsData } from '../../data/doctorsData';
@@ -21,6 +21,7 @@ const AdminDoctorCrud: React.FC = () => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   
   // Editor tab inside Modal: 'general' | 'bio' | 'details'
   const [modalTab, setModalTab] = useState<'general' | 'bio' | 'details'>('general');
@@ -88,6 +89,7 @@ const AdminDoctorCrud: React.FC = () => {
   // Open Edit or Add modal
   const openEditModal = (doctor: Doctor | null) => {
     setModalTab('general');
+    setImageFile(null);
     if (doctor) {
       setEditingDoctor(JSON.parse(JSON.stringify(doctor))); // deep copy
     } else {
@@ -111,7 +113,8 @@ const AdminDoctorCrud: React.FC = () => {
         skillsAm: [],
         biography: '',
         biographyAm: '',
-        branchSlugs: []
+        branchSlugs: [],
+        password: 'yanetstaff123'
       });
     }
     setIsEditModalOpen(true);
@@ -136,9 +139,29 @@ const AdminDoctorCrud: React.FC = () => {
         ? assignedBranches.map(b => b.name).join(', ') 
         : 'Addis Ababa, Ethiopia';
 
+      let uploadedImageUrl = editingDoctor.image;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+
+        const uploadRes = await fetch('http://localhost:5002/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadData = await uploadRes.json();
+        uploadedImageUrl = `http://localhost:5002${uploadData.imageUrl}`;
+      }
+
       const doctorDataToSave = {
         ...editingDoctor,
-        location: computedLocation
+        location: computedLocation,
+        image: uploadedImageUrl
       };
 
       const res = await fetch(url, {
@@ -171,6 +194,16 @@ const AdminDoctorCrud: React.FC = () => {
     }
   };
 
+  const generatePassword = () => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
+    let pwd = "";
+    for(let i=0; i<10; i++) {
+      pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    if (editingDoctor) {
+      setEditingDoctor({ ...editingDoctor, password: pwd });
+    }
+  };
 
   // Lists management inside form (Education, Experience, Skills)
   const handleAddListItem = (field: 'education' | 'educationAm' | 'experience' | 'experienceAm' | 'skills' | 'skillsAm') => {
@@ -253,25 +286,7 @@ const AdminDoctorCrud: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Dashboard Info */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Specialists', value: doctors.length, icon: Award, color: 'text-primary bg-primary/10' },
-          { label: 'Specialties Active', value: specialties.length - 1, icon: GraduationCap, color: 'text-indigo-500 bg-indigo-50' },
-          { label: 'Filtered Count', value: filteredDoctors.length, icon: Search, color: 'text-amber-500 bg-amber-50' },
-          { label: 'Latest Registration', value: doctors.length > 0 ? doctors[doctors.length - 1].name : 'N/A', icon: FileText, color: 'text-emerald-500 bg-emerald-50' }
-        ].map((stat, i) => (
-          <div key={i} className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between">
-            <div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-gray-400 block mb-1">{stat.label}</span>
-              <span className="text-lg md:text-xl font-black text-gray-900">{stat.value}</span>
-            </div>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${stat.color}`}>
-              <stat.icon className="w-5 h-5" />
-            </div>
-          </div>
-        ))}
-      </div>
+
 
       {/* Search & Actions Bar */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -568,17 +583,41 @@ const AdminDoctorCrud: React.FC = () => {
                       />
                     </div>
 
-
-
-                    {/* Image URL */}
+                    {/* Password Generate */}
                     <div className="space-y-2">
-                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Profile Image URL</label>
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Staff Login Password</label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="Password"
+                          value={editingDoctor.password || ''}
+                          onChange={(e) => setEditingDoctor({ ...editingDoctor, password: e.target.value })}
+                          className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
+                        />
+                        <button
+                          type="button"
+                          onClick={generatePassword}
+                          className="px-4 py-3 bg-primary/10 text-primary hover:bg-primary hover:text-white border border-primary/20 rounded-2xl flex items-center justify-center gap-2 transition-colors font-bold text-sm shrink-0"
+                        >
+                          <Key className="w-4 h-4" />
+                          Generate
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-bold">Share this password with the staff member.</p>
+                    </div>
+
+                    {/* Image Upload */}
+                    <div className="space-y-2">
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Profile Image</label>
                       <input 
-                        type="text" 
-                        required
-                        placeholder="Paste image link..."
-                        value={editingDoctor.image || ''}
-                        onChange={(e) => setEditingDoctor({ ...editingDoctor, image: e.target.value })}
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setImageFile(file);
+                          }
+                        }}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
                       />
                     </div>
@@ -618,7 +657,7 @@ const AdminDoctorCrud: React.FC = () => {
                     <div className="md:col-span-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl flex items-center gap-4">
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-gray-200 shrink-0">
                         <img 
-                          src={editingDoctor.image} 
+                          src={imageFile ? URL.createObjectURL(imageFile) : editingDoctor.image} 
                           alt="preview" 
                           className="w-full h-full object-cover" 
                           onError={(e) => {
@@ -628,7 +667,7 @@ const AdminDoctorCrud: React.FC = () => {
                       </div>
                       <div>
                         <h5 className="font-bold text-gray-800 text-xs">Image Preview</h5>
-                        <p className="text-[10px] text-gray-400 font-medium mt-0.5">Please ensure this is a high-quality Unsplash image link or hosted image URL.</p>
+                        <p className="text-[10px] text-gray-400 font-medium mt-0.5">Please upload a high-quality photo.</p>
                       </div>
                     </div>
                   </div>

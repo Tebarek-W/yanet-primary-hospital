@@ -18,6 +18,8 @@ export interface Doctor {
   skillsAm: string[];
   biography: string;
   biographyAm: string;
+  branchSlugs?: string[];
+  password?: string;
 }
 
 const staticDoctors: Doctor[] = [
