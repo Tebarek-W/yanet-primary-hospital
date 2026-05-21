@@ -68,83 +68,52 @@ export const StaffPortal: React.FC = () => {
 
 
   // Blogs state
-  const [blogs, setBlogs] = useState<BlogPost[]>([
-    {
-      id: 'blog1',
-      title: 'Managing Hypertension: Essential Lifestyle Advice',
-      titleAm: 'የደም ግፊትን መቆጣጠር፡ አስፈላጊ የአኗኗር ዘይቤ ምክሮች',
-      category: 'Medical Updates',
-      categoryAm: 'የሕክምና መረጃዎች',
-      content: 'Hypertension, commonly known as high blood pressure, affects millions globally. Continuous cardiovascular checks, low-sodium dietary measures, and scheduled aerobic activity are critical clinical standards to mitigate vascular load.',
-      contentAm: 'የደም ግፊት በዓለም አቀፍ ደረጃ በሚሊዮን የሚቆጠሩ ሰዎችን ይነካል። ቀጣይነት ያለው የልብ ምርመራ፣ አነስተኛ የጨው መጠን ያለው የአመጋገብ ልምድ እና የታቀዱ ኤሮቢክ እንቅስቃሴዎች የደም ሥር ጫናን ለመቀነስ ወሳኝ የሕክምና ደረጃዎች ናቸው።',
-      date: 'May 18, 2026',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800',
-      author: 'Dr. Tebarek Liyana'
-    },
-    {
-      id: 'blog2',
-      title: 'The Importance of Pediatric Vaccinations',
-      titleAm: 'የሕፃናት ክትባቶች አስፈላጊነት',
-      category: 'Health Education',
-      categoryAm: 'የጤና ትምህርት',
-      content: 'Early childhood vaccinations play an essential role in bolstering immunological shielding. Parents should maintain active scheduling protocols with clinics to satisfy recommended immunization indexes.',
-      contentAm: 'ቀደምት የልጅነት ክትባቶች በሽታ የመከላከል አቅምን ለማጎልበት ወሳኝ ሚና ይጫወታሉ። ወላጆች የሚመከሩትን የክትባት ደረጃዎች ለማሟላት ከክሊኒኮች ጋር ንቁ የጊዜ ሰሌዳ ፕሮቶኮሎችን መያዝ አለባቸው።',
-      date: 'May 12, 2026',
-      image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=800',
-      author: 'Dr. Sarah J.'
-    }
-  ]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
 
   // Chat Channels state
-  const [channels, setChannels] = useState<ChatChannel[]>([
-    {
-      id: 'chan1',
-      patientName: 'Abebe Kebede',
-      age: 34,
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
-      symptoms: 'Chronic Fatigue',
-      lastActive: '09:30 AM',
-      unread: false,
-      history: [
-        { id: 'm1', sender: 'doctor', text: 'Hello Abebe, how are your sleep patterns progressing?', time: '09:00 AM' },
-        { id: 'm2', sender: 'patient', text: 'Hello Doctor, I slept 7 hours last night, feeling slightly more rested.', time: '09:15 AM' },
-        { id: 'm3', sender: 'doctor', text: 'Excellent, maintain the magnesium doses as scheduled.', time: '09:30 AM' }
-      ]
-    },
-    {
-      id: 'chan2',
-      patientName: 'Semere Tadesse',
-      age: 58,
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200',
-      symptoms: 'Chest Palpitations',
-      lastActive: 'Yesterday',
-      unread: true,
-      history: [
-        { id: 'm4', sender: 'patient', text: 'Doctor Semere, I observed a brief racing pulse yesterday afternoon.', time: 'Yesterday' }
-      ]
-    },
-    {
-      id: 'chan3',
-      patientName: 'Martha Biru',
-      age: 27,
-      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
-      symptoms: 'Pregnancy Consultation',
-      lastActive: '2 days ago',
-      unread: false,
-      history: [
-        { id: 'm5', sender: 'doctor', text: 'Martha, check if your iron vitamins are fully replenished.', time: '2 days ago' },
-        { id: 'm6', sender: 'patient', text: 'Yes, just restocked them today. Thank you!', time: '2 days ago' }
-      ]
-    }
-  ]);
+  const [channels, setChannels] = useState<ChatChannel[]>([]);
 
-  // Read staff user from localStorage on mount
+  // Read staff user from localStorage on mount and fetch data
   useEffect(() => {
     const storedStaff = localStorage.getItem('yanet_staff_user');
     if (storedStaff) {
       setStaff(JSON.parse(storedStaff));
+      fetchData();
     }
   }, []);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem('yanet_staff_token');
+    if (!token) return;
+
+    try {
+      // Fetch Blogs
+      const blogsRes = await fetch('http://localhost:5002/api/blogs/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (blogsRes.ok) {
+        const blogsData = await blogsRes.json();
+        setBlogs(blogsData);
+      }
+
+      // Fetch Channels
+      const channelsRes = await fetch('http://localhost:5002/api/messages/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (channelsRes.ok) {
+        const channelsData = await channelsRes.json();
+        // ensure id is string if it comes as int, but let's keep it as string
+        const formattedChannels = channelsData.map((c: any) => ({
+          ...c,
+          id: c.id.toString(),
+          history: c.history.map((m: any) => ({ ...m, id: m.id.toString() }))
+        }));
+        setChannels(formattedChannels);
+      }
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    }
+  };
 
   // Theme Sync on dark mode state change
   useEffect(() => {
@@ -159,6 +128,7 @@ export const StaffPortal: React.FC = () => {
     const userObj = { email, name, role, avatar };
     setStaff(userObj);
     localStorage.setItem('yanet_staff_user', JSON.stringify(userObj));
+    fetchData(); // Fetch data upon login
   };
 
   const handleLogout = () => {
@@ -173,82 +143,132 @@ export const StaffPortal: React.FC = () => {
 
 
   // Blog operations
-  const handleAddBlog = (newBlog: Omit<BlogPost, 'id' | 'date' | 'author'>) => {
-    const publishedPost: BlogPost = {
-      ...newBlog,
-      id: `blog-${Date.now()}`,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      author: staff?.name || 'Consultant Doctor'
-    };
-    setBlogs(prev => [publishedPost, ...prev]);
+  const handleAddBlog = async (newBlog: Omit<BlogPost, 'id' | 'date' | 'author'>) => {
+    const token = localStorage.getItem('yanet_staff_token');
+    const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    
+    try {
+      const res = await fetch('http://localhost:5002/api/blogs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ...newBlog, date })
+      });
+      if (res.ok) {
+        const createdBlog = await res.json();
+        createdBlog.author = staff?.name || 'Consultant Doctor'; // API might not return author name directly depending on includes
+        setBlogs(prev => [createdBlog, ...prev]);
 
-    // Add notification
-    const newNotify = {
-      id: `n-blog-${Date.now()}`,
-      title: `Article Published`,
-      message: `"${newBlog.title.substring(0, 30)}..." is now live.`,
-      time: 'Just now',
-      read: false
-    };
-    setNotifications(prev => [newNotify, ...prev]);
+        // Add notification
+        const newNotify = {
+          id: `n-blog-${Date.now()}`,
+          title: `Article Published`,
+          message: `"${newBlog.title.substring(0, 30)}..." is now live.`,
+          time: 'Just now',
+          read: false
+        };
+        setNotifications(prev => [newNotify, ...prev]);
+      }
+    } catch (err) {
+      console.error('Failed to create blog:', err);
+    }
   };
 
-  const handleDeleteBlog = (id: string) => {
-    setBlogs(prev => prev.filter(b => b.id !== id));
+  const handleDeleteBlog = async (id: string) => {
+    const token = localStorage.getItem('yanet_staff_token');
+    try {
+      const res = await fetch(`http://localhost:5002/api/blogs/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setBlogs(prev => prev.filter(b => b.id.toString() !== id.toString()));
+      }
+    } catch (err) {
+      console.error('Failed to delete blog:', err);
+    }
   };
 
   // Message operations
-  const handleSendMessage = (channelId: string, text: string) => {
+  const handleSendMessage = async (channelId: string, text: string) => {
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const newMsg: Message = {
-      id: `msg-${Date.now()}`,
-      sender: 'doctor',
-      text,
-      time: timeStr
-    };
+    const token = localStorage.getItem('yanet_staff_token');
 
-    setChannels(prev => prev.map(chan => {
-      if (chan.id === channelId) {
-        return {
-          ...chan,
-          lastActive: timeStr,
-          history: [...chan.history, newMsg]
-        };
+    try {
+      const res = await fetch('http://localhost:5002/api/messages/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ channelId, text, time: timeStr, sender: 'doctor' })
+      });
+
+      if (res.ok) {
+        const newMsg = await res.json();
+        newMsg.id = newMsg.id.toString();
+
+        setChannels(prev => prev.map(chan => {
+          if (chan.id.toString() === channelId.toString()) {
+            return {
+              ...chan,
+              lastActive: timeStr,
+              history: [...chan.history, newMsg]
+            };
+          }
+          return chan;
+        }));
       }
-      return chan;
-    }));
+    } catch (err) {
+      console.error('Failed to send message:', err);
+    }
   };
 
-  const handleReceiveSimulatedReply = (channelId: string, replyText: string) => {
+  const handleReceiveSimulatedReply = async (channelId: string, replyText: string) => {
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const replyMsg: Message = {
-      id: `msg-reply-${Date.now()}`,
-      sender: 'patient',
-      text: replyText,
-      time: timeStr
-    };
+    const token = localStorage.getItem('yanet_staff_token');
 
-    setChannels(prev => prev.map(chan => {
-      if (chan.id === channelId) {
-        return {
-          ...chan,
-          lastActive: timeStr,
-          history: [...chan.history, replyMsg]
+    try {
+      const res = await fetch('http://localhost:5002/api/messages/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ channelId, text: replyText, time: timeStr, sender: 'patient' })
+      });
+
+      if (res.ok) {
+        const replyMsg = await res.json();
+        replyMsg.id = replyMsg.id.toString();
+
+        setChannels(prev => prev.map(chan => {
+          if (chan.id.toString() === channelId.toString()) {
+            return {
+              ...chan,
+              lastActive: timeStr,
+              history: [...chan.history, replyMsg]
+            };
+          }
+          return chan;
+        }));
+
+        // Trigger Notification
+        const targetChan = channels.find(c => c.id.toString() === channelId.toString());
+        const newNotify = {
+          id: `n-msg-${Date.now()}`,
+          title: `Reply from ${targetChan?.patientName || 'Patient'}`,
+          message: replyText.substring(0, 45) + '...',
+          time: 'Just now',
+          read: false
         };
+        setNotifications(prev => [newNotify, ...prev]);
       }
-      return chan;
-    }));
-
-    // Trigger Notification
-    const targetChan = channels.find(c => c.id === channelId);
-    const newNotify = {
-      id: `n-msg-${Date.now()}`,
-      title: `Reply from ${targetChan?.patientName || 'Patient'}`,
-      message: replyText.substring(0, 45) + '...',
-      time: 'Just now',
-      read: false
-    };
-    setNotifications(prev => [newNotify, ...prev]);
+    } catch (err) {
+      console.error('Failed to simulate reply:', err);
+    }
   };
 
   return (

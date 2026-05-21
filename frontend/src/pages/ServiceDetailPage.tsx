@@ -22,7 +22,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
-import { doctorsData } from '../data/doctorsData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 import Breadcrumb from '../components/About/Breadcrumb';
 
 interface ServiceDetailPageProps {
@@ -58,20 +59,23 @@ const ServiceDetailPage = ({ onAppointmentClick }: ServiceDetailPageProps) => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', date: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
 
   // Redirect if service not found
   useEffect(() => {
     if (!service) {
       navigate('/services');
+    } else {
+      fetchDoctors().then(data => setAllDoctors(data));
     }
   }, [service, navigate]);
 
   if (!service) return null;
 
   // Query matching doctors based on specialty
-  const relatedDoctors = doctorsData.filter(doc => doc.specialty === service.specialty);
+  const relatedDoctors = allDoctors.filter(doc => doc.specialty === service.specialty);
   // Fallback to general doctors if no specific specialty match (e.g. Pharmacy, Ambulance, Lab)
-  const displayDoctors = relatedDoctors.length > 0 ? relatedDoctors : doctorsData.slice(0, 3);
+  const displayDoctors = relatedDoctors.length > 0 ? relatedDoctors : allDoctors.slice(0, 3);
 
   // Handle sidebar form submission (Lead Capture)
   const handleSubmit = (e: React.FormEvent) => {

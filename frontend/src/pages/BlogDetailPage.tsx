@@ -3,7 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Clock, Calendar, ChevronLeft, ArrowUp, Info, User, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { blogArticles } from '../data/blogData';
-import { doctorsData } from '../data/doctorsData';
+import type { BlogArticle } from '../data/blogData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 
 interface MedicalTipBoxProps {
   children: React.ReactNode;
@@ -30,16 +32,62 @@ const BlogDetailPage = () => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const article = blogArticles.find(a => a.id === id);
+  const [article, setArticle] = useState<BlogArticle | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Scroll to top on mount
+  // Scroll to top on mount and fetch article
   useEffect(() => {
     window.scrollTo(0, 0);
+    const fetchArticle = async () => {
+      setLoading(true);
+      if (id?.startsWith('db-')) {
+        try {
+          const dbId = id.replace('db-', '');
+          const res = await fetch(`http://localhost:5002/api/blogs/${dbId}`);
+          if (res.ok) {
+            const b = await res.json();
+            setArticle({
+              id: 'db-' + b.id.toString(),
+              categoryEn: b.category,
+              categoryAm: b.categoryAm || b.category,
+              titleEn: b.title,
+              titleAm: b.titleAm || b.title,
+              excerptEn: b.content.substring(0, 120) + '...',
+              excerptAm: b.contentAm ? b.contentAm.substring(0, 120) + '...' : b.content.substring(0, 120) + '...',
+              image: b.image,
+              dateEn: b.date,
+              dateAm: b.date,
+              authorId: b.authorId.toString(),
+              authorNameEn: b.doctor ? b.doctor.name : 'Consultant Doctor',
+              authorNameAm: b.doctor && b.doctor.nameAm ? b.doctor.nameAm : (b.doctor ? b.doctor.name : 'አማካሪ ዶክተር'),
+              readMin: Math.ceil(b.content.split(' ').length / 200) || 5,
+              contentEn: b.content,
+              contentAm: b.contentAm || b.content,
+            });
+          } else {
+            setArticle(null);
+          }
+        } catch (err) {
+          console.error(err);
+          setArticle(null);
+        }
+      } else {
+        const found = blogArticles.find(a => a.id === id);
+        setArticle(found || null);
+      }
+      setLoading(false);
+    };
+    fetchArticle();
   }, [id]);
 
   const [activeSection, setActiveSection] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
+
+  useEffect(() => {
+    fetchDoctors().then(data => setAllDoctors(data));
+  }, []);
 
   // Track scroll position for progress bar and active section
   useEffect(() => {
@@ -74,6 +122,14 @@ const BlogDetailPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [article, isAmharic]);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center pt-28">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   if (!article) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center pt-28">
@@ -96,7 +152,7 @@ const BlogDetailPage = () => {
   }
 
   // Query related doctor details
-  const relatedDoctor = doctorsData.find(d => d.id === article.authorId);
+  const relatedDoctor = allDoctors.find(d => d.id === article.authorId);
 
   // Extract headings for Table of Contents
   const extractHeadings = (content: string) => {

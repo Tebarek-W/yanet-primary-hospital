@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Search, Filter, Plus, Edit2, Trash2, Globe, Mail, Phone, 
   MapPin, X, PlusCircle, Check, Award, GraduationCap, 
-  Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle
+  Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle, Key
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { doctorsData } from '../../data/doctorsData';
@@ -11,6 +11,7 @@ import type { Doctor } from '../../data/doctorsData';
 const AdminDoctorCrud: React.FC = () => {
   // Reactive list of doctors
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [branches, setBranches] = useState<{slug: string, name: string}[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   
@@ -19,6 +20,8 @@ const AdminDoctorCrud: React.FC = () => {
   const [editingDoctor, setEditingDoctor] = useState<Partial<Doctor> | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   
   // Editor tab inside Modal: 'general' | 'bio' | 'details'
   const [modalTab, setModalTab] = useState<'general' | 'bio' | 'details'>('general');
@@ -26,22 +29,36 @@ const AdminDoctorCrud: React.FC = () => {
   // Custom alerts/toasts
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
 
-  // Load doctors from proxy (localStorage backed) on mount
+  const API_URL = 'http://localhost:5002/api/doctors';
+
+  const loadDoctorsAndBranches = async () => {
+    try {
+      const [docRes, branchRes] = await Promise.all([
+        fetch(API_URL),
+        fetch('http://localhost:5002/api/branches')
+      ]);
+      if (docRes.ok) {
+        const data = await docRes.json();
+        setDoctors(data);
+      }
+      if (branchRes.ok) {
+        const branchData = await branchRes.json();
+        setBranches(branchData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      triggerToast('Failed to load data from server.', 'danger');
+    }
+  };
+
+  // Load doctors on mount
   useEffect(() => {
-    setDoctors([...doctorsData]);
+    loadDoctorsAndBranches();
   }, []);
 
   const triggerToast = (message: string, type: 'success' | 'danger' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  };
-
-  // Save changes back to proxy/localStorage
-  const persistDoctors = (updatedList: Doctor[]) => {
-    // Clear array and push all to trigger Proxy 'set'
-    doctorsData.length = 0;
-    updatedList.forEach(doc => doctorsData.push(doc));
-    setDoctors([...doctorsData]);
   };
 
   // Handle Delete operation
@@ -50,24 +67,34 @@ const AdminDoctorCrud: React.FC = () => {
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!doctorToDelete) return;
-    const updated = doctors.filter(doc => doc.id !== doctorToDelete.id);
-    persistDoctors(updated);
+    try {
+      const res = await fetch(`${API_URL}/${doctorToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setDoctors(doctors.filter(doc => doc.id !== doctorToDelete.id));
+        triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
+      } else {
+        triggerToast('Failed to delete doctor.', 'danger');
+      }
+    } catch (error) {
+      triggerToast('An error occurred while deleting.', 'danger');
+    }
     setIsDeleteConfirmOpen(false);
     setDoctorToDelete(null);
-    triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
   };
 
   // Open Edit or Add modal
   const openEditModal = (doctor: Doctor | null) => {
     setModalTab('general');
+    setImageFile(null);
     if (doctor) {
       setEditingDoctor(JSON.parse(JSON.stringify(doctor))); // deep copy
     } else {
       // Default empty doctor template
       setEditingDoctor({
-        id: (Math.max(...doctors.map(d => parseInt(d.id) || 0), 0) + 1).toString(),
         name: '',
         nameAm: '',
         roleKey: 'doctor_team.roles.cardiologist',
@@ -85,35 +112,97 @@ const AdminDoctorCrud: React.FC = () => {
         skills: [],
         skillsAm: [],
         biography: '',
-        biographyAm: ''
+        biographyAm: '',
+        branchSlugs: [],
+        password: 'yanetstaff123'
       });
     }
     setIsEditModalOpen(true);
   };
 
   // Save add/edit form
-  const handleSaveDoctor = (e: React.FormEvent) => {
+  const handleSaveDoctor = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingDoctor || !editingDoctor.name || !editingDoctor.id) {
-      triggerToast('Please provide a valid doctor name.', 'danger');
+    if (!editingDoctor || !editingDoctor.name || !editingDoctor.email || !editingDoctor.specialty) {
+      triggerToast('Name, email, and specialty are required.', 'danger');
       return;
     }
 
-    const updatedDoctor = editingDoctor as Doctor;
-    const exists = doctors.some(d => d.id === updatedDoctor.id);
-    let updatedList: Doctor[];
+    setIsSaving(true);
+    try {
+      const isNew = !editingDoctor.id;
+      const url = isNew ? API_URL : `${API_URL}/${editingDoctor.id}`;
+      const method = isNew ? 'POST' : 'PUT';
 
-    if (exists) {
-      updatedList = doctors.map(d => d.id === updatedDoctor.id ? updatedDoctor : d);
-      triggerToast(`Profile for ${updatedDoctor.name} updated successfully.`);
-    } else {
-      updatedList = [...doctors, updatedDoctor];
-      triggerToast(`Doctor ${updatedDoctor.name} added to the registry.`);
+      const assignedBranches = branches.filter(b => editingDoctor.branchSlugs?.includes(b.slug));
+      const computedLocation = assignedBranches.length > 0 
+        ? assignedBranches.map(b => b.name).join(', ') 
+        : 'Addis Ababa, Ethiopia';
+
+      let uploadedImageUrl = editingDoctor.image;
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
+
+        const uploadRes = await fetch('http://localhost:5002/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadData = await uploadRes.json();
+        uploadedImageUrl = `http://localhost:5002${uploadData.imageUrl}`;
+      }
+
+      const doctorDataToSave = {
+        ...editingDoctor,
+        location: computedLocation,
+        image: uploadedImageUrl
+      };
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(doctorDataToSave),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to save doctor');
+      }
+
+      const savedDoctor = await res.json();
+
+      if (isNew) {
+        setDoctors([savedDoctor, ...doctors]);
+        triggerToast(`Doctor ${savedDoctor.name} added to the registry.`);
+      } else {
+        setDoctors(doctors.map(d => d.id === savedDoctor.id ? savedDoctor : d));
+        triggerToast(`Profile for ${savedDoctor.name} updated successfully.`);
+      }
+
+      setIsEditModalOpen(false);
+      setEditingDoctor(null);
+    } catch (error: any) {
+      triggerToast(error.message || 'An error occurred while saving.', 'danger');
+    } finally {
+      setIsSaving(false);
     }
+  };
 
-    persistDoctors(updatedList);
-    setIsEditModalOpen(false);
-    setEditingDoctor(null);
+  const generatePassword = () => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
+    let pwd = "";
+    for(let i=0; i<10; i++) {
+      pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    if (editingDoctor) {
+      setEditingDoctor({ ...editingDoctor, password: pwd });
+    }
   };
 
   // Lists management inside form (Education, Experience, Skills)
@@ -197,25 +286,7 @@ const AdminDoctorCrud: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Dashboard Info */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Specialists', value: doctors.length, icon: Award, color: 'text-primary bg-primary/10' },
-          { label: 'Specialties Active', value: specialties.length - 1, icon: GraduationCap, color: 'text-indigo-500 bg-indigo-50' },
-          { label: 'Filtered Count', value: filteredDoctors.length, icon: Search, color: 'text-amber-500 bg-amber-50' },
-          { label: 'Latest Registration', value: doctors.length > 0 ? doctors[doctors.length - 1].name : 'N/A', icon: FileText, color: 'text-emerald-500 bg-emerald-50' }
-        ].map((stat, i) => (
-          <div key={i} className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between">
-            <div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-gray-400 block mb-1">{stat.label}</span>
-              <span className="text-lg md:text-xl font-black text-gray-900">{stat.value}</span>
-            </div>
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${stat.color}`}>
-              <stat.icon className="w-5 h-5" />
-            </div>
-          </div>
-        ))}
-      </div>
+
 
       {/* Search & Actions Bar */}
       <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -304,9 +375,6 @@ const AdminDoctorCrud: React.FC = () => {
                     <td className="px-6 py-4.5">
                       <span className="px-3 py-1.5 bg-primary/10 text-primary text-[11px] font-black rounded-xl uppercase tracking-wider block w-fit">
                         {doctor.specialty}
-                      </span>
-                      <span className="text-[10px] text-gray-400 font-bold block mt-1">
-                        {doctor.roleKey.split('.').pop()?.toUpperCase()}
                       </span>
                     </td>
 
@@ -515,36 +583,81 @@ const AdminDoctorCrud: React.FC = () => {
                       />
                     </div>
 
+                    {/* Password Generate */}
                     <div className="space-y-2">
-                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Location Branch</label>
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Staff Login Password</label>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="Password"
+                          value={editingDoctor.password || ''}
+                          onChange={(e) => setEditingDoctor({ ...editingDoctor, password: e.target.value })}
+                          className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
+                        />
+                        <button
+                          type="button"
+                          onClick={generatePassword}
+                          className="px-4 py-3 bg-primary/10 text-primary hover:bg-primary hover:text-white border border-primary/20 rounded-2xl flex items-center justify-center gap-2 transition-colors font-bold text-sm shrink-0"
+                        >
+                          <Key className="w-4 h-4" />
+                          Generate
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-bold">Share this password with the staff member.</p>
+                    </div>
+
+                    {/* Image Upload */}
+                    <div className="space-y-2">
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Profile Image</label>
                       <input 
-                        type="text" 
-                        required
-                        placeholder="Addis Ababa, Ethiopia"
-                        value={editingDoctor.location || ''}
-                        onChange={(e) => setEditingDoctor({ ...editingDoctor, location: e.target.value })}
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setImageFile(file);
+                          }
+                        }}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
                       />
                     </div>
 
-                    {/* Image URL */}
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Profile Image URL</label>
-                      <input 
-                        type="text" 
-                        required
-                        placeholder="Paste image link..."
-                        value={editingDoctor.image || ''}
-                        onChange={(e) => setEditingDoctor({ ...editingDoctor, image: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
-                      />
+                    {/* Branch Assignment */}
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Assign to Branches</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 p-4 border border-gray-200 rounded-2xl">
+                        {branches.map(branch => {
+                          const isAssigned = editingDoctor.branchSlugs?.includes(branch.slug);
+                          return (
+                            <label key={branch.slug} className="flex items-center gap-2 cursor-pointer">
+                              <input 
+                                type="checkbox"
+                                checked={isAssigned || false}
+                                onChange={(e) => {
+                                  const currentSlugs = editingDoctor.branchSlugs || [];
+                                  if (e.target.checked) {
+                                    setEditingDoctor({ ...editingDoctor, branchSlugs: [...currentSlugs, branch.slug] });
+                                  } else {
+                                    setEditingDoctor({ ...editingDoctor, branchSlugs: currentSlugs.filter(s => s !== branch.slug) });
+                                  }
+                                }}
+                                className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                              />
+                              <span className="text-xs font-bold text-gray-700">{branch.name}</span>
+                            </label>
+                          );
+                        })}
+                        {branches.length === 0 && (
+                          <div className="col-span-full text-xs text-gray-400 italic">No branches available.</div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Image Preview Box */}
                     <div className="md:col-span-2 p-4 bg-gray-50 border border-gray-100 rounded-2xl flex items-center gap-4">
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-gray-200 shrink-0">
                         <img 
-                          src={editingDoctor.image} 
+                          src={imageFile ? URL.createObjectURL(imageFile) : editingDoctor.image} 
                           alt="preview" 
                           className="w-full h-full object-cover" 
                           onError={(e) => {
@@ -554,7 +667,7 @@ const AdminDoctorCrud: React.FC = () => {
                       </div>
                       <div>
                         <h5 className="font-bold text-gray-800 text-xs">Image Preview</h5>
-                        <p className="text-[10px] text-gray-400 font-medium mt-0.5">Please ensure this is a high-quality Unsplash image link or hosted image URL.</p>
+                        <p className="text-[10px] text-gray-400 font-medium mt-0.5">Please upload a high-quality photo.</p>
                       </div>
                     </div>
                   </div>
@@ -870,17 +983,23 @@ const AdminDoctorCrud: React.FC = () => {
                 <button 
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-5 py-3 rounded-2xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 text-sm font-extrabold transition-colors"
+                  disabled={isSaving}
+                  className="px-5 py-3 rounded-2xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 text-sm font-extrabold transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button 
                   type="button"
                   onClick={handleSaveDoctor}
-                  className="btn-primary !px-6 flex items-center gap-2 text-sm font-extrabold"
+                  disabled={isSaving}
+                  className="btn-primary !px-6 flex items-center gap-2 text-sm font-extrabold disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <Check className="w-4.5 h-4.5" />
-                  Save Changes
+                  {isSaving ? (
+                    <div className="w-4.5 h-4.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check className="w-4.5 h-4.5" />
+                  )}
+                  {isSaving ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
 

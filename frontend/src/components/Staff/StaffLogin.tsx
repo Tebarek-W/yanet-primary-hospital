@@ -15,26 +15,26 @@ export const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
 
   const presets = [
     {
-      name: 'Dr. Tebarek Liyana',
-      email: 'dr.tebarek@yanethospital.com',
+      name: 'Dr. Dawit Yilma',
+      email: 'dawit.yilma@yanet.com',
       role: 'Chief Cardiologist',
-      avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=200',
+      avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=2070&auto=format&fit=crop',
     },
     {
-      name: 'Dr. Birhanu Mengiste',
-      email: 'dr.birhanu@yanethospital.com',
-      role: 'General Surgeon',
-      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=200',
+      name: 'Dr. Hana Gebre',
+      email: 'hana.gebre@yanet.com',
+      role: 'Pediatrician',
+      avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2000&auto=format&fit=crop',
     }
   ];
 
   const handlePresetSelect = (preset: typeof presets[0]) => {
     setEmail(preset.email);
-    setPassword('yanetpass123');
+    setPassword('yanetstaff123');
     setError('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -45,26 +45,33 @@ export const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
 
     setIsLoading(true);
 
-    // Simulated auth delay
-    setTimeout(() => {
-      const foundPreset = presets.find(p => p.email.toLowerCase() === email.toLowerCase());
-      if (foundPreset) {
-        onLogin(foundPreset.email, foundPreset.name, foundPreset.role, foundPreset.avatar);
-      } else if (email.includes('@') && password.length >= 6) {
-        // Fallback for custom user
-        const formattedName = email.split('@')[0].replace('.', ' ');
-        const capitalizedName = formattedName.replace(/\b\w/g, c => c.toUpperCase());
-        onLogin(
-          email, 
-          capitalizedName.startsWith('Dr') ? capitalizedName : `Dr. ${capitalizedName}`, 
-          'Consultant Physician',
-          'https://images.unsplash.com/photo-1594824813573-246434e33963?auto=format&fit=crop&q=80&w=200'
-        );
-      } else {
-        setError('Invalid staff credentials. Try using one of our verified doctor presets.');
+    try {
+      const res = await fetch('http://localhost:5002/api/auth/staff-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Invalid staff credentials.');
+        setIsLoading(false);
+        return;
       }
+
+      // Store token and call onLogin
+      localStorage.setItem('yanet_staff_token', data.token);
+      localStorage.setItem('yanet_staff_user', JSON.stringify(data.user));
+
+      onLogin(data.user.email, data.user.name, data.user.role, data.user.avatar || 'https://images.unsplash.com/photo-1594824813573-246434e33963?auto=format&fit=crop&q=80&w=200');
+    } catch (err) {
+      setError('Connection to authentication server failed. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (

@@ -67,7 +67,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
 
   const handlePublishSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !titleAm || !content || !contentAm) return;
+    if (!title || !content) return;
 
     onAddBlog({
       title,
@@ -177,7 +177,6 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                       </label>
                       <input
                         type="text"
-                        required
                         value={titleAm}
                         onChange={(e) => setTitleAm(e.target.value)}
                         placeholder="ምሳሌ፡ 5 ጤናማ ልምዶች ለልብ ጤንነት"
@@ -205,7 +204,6 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                         Body Content (Amharic)
                       </label>
                       <textarea
-                        required
                         value={contentAm}
                         onChange={(e) => setContentAm(e.target.value)}
                         placeholder="እባክዎን ዝርዝር የሕክምና ትምህርቶችን እዚህ ይጻፉ..."

@@ -45,3 +45,71 @@ model Branch {
   updatedAt          DateTime @updatedAt
 }
 
+model Doctor {
+  id            Int      @id @default(autoincrement())
+  name          String
+  nameAm        String   @default("")
+  roleKey       String   @default("doctor_team.roles.general")
+  specialty     String
+  image         String   @db.Text
+  desc          String   @db.Text
+  descAm        String   @db.Text
+  email         String   @unique
+  phone         String   @default("")
+  password      String
+  location      String   @default("Addis Ababa, Ethiopia")
+  education     Json
+  educationAm   Json
+  experience    Json
+  experienceAm  Json
+  skills        Json
+  skillsAm      Json
+  biography     String   @db.Text
+  biographyAm   String   @db.Text
+  branchSlugs   Json
+  isActive      Boolean  @default(true)
+  blogs         Blog[]
+  messageChannels MessageChannel[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Blog {
+  id         Int      @id @default(autoincrement())
+  title      String
+  titleAm    String
+  category   String
+  categoryAm String
+  content    String   @db.Text
+  contentAm  String   @db.Text
+  image      String   @db.Text
+  date       String
+  authorId   Int
+  doctor     Doctor   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model MessageChannel {
+  id          Int            @id @default(autoincrement())
+  patientName String
+  age         Int
+  avatar      String       @db.Text
+  symptoms    String
+  unread      Boolean        @default(false)
+  doctorId    Int
+  doctor      Doctor         @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  history     ChatMessage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ChatMessage {
+  id        Int            @id @default(autoincrement())
+  channelId Int
+  channel   MessageChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  sender    String         // 'patient' or 'doctor'
+  text      String         @db.Text
+  time      String
+  createdAt DateTime       @default(now())
+}
