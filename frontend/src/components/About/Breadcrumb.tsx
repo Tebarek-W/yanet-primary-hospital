@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 
 interface BreadcrumbProps {
   title: string;
+  cmsData?: Record<string, any> | null;
 }
 
-const Breadcrumb = ({ title }: BreadcrumbProps) => {
+const Breadcrumb = ({ title, cmsData }: BreadcrumbProps) => {
   const { t } = useTranslation();
+  const isAmharic = t('nav.home') === 'መነሻ';
 
   return (
     <div className="relative pt-[220px] pb-[140px] overflow-hidden bg-secondary">
@@ -18,7 +20,7 @@ const Breadcrumb = ({ title }: BreadcrumbProps) => {
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.5 }}
-          src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000" 
+          src={cmsData?.about_hero_image || "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000"}  
           alt="Medical Background" 
           className="w-full h-full object-cover opacity-30"
         />
@@ -92,10 +94,12 @@ const Breadcrumb = ({ title }: BreadcrumbProps) => {
             </div>
 
             <h1 className="text-white text-[45px] md:text-[60px] font-bold mb-6 leading-tight">
-              {title === 'About Us' || title === 'ስለ እኛ' ? (
+              {cmsData?.about_hero_title ? (
+                cmsData.about_hero_title
+              ) : title === 'About Us' || title === 'ስለ እኛ' ? (
                 <>
-                  {title === 'ስለ እኛ' ? "ስለ ያኔት " : "About Yanet "}
-                  <span className="text-primary italic">{title === 'ስለ እኛ' ? "ሆስፒታል" : "Hospital"}</span>
+                  {isAmharic ? "ስለ ያኔት " : "About Yanet "}
+                  <span className="text-primary italic">{isAmharic ? "ሆስፒታል" : "Hospital"}</span>
                 </>
               ) : (
                 title
@@ -103,7 +107,9 @@ const Breadcrumb = ({ title }: BreadcrumbProps) => {
             </h1>
 
             <p className="text-white/70 text-[18px] mb-10 leading-relaxed max-w-[600px]">
-              {title === 'ስለ እኛ'
+              {cmsData?.about_hero_desc ? (
+                cmsData.about_hero_desc
+              ) : isAmharic
                 ? "ጥራት ያለው፣ ታካሚን ማዕከል ያደረገ እንክብካቤ እና የላቀ የህክምና አገልግሎቶችን ለህብረተሰባችን ለመስጠት ቆርጠን ተነስተናል።"
                 : "We are committed to providing high-quality, patient-centered care and advanced medical services to our community."}
             </p>

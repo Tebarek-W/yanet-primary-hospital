@@ -1,108 +1,57 @@
 const prisma = require('../prismaClient');
 
-// Get all blogs (public)
-exports.getAllBlogs = async (req, res) => {
+const getAllPosts = async (req, res) => {
   try {
-    const blogs = await prisma.blog.findMany({
-      include: {
-        doctor: {
-          select: { name: true, nameAm: true }
-        }
-      },
-      orderBy: { createdAt: 'desc' }
-    });
-    res.json(blogs);
+    const posts = await prisma.blogPost.findMany({ orderBy: { createdAt: 'desc' } });
+    res.json(posts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching blogs' });
+    res.status(500).json({ message: 'Server error fetching blog posts' });
   }
 };
 
-// Get single blog by ID (public)
-exports.getBlogById = async (req, res) => {
+const getPostById = async (req, res) => {
   try {
-    const blogId = parseInt(req.params.id);
-    if (isNaN(blogId)) {
-      return res.status(400).json({ message: 'Invalid blog ID' });
-    }
-    const blog = await prisma.blog.findUnique({
-      where: { id: blogId },
-      include: {
-        doctor: {
-          select: { name: true, nameAm: true }
-        }
-      }
-    });
-    if (!blog) {
-      return res.status(404).json({ message: 'Blog not found' });
-    }
-    res.json(blog);
+    const { id } = req.params;
+    const post = await prisma.blogPost.findUnique({ where: { id } });
+    if (!post) return res.status(404).json({ message: 'Blog post not found' });
+    res.json(post);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching blog' });
+    res.status(500).json({ message: 'Server error fetching blog post' });
   }
 };
 
-// Get all blogs for the logged-in doctor
-exports.getDoctorBlogs = async (req, res) => {
+const createPost = async (req, res) => {
   try {
-    const doctorId = req.user.id;
-    const blogs = await prisma.blog.findMany({
-      where: { authorId: doctorId },
-      orderBy: { createdAt: 'desc' }
-    });
-    res.json(blogs);
+    const post = await prisma.blogPost.create({ data: req.body });
+    res.status(201).json(post);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching blogs' });
+    res.status(500).json({ message: 'Server error creating blog post' });
   }
 };
 
-// Create a new blog post
-exports.createBlog = async (req, res) => {
+const updatePost = async (req, res) => {
   try {
-    const doctorId = req.user.id;
-    const { title, titleAm, category, categoryAm, content, contentAm, image, date } = req.body;
-
-    const newBlog = await prisma.blog.create({
-      data: {
-        title,
-        titleAm,
-        category,
-        categoryAm,
-        content,
-        contentAm,
-        image,
-        date,
-        authorId: doctorId
-      }
-    });
-    res.status(201).json(newBlog);
+    const { id } = req.params;
+    const post = await prisma.blogPost.update({ where: { id }, data: req.body });
+    res.json(post);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error creating blog' });
+    res.status(500).json({ message: 'Server error updating blog post' });
   }
 };
 
-// Delete a blog post
-exports.deleteBlog = async (req, res) => {
+const deletePost = async (req, res) => {
   try {
-    const doctorId = req.user.id;
-    const blogId = parseInt(req.params.id);
-
-    // Verify ownership
-    const blog = await prisma.blog.findUnique({ where: { id: blogId } });
-    if (!blog) {
-      return res.status(404).json({ message: 'Blog not found' });
-    }
-    if (blog.authorId !== doctorId) {
-      return res.status(403).json({ message: 'Unauthorized to delete this blog' });
-    }
-
-    await prisma.blog.delete({ where: { id: blogId } });
-    res.json({ message: 'Blog deleted successfully' });
+    const { id } = req.params;
+    await prisma.blogPost.delete({ where: { id } });
+    res.json({ message: 'Blog post deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error deleting blog' });
+    res.status(500).json({ message: 'Server error deleting blog post' });
   }
 };
+
+module.exports = { getAllPosts, getPostById, createPost, updatePost, deletePost };

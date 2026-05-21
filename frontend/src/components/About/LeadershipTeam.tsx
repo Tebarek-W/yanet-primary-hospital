@@ -2,31 +2,52 @@ import { motion } from 'framer-motion';
 import { Mail, Linkedin, Twitter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const LeadershipTeam = () => {
+interface LeadershipTeamProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const LeadershipTeam = ({ cmsData }: LeadershipTeamProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
+  // Build leaders array — prefer CMS data, fall back to translation keys
   const leaders = [
     {
+      idx: 1,
       key: 'ceo',
-      image: '/doctor_new.png',
-      socials: { linkedin: '#', twitter: '#', mail: 'tebarek@yanethospital.com' }
+      image:   cmsData?.leader_1_image || '/doctor_new.png',
+      name:    cmsData?.leader_1_name  || undefined,
+      role:    cmsData?.leader_1_role  || undefined,
+      bio:     cmsData?.leader_1_bio   || undefined,
+      email:   cmsData?.leader_1_email || 'tebarek@yanethospital.com',
     },
     {
+      idx: 2,
       key: 'md',
-      image: '/doctors/doctor1.png',
-      socials: { linkedin: '#', twitter: '#', mail: 'birhanu@yanethospital.com' }
+      image:   cmsData?.leader_2_image || '/doctors/doctor1.png',
+      name:    cmsData?.leader_2_name  || undefined,
+      role:    cmsData?.leader_2_role  || undefined,
+      bio:     cmsData?.leader_2_bio   || undefined,
+      email:   cmsData?.leader_2_email || 'birhanu@yanethospital.com',
     },
     {
+      idx: 3,
       key: 'cno',
-      image: '/doctors/doctor4.png',
-      socials: { linkedin: '#', twitter: '#', mail: 'tigist@yanethospital.com' }
+      image:   cmsData?.leader_3_image || '/doctors/doctor4.png',
+      name:    cmsData?.leader_3_name  || undefined,
+      role:    cmsData?.leader_3_role  || undefined,
+      bio:     cmsData?.leader_3_bio   || undefined,
+      email:   cmsData?.leader_3_email || 'tigist@yanethospital.com',
     },
     {
+      idx: 4,
       key: 'coo',
-      image: '/doctors/doctor3.png',
-      socials: { linkedin: '#', twitter: '#', mail: 'samuel@yanethospital.com' }
-    }
+      image:   cmsData?.leader_4_image || '/doctors/doctor3.png',
+      name:    cmsData?.leader_4_name  || undefined,
+      role:    cmsData?.leader_4_role  || undefined,
+      bio:     cmsData?.leader_4_bio   || undefined,
+      email:   cmsData?.leader_4_email || 'samuel@yanethospital.com',
+    },
   ];
 
   return (
@@ -45,17 +66,21 @@ const LeadershipTeam = () => {
             {t('about_leadership.badge')}
           </span>
           <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">
-            {t('about_leadership.title')}
+            {cmsData?.leadership_title || t('about_leadership.title')}
           </h2>
           <p className="relative z-10 text-[#5d666e] mt-3 max-w-[650px] mx-auto text-[14px]">
-            {t('about_leadership.desc')}
+            {cmsData?.leadership_desc || t('about_leadership.desc')}
           </p>
         </div>
 
         {/* Leadership Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {leaders.map((leader, i) => {
-            const memberTranslation = t(`about_leadership.members.${leader.key}`, { returnObjects: true }) as any;
+            const fallback = t(`about_leadership.members.${leader.key}`, { returnObjects: true }) as any;
+            const displayName = leader.name || fallback?.name || '';
+            const displayRole = leader.role || fallback?.role || '';
+            const displayBio  = leader.bio  || fallback?.bio  || '';
+
             return (
               <motion.div
                 key={leader.key}
@@ -71,7 +96,7 @@ const LeadershipTeam = () => {
                   <div className="w-full h-full rounded-full overflow-hidden bg-gray-50 border-2 border-white">
                     <img
                       src={leader.image}
-                      alt={memberTranslation.name}
+                      alt={displayName}
                       className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
@@ -80,36 +105,27 @@ const LeadershipTeam = () => {
                 {/* Identity & Role */}
                 <div className="mb-4">
                   <h3 className="text-[18px] font-bold text-secondary group-hover:text-primary transition-colors duration-300">
-                    {memberTranslation.name}
+                    {displayName}
                   </h3>
                   <span className="inline-block px-3 py-1 mt-1 text-[11px] font-bold text-primary bg-primary/5 rounded-full uppercase tracking-wider">
-                    {memberTranslation.role}
+                    {displayRole}
                   </span>
                 </div>
 
                 {/* Biography */}
                 <p className="text-[#5d666e] text-[13px] leading-relaxed mb-6 px-1 flex-grow">
-                  {memberTranslation.bio}
+                  {displayBio}
                 </p>
 
                 {/* Social Actions */}
                 <div className="flex justify-center gap-3 pt-4 border-t border-gray-50 mt-auto">
-                  <a
-                    href={leader.socials.linkedin}
-                    className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm"
-                  >
+                  <a href="#" className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm">
                     <Linkedin className="w-4 h-4" />
                   </a>
-                  <a
-                    href={leader.socials.twitter}
-                    className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm"
-                  >
+                  <a href="#" className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm">
                     <Twitter className="w-4 h-4" />
                   </a>
-                  <a
-                    href={`mailto:${leader.socials.mail}`}
-                    className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm"
-                  >
+                  <a href={`mailto:${leader.email}`} className="w-8 h-8 rounded-full bg-gray-50 text-[#8c949c] hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm">
                     <Mail className="w-4 h-4" />
                   </a>
                 </div>

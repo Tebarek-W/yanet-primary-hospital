@@ -4,12 +4,23 @@ import { Mail, Phone, MapPin, Clock, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { hrContactData } from '../../data/careersData';
 
-const HRContact: React.FC = () => {
+interface HRContactProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const HRContact: React.FC<HRContactProps> = ({ cmsData }) => {
   const { t, i18n } = useTranslation();
   const isAmharic = i18n.language.startsWith('am');
 
-  const address = isAmharic ? hrContactData.addressAm : hrContactData.address;
-  const workingHours = isAmharic ? hrContactData.workingHoursAm : hrContactData.workingHours;
+  // Use CMS data if available, fall back to static data
+  const email = cmsData?.hr_email || hrContactData.email;
+  const phone = cmsData?.hr_phone || hrContactData.phone;
+  const address = isAmharic
+    ? (cmsData?.hr_address_am || hrContactData.addressAm)
+    : (cmsData?.hr_address || hrContactData.address);
+  const workingHours = isAmharic
+    ? (cmsData?.hr_hours_am || hrContactData.workingHoursAm)
+    : (cmsData?.hr_hours || hrContactData.workingHours);
 
   return (
     <div className="py-[100px] bg-secondary relative overflow-hidden text-white">
@@ -35,7 +46,7 @@ const HRContact: React.FC = () => {
           {/* Right Column: Contact Cards */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.a
-              href={`mailto:${hrContactData.email}`}
+              href={`mailto:${email}`}
               whileHover={{ scale: 1.02 }}
               className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md flex items-start gap-4 hover:border-primary/50 transition-colors group"
             >
@@ -44,13 +55,13 @@ const HRContact: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t('careers.email_us', 'Email Direct')}</h4>
-                <p className="text-sm font-black text-white">{hrContactData.email}</p>
+                <p className="text-sm font-black text-white">{email}</p>
                 <span className="text-[10px] font-bold text-primary mt-2 inline-block">Response in 24h &rarr;</span>
               </div>
             </motion.a>
 
             <motion.a
-              href={`tel:${hrContactData.phone.replace(/\s+/g, '')}`}
+              href={`tel:${phone.replace(/\s+/g, '')}`}
               whileHover={{ scale: 1.02 }}
               className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md flex items-start gap-4 hover:border-primary/50 transition-colors group"
             >
@@ -59,7 +70,7 @@ const HRContact: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t('careers.call_hr', 'Call HR Office')}</h4>
-                <p className="text-sm font-black text-white">{hrContactData.phone}</p>
+                <p className="text-sm font-black text-white">{phone}</p>
                 <span className="text-[10px] font-bold text-primary mt-2 inline-block">Direct Line &rarr;</span>
               </div>
             </motion.a>

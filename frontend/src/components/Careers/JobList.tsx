@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Briefcase, Clock, Calendar, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { careersData, type JobVacancy } from '../../data/careersData';
+import { api } from '../../utils/api';
 
 interface JobListProps {
   searchQuery: string;
@@ -15,33 +16,44 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
 
   const [activeDept, setActiveDept] = useState<string>('All');
   const [activeLoc, setActiveLoc] = useState<string>('All');
+  const [jobs, setJobs] = useState<JobVacancy[]>([...careersData]);
+
+  useEffect(() => {
+    api.careers.getVacancies()
+      .then((data: JobVacancy[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setJobs(data);
+        }
+      })
+      .catch(() => { /* keep static fallback */ });
+  }, []);
 
   // Extract unique departments & locations with bilingual mapping
   const departmentsMap = useMemo(() => {
     const map = new Map<string, { en: string; am: string }>();
-    careersData.forEach(job => {
+    jobs.forEach(job => {
       map.set(job.department, { en: job.department, am: job.departmentAm });
     });
     return [
       { key: 'All', en: 'All Departments', am: 'ሁሉም የስራ ክፍሎች' },
       ...Array.from(map.values()).map(v => ({ key: v.en, en: v.en, am: v.am }))
     ];
-  }, []);
+  }, [jobs]);
 
   const locationsMap = useMemo(() => {
     const map = new Map<string, { en: string; am: string }>();
-    careersData.forEach(job => {
+    jobs.forEach(job => {
       map.set(job.location, { en: job.location, am: job.locationAm });
     });
     return [
       { key: 'All', en: 'All Branches', am: 'ሁሉም ቅርንጫፎች' },
       ...Array.from(map.values()).map(v => ({ key: v.en, en: v.en, am: v.am }))
     ];
-  }, []);
+  }, [jobs]);
 
   // Filter jobs
   const filteredJobs = useMemo(() => {
-    return careersData.filter(job => {
+    return jobs.filter(job => {
       const matchQuery = searchQuery ? (
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.titleAm.includes(searchQuery) ||
@@ -54,7 +66,7 @@ const JobList: React.FC<JobListProps> = ({ searchQuery, onApplyClick }) => {
 
       return matchQuery && matchDept && matchLoc;
     });
-  }, [searchQuery, activeDept, activeLoc]);
+  }, [searchQuery, activeDept, activeLoc, jobs]);
 
   return (
     <div className="py-[100px] bg-gray-50/50">

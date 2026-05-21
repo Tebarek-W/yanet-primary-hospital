@@ -2,7 +2,11 @@ import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const AboutUs = () => {
+interface AboutUsProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const AboutUs = ({ cmsData }: AboutUsProps) => {
   const { t } = useTranslation();
 
   const features = [
@@ -53,7 +57,7 @@ const AboutUs = () => {
               className="relative z-10 rounded-[10px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] bg-primary/5 p-4"
             >
               <img 
-                src="/doctors/receptionist.png" 
+                src={cmsData?.overview_image || "/doctors/receptionist.png"} 
                 alt="Ethiopian Medical Professional" 
                 className="w-full h-auto rounded-[5px]"
               />
@@ -72,12 +76,12 @@ const AboutUs = () => {
               </span>
               <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px]">{t('nav.about')}</span>
               <h2 className="relative z-10 text-[28px] font-bold text-secondary mt-1 leading-tight">
-                {t('about.about_page_us.title')}
+                {cmsData?.overview_title || t('about.about_page_us.title')}
               </h2>
             </div>
             
             <p className="text-[#5d666e] text-[17px] mb-8 leading-relaxed max-w-[550px]">
-              {t('about.about_page_us.desc')}
+              {cmsData?.overview_content || t('about.about_page_us.desc')}
             </p>
 
             <ul className="space-y-4">

@@ -2,28 +2,41 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Stethoscope, HeartPulse, Activity } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const MissionVision = () => {
+interface MissionVisionProps {
+  cmsData?: Record<string, any> | null;
+}
+
+const MissionVision = ({ cmsData }: MissionVisionProps) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
+
+  const getCoreValuesDesc = () => {
+    if (cmsData?.value_1_title && cmsData?.value_2_title && cmsData?.value_3_title) {
+      return `${cmsData.value_1_title} (${cmsData.value_1_desc}) - ${cmsData.value_2_title} (${cmsData.value_2_desc}) - ${cmsData.value_3_title} (${cmsData.value_3_desc})`;
+    }
+    return isAmharic 
+      ? "ቅንነት፣ ልህቀት፣ ርህራሄ እና ፈጠራ ለእያንዳንዱ ታካሚ እና ለቤተሰቦቻቸው የምንወስደውን እርምጃ ይመራሉ።" 
+      : "Integrity, Excellence, Compassion, and Innovation guide every action we take for our patients and their families.";
+  };
 
   const items = [
     {
       title: t('about_extra.mission.m_title'),
-      desc: t('about_extra.mission.m_desc'),
+      desc: cmsData?.mission_statement || t('about_extra.mission.m_desc'),
       icon: <Stethoscope className="w-8 h-8" />,
       color: "bg-primary",
       accent: "text-primary"
     },
     {
       title: t('about_extra.mission.v_title'),
-      desc: t('about_extra.mission.v_desc'),
+      desc: cmsData?.vision_statement || t('about_extra.mission.v_desc'),
       icon: <Activity className="w-8 h-8" />,
       color: "bg-secondary",
       accent: "text-secondary"
     },
     {
-      title: isAmharic ? "መሠረታዊ እሴቶች" : "Core Values",
-      desc: isAmharic ? "ቅንነት፣ ልህቀት፣ ርህራሄ እና ፈጠራ ለእያንዳንዱ ታካሚ እና ለቤተሰቦቻቸው የምንወስደውን እርምጃ ይመራሉ።" : "Integrity, Excellence, Compassion, and Innovation guide every action we take for our patients and their families.",
+      title: cmsData?.values_title || (isAmharic ? "መሠረታዊ እሴቶች" : "Core Values"),
+      desc: getCoreValuesDesc(),
       icon: <ShieldCheck className="w-8 h-8" />,
       color: "bg-teal-600",
       accent: "text-teal-600"

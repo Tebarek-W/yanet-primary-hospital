@@ -2,12 +2,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { api } from '../utils/api';
+
+const DEFAULT_EMBED = 'https://tour.panoee.net/iframe/69d5076793f8052809dbec8b';
 
 const VirtualTourPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
   const [loading, setLoading] = useState(true);
+  const [embedUrl, setEmbedUrl] = useState(DEFAULT_EMBED);
+
+  useEffect(() => {
+    api.pages.get('virtual-tour')
+      .then(data => {
+        if (data?.vt_embed_url) setEmbedUrl(data.vt_embed_url);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     // Forward device motion to Panoee iframe for mobile VR support
@@ -69,7 +81,7 @@ const VirtualTourPage = () => {
       <iframe
         id="tour-embeded"
         title="Yanet Primary Hospital Virtual Tour"
-        src="https://tour.panoee.net/iframe/69d5076793f8052809dbec8b"
+        src={embedUrl}
         width="100%"
         height="100%"
         scrolling="no"

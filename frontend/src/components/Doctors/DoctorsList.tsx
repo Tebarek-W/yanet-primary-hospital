@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import DoctorCard from './DoctorCard';
-import { fetchDoctors } from '../../data/doctorsData';
+import { doctorsData } from '../../data/doctorsData';
 import type { Doctor } from '../../data/doctorsData';
+import { api } from '../../utils/api';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -14,18 +15,17 @@ const DoctorsList = () => {
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([...doctorsData]);
+
   const isAmharic = t('nav.home') === 'መነሻ';
 
+  // Fetch live data from API; keep static data as fallback
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      const data = await fetchDoctors();
-      setDoctorsData(data);
-      setIsLoading(false);
-    };
-    loadData();
+    api.doctors.getAll()
+      .then((data: Doctor[]) => {
+        if (Array.isArray(data) && data.length > 0) setAllDoctors(data);
+      })
+      .catch(() => { /* keep static fallback */ });
   }, []);
 
   const specialties = [
@@ -39,7 +39,7 @@ const DoctorsList = () => {
 
   // Enhanced search and filter logic
   const filteredDoctors = useMemo(() => {
-    return doctorsData.filter(doctor => {
+    return allDoctors.filter(doctor => {
       const matchesFilter = filter === 'All' || doctor.specialty === filter;
       const doctorName = isAmharic ? doctor.nameAm : doctor.name;
       const doctorRole = t(doctor.roleKey);
@@ -51,7 +51,7 @@ const DoctorsList = () => {
         
       return matchesFilter && matchesSearch;
     });
-  }, [filter, searchQuery, isAmharic, t, doctorsData]);
+  }, [filter, searchQuery, isAmharic, t, allDoctors]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredDoctors.length / ITEMS_PER_PAGE);

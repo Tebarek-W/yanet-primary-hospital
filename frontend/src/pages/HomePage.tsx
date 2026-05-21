@@ -10,6 +10,7 @@ import Testimonials from '../components/Home/Testimonials';
 import CampaignBanner from '../components/Home/CampaignBanner';
 import VirtualTourSection from '../components/Home/VirtualTourSection';
 import Blog from '../components/Home/Blog';
+import { api } from '../utils/api';
 
 interface HomePageProps {
   onAppointmentClick: () => void;
@@ -19,11 +20,7 @@ const HomePage = ({ onAppointmentClick }: HomePageProps) => {
   const [cmsData, setCmsData] = useState<Record<string, any> | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:5002/api/pages/home')
-      .then(res => {
-        if (res.ok) return res.json();
-        throw new Error('Database content not seeded or server offline');
-      })
+    api.pages.get('home')
       .then(data => {
         if (data && Object.keys(data).length > 0) {
           setCmsData(data);
@@ -40,12 +37,12 @@ const HomePage = ({ onAppointmentClick }: HomePageProps) => {
       <Features onAppointmentClick={onAppointmentClick} cmsData={cmsData} />
       <About cmsData={cmsData} />
       <Services />
-      <HomeStats />
-      <WhyChooseUs />
+      <HomeStats cmsData={cmsData} />
+      <WhyChooseUs cmsData={cmsData} />
       <Doctors />
       <Testimonials cmsData={cmsData} />
-      <VirtualTourSection />
-      <CampaignBanner onAppointmentClick={onAppointmentClick} />
+      <VirtualTourSection cmsData={cmsData} />
+      <CampaignBanner onAppointmentClick={onAppointmentClick} cmsData={cmsData} />
       <Blog />
     </>
   );

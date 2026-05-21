@@ -2,14 +2,14 @@ import { motion } from 'framer-motion';
 import { Phone, MapPin, CheckCircle2, Award, Clock, HeartPulse } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const WhyChooseUs = () => {
+const WhyChooseUs = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
 
   const stats = [
-    { icon: <CheckCircle2 className="w-8 h-8" />, title: t('why_choose.stats.doctors'), desc: t('why_choose.stats.doctors_desc') },
-    { icon: <Award className="w-8 h-8" />, title: t('why_choose.stats.award'), desc: t('why_choose.stats.award_desc') },
-    { icon: <Clock className="w-8 h-8" />, title: t('why_choose.stats.service'), desc: t('why_choose.stats.service_desc') },
-    { icon: <HeartPulse className="w-8 h-8" />, title: t('why_choose.stats.tech'), desc: t('why_choose.stats.tech_desc') },
+    { icon: <CheckCircle2 className="w-8 h-8" />, title: cmsData?.why_stat1_title || t('why_choose.stats.doctors'), desc: cmsData?.why_stat1_desc || t('why_choose.stats.doctors_desc') },
+    { icon: <Award className="w-8 h-8" />,        title: cmsData?.why_stat2_title || t('why_choose.stats.award'),   desc: cmsData?.why_stat2_desc || t('why_choose.stats.award_desc') },
+    { icon: <Clock className="w-8 h-8" />,        title: cmsData?.why_stat3_title || t('why_choose.stats.service'), desc: cmsData?.why_stat3_desc || t('why_choose.stats.service_desc') },
+    { icon: <HeartPulse className="w-8 h-8" />,   title: cmsData?.why_stat4_title || t('why_choose.stats.tech'),    desc: cmsData?.why_stat4_desc || t('why_choose.stats.tech_desc') },
   ];
 
   return (
@@ -66,7 +66,7 @@ const WhyChooseUs = () => {
                   </div>
                   <div>
                     <h4 className="text-white/40 text-[11px] uppercase tracking-widest mb-0.5">{t('common.emergency')}</h4>
-                    <p className="text-white text-[19px] font-black tracking-tight">+251 11 123 4567</p>
+                    <p className="text-white text-[19px] font-black tracking-tight">{cmsData?.why_phone || '+251 11 123 4567'}</p>
                   </div>
                 </div>
 
@@ -76,14 +76,14 @@ const WhyChooseUs = () => {
                   </div>
                   <div>
                     <h4 className="text-white/40 text-[11px] uppercase tracking-widest mb-0.5">{t('common.location')}</h4>
-                    <p className="text-white text-[16px] font-bold">Bole Road, Addis Ababa, Ethiopia</p>
+                    <p className="text-white text-[16px] font-bold">{cmsData?.why_address || 'Bole Road, Addis Ababa, Ethiopia'}</p>
                   </div>
                 </div>
 
                 <div className="pt-10 border-t border-white/10 flex items-center justify-between">
                   <div>
                     <p className="text-white font-bold text-[18px]">{t('common.opening_hours')}</p>
-                    <p className="text-white/40">Mon - Sun: 24 Hours</p>
+                    <p className="text-white/40">{cmsData?.why_hours || 'Mon - Sun: 24 Hours'}</p>
                   </div>
                   <div className="flex -space-x-4">
                     {[1,2,3].map(i => (

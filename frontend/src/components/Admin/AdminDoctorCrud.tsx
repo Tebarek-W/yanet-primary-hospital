@@ -5,8 +5,9 @@ import {
   Briefcase, FileText, UserPlus, Sparkles, CheckCircle2, AlertTriangle, Key
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { doctorsData } from '../../data/doctorsData';
+import { doctorsData } from '../../data/doctorsData'; // fallback static data
 import type { Doctor } from '../../data/doctorsData';
+import { api } from '../../utils/api';
 
 const AdminDoctorCrud: React.FC = () => {
   // Reactive list of doctors
@@ -29,31 +30,18 @@ const AdminDoctorCrud: React.FC = () => {
   // Custom alerts/toasts
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
 
-  const API_URL = 'http://localhost:5002/api/doctors';
-
-  const loadDoctorsAndBranches = async () => {
+  // Load doctors from API on mount, fallback to static data if server is offline
+  const fetchDoctors = async () => {
     try {
-      const [docRes, branchRes] = await Promise.all([
-        fetch(API_URL),
-        fetch('http://localhost:5002/api/branches')
-      ]);
-      if (docRes.ok) {
-        const data = await docRes.json();
-        setDoctors(data);
-      }
-      if (branchRes.ok) {
-        const branchData = await branchRes.json();
-        setBranches(branchData);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      triggerToast('Failed to load data from server.', 'danger');
+      const data = await api.doctors.getAll();
+      setDoctors(Array.isArray(data) ? data : [...doctorsData]);
+    } catch {
+      setDoctors([...doctorsData]);
     }
   };
 
-  // Load doctors on mount
   useEffect(() => {
-    loadDoctorsAndBranches();
+    fetchDoctors();
   }, []);
 
   const triggerToast = (message: string, type: 'success' | 'danger' = 'success') => {
@@ -70,17 +58,11 @@ const AdminDoctorCrud: React.FC = () => {
   const handleDelete = async () => {
     if (!doctorToDelete) return;
     try {
-      const res = await fetch(`${API_URL}/${doctorToDelete.id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        setDoctors(doctors.filter(doc => doc.id !== doctorToDelete.id));
-        triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
-      } else {
-        triggerToast('Failed to delete doctor.', 'danger');
-      }
-    } catch (error) {
-      triggerToast('An error occurred while deleting.', 'danger');
+      await api.doctors.delete(doctorToDelete.id);
+      setDoctors(prev => prev.filter(d => d.id !== doctorToDelete.id));
+      triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
+    } catch {
+      triggerToast('Failed to delete doctor. Please check the server connection.', 'danger');
     }
     setIsDeleteConfirmOpen(false);
     setDoctorToDelete(null);
@@ -128,80 +110,23 @@ const AdminDoctorCrud: React.FC = () => {
       return;
     }
 
-    setIsSaving(true);
+    const doctorPayload = editingDoctor as Doctor;
+    const exists = doctors.some(d => d.id === doctorPayload.id);
+
     try {
-      const isNew = !editingDoctor.id;
-      const url = isNew ? API_URL : `${API_URL}/${editingDoctor.id}`;
-      const method = isNew ? 'POST' : 'PUT';
-
-      const assignedBranches = branches.filter(b => editingDoctor.branchSlugs?.includes(b.slug));
-      const computedLocation = assignedBranches.length > 0 
-        ? assignedBranches.map(b => b.name).join(', ') 
-        : 'Addis Ababa, Ethiopia';
-
-      let uploadedImageUrl = editingDoctor.image;
-
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', imageFile);
-
-        const uploadRes = await fetch('http://localhost:5002/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error('Failed to upload image');
-        }
-
-        const uploadData = await uploadRes.json();
-        uploadedImageUrl = `http://localhost:5002${uploadData.imageUrl}`;
-      }
-
-      const doctorDataToSave = {
-        ...editingDoctor,
-        location: computedLocation,
-        image: uploadedImageUrl
-      };
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(doctorDataToSave),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Failed to save doctor');
-      }
-
-      const savedDoctor = await res.json();
-
-      if (isNew) {
-        setDoctors([savedDoctor, ...doctors]);
-        triggerToast(`Doctor ${savedDoctor.name} added to the registry.`);
+      if (exists) {
+        const saved: Doctor = await api.doctors.update(doctorPayload.id, doctorPayload);
+        setDoctors(prev => prev.map(d => d.id === saved.id ? saved : d));
+        triggerToast(`Profile for ${doctorPayload.name} updated successfully.`);
       } else {
-        setDoctors(doctors.map(d => d.id === savedDoctor.id ? savedDoctor : d));
-        triggerToast(`Profile for ${savedDoctor.name} updated successfully.`);
+        const saved: Doctor = await api.doctors.create(doctorPayload);
+        setDoctors(prev => [...prev, saved]);
+        triggerToast(`Doctor ${doctorPayload.name} added to the registry.`);
       }
-
       setIsEditModalOpen(false);
       setEditingDoctor(null);
-    } catch (error: any) {
-      triggerToast(error.message || 'An error occurred while saving.', 'danger');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const generatePassword = () => {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
-    let pwd = "";
-    for(let i=0; i<10; i++) {
-      pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    if (editingDoctor) {
-      setEditingDoctor({ ...editingDoctor, password: pwd });
+    } catch {
+      triggerToast('Failed to save doctor profile. Please check the server connection.', 'danger');
     }
   };
 

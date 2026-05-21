@@ -2,38 +2,38 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Award, CheckCircle2, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const Certifications = () => {
+const Certifications = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
   const certs = [
     {
       key: 'fmhaca',
+      title: cmsData?.cert_1_title || t('about_certifications.items.fmhaca.title'),
+      desc:  cmsData?.cert_1_desc  || t('about_certifications.items.fmhaca.desc'),
       icon: <ShieldCheck className="w-8 h-8" />,
-      color: 'text-primary',
-      bg: 'bg-primary/5',
-      border: 'hover:border-primary/30'
+      color: 'text-primary', bg: 'bg-primary/5', border: 'hover:border-primary/30'
     },
     {
       key: 'iso',
+      title: cmsData?.cert_2_title || t('about_certifications.items.iso.title'),
+      desc:  cmsData?.cert_2_desc  || t('about_certifications.items.iso.desc'),
       icon: <Award className="w-8 h-8" />,
-      color: 'text-secondary',
-      bg: 'bg-secondary/5',
-      border: 'hover:border-secondary/30'
+      color: 'text-secondary', bg: 'bg-secondary/5', border: 'hover:border-secondary/30'
     },
     {
       key: 'nqs',
+      title: cmsData?.cert_3_title || t('about_certifications.items.nqs.title'),
+      desc:  cmsData?.cert_3_desc  || t('about_certifications.items.nqs.desc'),
       icon: <CheckCircle2 className="w-8 h-8" />,
-      color: 'text-teal-600',
-      bg: 'bg-teal-50',
-      border: 'hover:border-teal-500/30'
+      color: 'text-teal-600', bg: 'bg-teal-50', border: 'hover:border-teal-500/30'
     },
     {
       key: 'ema',
+      title: cmsData?.cert_4_title || t('about_certifications.items.ema.title'),
+      desc:  cmsData?.cert_4_desc  || t('about_certifications.items.ema.desc'),
       icon: <Heart className="w-8 h-8" />,
-      color: 'text-rose-500',
-      bg: 'bg-rose-50',
-      border: 'hover:border-rose-500/30'
+      color: 'text-rose-500', bg: 'bg-rose-50', border: 'hover:border-rose-500/30'
     }
   ];
 
@@ -49,13 +49,13 @@ const Certifications = () => {
             {isAmharic ? 'ዕውቅናዎች' : 'CREDENTIALS'}
           </div>
           <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">
-            {t('about_certifications.badge')}
+            {cmsData?.cert_badge || t('about_certifications.badge')}
           </span>
           <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">
-            {t('about_certifications.title')}
+            {cmsData?.cert_title || t('about_certifications.title')}
           </h2>
           <p className="relative z-10 text-[#5d666e] mt-3 max-w-[650px] mx-auto text-[14px]">
-            {t('about_certifications.desc')}
+            {cmsData?.cert_desc || t('about_certifications.desc')}
           </p>
         </div>
 
@@ -78,10 +78,10 @@ const Certifications = () => {
 
               {/* Title & Desc */}
               <h3 className="text-[17px] font-bold text-secondary mb-2 group-hover:text-primary transition-colors duration-300">
-                {t(`about_certifications.items.${cert.key}.title`)}
+                {cert.title}
               </h3>
               <p className="text-[#5d666e] text-[13.5px] leading-relaxed">
-                {t(`about_certifications.items.${cert.key}.desc`)}
+                {cert.desc}
               </p>
             </motion.div>
           ))}

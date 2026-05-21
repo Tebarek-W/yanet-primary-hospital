@@ -1,20 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const doctorController = require('../controllers/doctorController');
+const { getAllDoctors, getDoctorById, createDoctor, updateDoctor, deleteDoctor } = require('../controllers/doctorController');
 
-// Get all doctors
-router.get('/', doctorController.getAllDoctors);
-
-// Get single doctor
-router.get('/:id', doctorController.getDoctorById);
-
-// Create doctor
-router.post('/', doctorController.createDoctor);
-
-// Update doctor
-router.put('/:id', doctorController.updateDoctor);
-
-// Delete doctor
-router.delete('/:id', doctorController.deleteDoctor);
+router.get('/', getAllDoctors);
+router.get('/:id', getDoctorById);
+router.post('/', createDoctor);
+router.put('/:id', updateDoctor);
+router.delete('/:id', deleteDoctor);
 
 module.exports = router;

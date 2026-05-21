@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Phone, Mail, Plus, Edit3, Trash2, Search, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_BASE } from '../../utils/api';
 
 interface Branch {
   slug: string;
@@ -26,7 +27,7 @@ const AdminBranchesList: React.FC = () => {
   const fetchBranches = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5002/api/branches');
+      const response = await fetch(`${API_BASE}/branches`);
       if (!response.ok) throw new Error('Failed to fetch branches from API');
       const data = await response.json();
       setBranches(data);
@@ -45,7 +46,7 @@ const AdminBranchesList: React.FC = () => {
     if (!window.confirm(`Are you sure you want to delete branch "${slug}"?`)) return;
 
     try {
-      const response = await fetch(`http://localhost:5002/api/branches/${slug}`, {
+      const response = await fetch(`${API_BASE}/branches/${slug}`, {
         method: 'DELETE',
       });
       if (response.ok) {

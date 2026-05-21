@@ -5,19 +5,20 @@ import { useTranslation } from 'react-i18next';
 
 interface CampaignBannerProps {
   onAppointmentClick: () => void;
+  cmsData?: Record<string, any> | null;
 }
 
-const CampaignBanner = ({ onAppointmentClick }: CampaignBannerProps) => {
+const CampaignBanner = ({ onAppointmentClick, cmsData }: CampaignBannerProps) => {
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const campaigns = [
     {
-      badge: t('campaign.flu_badge'),
-      title: t('campaign.flu_title'),
-      desc: t('campaign.flu_desc'),
-      cta: t('campaign.flu_cta'),
+      badge: cmsData?.campaign_1_badge || t('campaign.flu_badge'),
+      title: cmsData?.campaign_1_title || t('campaign.flu_title'),
+      desc:  cmsData?.campaign_1_desc  || t('campaign.flu_desc'),
+      cta:   cmsData?.campaign_1_cta   || t('campaign.flu_cta'),
       icon: <ShieldCheck className="w-16 h-16 text-sky-400" />,
       bgClass: 'from-sky-950/90 via-slate-900/95 to-sky-950/90 border-sky-500/20',
       glowColor: 'rgba(56,189,248,0.15)',
@@ -34,10 +35,10 @@ const CampaignBanner = ({ onAppointmentClick }: CampaignBannerProps) => {
       )
     },
     {
-      badge: t('campaign.wellness_badge'),
-      title: t('campaign.wellness_title'),
-      desc: t('campaign.wellness_desc'),
-      cta: t('campaign.wellness_cta'),
+      badge: cmsData?.campaign_2_badge || t('campaign.wellness_badge'),
+      title: cmsData?.campaign_2_title || t('campaign.wellness_title'),
+      desc:  cmsData?.campaign_2_desc  || t('campaign.wellness_desc'),
+      cta:   cmsData?.campaign_2_cta   || t('campaign.wellness_cta'),
       icon: <HeartPulse className="w-16 h-16 text-emerald-400" />,
       bgClass: 'from-emerald-950/90 via-slate-900/95 to-emerald-950/90 border-emerald-500/20',
       glowColor: 'rgba(52,211,153,0.15)',
@@ -54,10 +55,10 @@ const CampaignBanner = ({ onAppointmentClick }: CampaignBannerProps) => {
       )
     },
     {
-      badge: t('campaign.maternal_badge'),
-      title: t('campaign.maternal_title'),
-      desc: t('campaign.maternal_desc'),
-      cta: t('campaign.maternal_cta'),
+      badge: cmsData?.campaign_3_badge || t('campaign.maternal_badge'),
+      title: cmsData?.campaign_3_title || t('campaign.maternal_title'),
+      desc:  cmsData?.campaign_3_desc  || t('campaign.maternal_desc'),
+      cta:   cmsData?.campaign_3_cta   || t('campaign.maternal_cta'),
       icon: <Heart className="w-16 h-16 text-rose-400" />,
       bgClass: 'from-rose-950/90 via-slate-900/95 to-rose-950/90 border-rose-500/20',
       glowColor: 'rgba(251,113,133,0.15)',

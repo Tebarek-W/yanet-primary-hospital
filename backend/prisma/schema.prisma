@@ -46,70 +46,99 @@ model Branch {
 }
 
 model Doctor {
-  id            Int      @id @default(autoincrement())
-  name          String
-  nameAm        String   @default("")
-  roleKey       String   @default("doctor_team.roles.general")
-  specialty     String
+  id          String   @id
+  name        String
+  nameAm      String
+  roleKey     String
+  specialty   String
+  image       String   @db.Text
+  desc        String   @db.Text
+  descAm      String   @db.Text
+  email       String
+  phone       String
+  location    String
+  education   Json
+  educationAm Json
+  experience  Json
+  experienceAm Json
+  skills      Json
+  skillsAm    Json
+  biography   String   @db.Text
+  biographyAm String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  slug        String   @id
+  category    String
+  iconName    String
+  title       String
+  titleAm     String
+  desc        String   @db.Text
+  descAm      String   @db.Text
+  fullDesc    String   @db.LongText
+  fullDescAm  String   @db.LongText
+  specialty   String
+  treatments  Json
+  treatmentsAm Json
+  equipment   Json
+  equipmentAm Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id            String   @id
+  categoryEn    String
+  categoryAm    String
+  titleEn       String
+  titleAm       String
+  excerptEn     String   @db.Text
+  excerptAm     String   @db.Text
   image         String   @db.Text
-  desc          String   @db.Text
-  descAm        String   @db.Text
-  email         String   @unique
-  phone         String   @default("")
-  password      String
-  location      String   @default("Addis Ababa, Ethiopia")
-  education     Json
-  educationAm   Json
-  experience    Json
-  experienceAm  Json
-  skills        Json
-  skillsAm      Json
-  biography     String   @db.Text
-  biographyAm   String   @db.Text
-  branchSlugs   Json
-  isActive      Boolean  @default(true)
-  blogs         Blog[]
-  messageChannels MessageChannel[]
+  dateEn        String
+  dateAm        String
+  authorId      String
+  authorNameEn  String
+  authorNameAm  String
+  readMin       Int
+  contentEn     String   @db.LongText
+  contentAm     String   @db.LongText
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
-model Blog {
-  id         Int      @id @default(autoincrement())
-  title      String
-  titleAm    String
-  category   String
-  categoryAm String
-  content    String   @db.Text
-  contentAm  String   @db.Text
-  image      String   @db.Text
-  date       String
-  authorId   Int
-  doctor     Doctor   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model JobVacancy {
+  id           String   @id
+  title        String
+  titleAm      String
+  department   String
+  departmentAm String
+  location     String
+  locationAm   String
+  type         String
+  typeAm       String
+  experience   String
+  experienceAm String
+  desc         String   @db.Text
+  descAm       String   @db.Text
+  reqs         Json
+  reqsAm       Json
+  postedDate   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-model MessageChannel {
-  id          Int            @id @default(autoincrement())
-  patientName String
-  age         Int
-  avatar      String       @db.Text
-  symptoms    String
-  unread      Boolean        @default(false)
-  doctorId    Int
-  doctor      Doctor         @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-  history     ChatMessage[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-}
-
-model ChatMessage {
-  id        Int            @id @default(autoincrement())
-  channelId Int
-  channel   MessageChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  sender    String         // 'patient' or 'doctor'
-  text      String         @db.Text
-  time      String
-  createdAt DateTime       @default(now())
+model InternshipProgram {
+  id        String   @id
+  title     String
+  titleAm   String
+  duration  String
+  durationAm String
+  desc      String   @db.Text
+  descAm    String   @db.Text
+  icon      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

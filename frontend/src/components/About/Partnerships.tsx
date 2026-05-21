@@ -2,31 +2,41 @@ import { motion } from 'framer-motion';
 import { CreditCard, Landmark, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const Partnerships = () => {
+const Partnerships = ({ cmsData }: { cmsData?: Record<string, any> | null }) => {
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
+
+  // Parse partner lists from CMS or fall back to translation keys
+  const parseList = (raw: string | undefined, fallbackKey: string): string[] => {
+    if (raw) return raw.split(',').map(s => s.trim()).filter(Boolean);
+    return t(fallbackKey, { returnObjects: true }) as string[] || [];
+  };
+
+  const insurersList  = parseList(cmsData?.partner_insurers,  'about_partnerships.items_insurers');
+  const hospitalsList = parseList(cmsData?.partner_hospitals, 'about_partnerships.items_hospitals');
+  const ngosList      = parseList(cmsData?.partner_ngos,      'about_partnerships.items_ngos');
 
   const partnerGroups = [
     {
       key: 'insurers',
       icon: <CreditCard className="w-6 h-6" />,
-      color: 'text-primary',
-      bg: 'bg-primary/5',
-      partners: ['nyala', 'medhin', 'united', 'awash']
+      color: 'text-primary', bg: 'bg-primary/5',
+      partners: insurersList.length > 0 ? insurersList : ['nyala', 'medhin', 'united', 'awash'],
+      isRaw: insurersList.length > 0
     },
     {
       key: 'hospitals',
       icon: <Landmark className="w-6 h-6" />,
-      color: 'text-secondary',
-      bg: 'bg-secondary/5',
-      partners: ['black_lion', 'hawassa_uni']
+      color: 'text-secondary', bg: 'bg-secondary/5',
+      partners: hospitalsList.length > 0 ? hospitalsList : ['black_lion', 'hawassa_uni'],
+      isRaw: hospitalsList.length > 0
     },
     {
       key: 'ngos',
       icon: <ShieldCheck className="w-6 h-6" />,
-      color: 'text-teal-600',
-      bg: 'bg-teal-50',
-      partners: ['red_cross', 'usaid']
+      color: 'text-teal-600', bg: 'bg-teal-50',
+      partners: ngosList.length > 0 ? ngosList : ['red_cross', 'usaid'],
+      isRaw: ngosList.length > 0
     }
   ];
 
@@ -42,13 +52,13 @@ const Partnerships = () => {
             {isAmharic ? 'አጋሮች' : 'COLLABORATIONS'}
           </div>
           <span className="relative z-10 text-primary font-bold uppercase tracking-wider text-[11px] !bg-transparent !p-0">
-            {t('about_partnerships.badge')}
+            {cmsData?.partner_badge || t('about_partnerships.badge')}
           </span>
           <h2 className="relative z-10 text-[32px] font-bold text-secondary mt-2">
-            {t('about_partnerships.title')}
+            {cmsData?.partner_title || t('about_partnerships.title')}
           </h2>
           <p className="relative z-10 text-[#5d666e] mt-3 max-w-[650px] mx-auto text-[14px]">
-            {t('about_partnerships.desc')}
+            {cmsData?.partner_desc || t('about_partnerships.desc')}
           </p>
         </div>
 
@@ -75,16 +85,15 @@ const Partnerships = () => {
 
               {/* Partners list inside the category */}
               <div className="flex flex-col gap-3 flex-grow">
-                {group.partners.map((partnerKey) => (
+                {group.partners.map((partnerKey, pIdx) => (
                   <motion.div
-                    key={partnerKey}
+                    key={pIdx}
                     whileHover={{ x: 5 }}
                     className="p-3 bg-gray-50/50 hover:bg-[#eef9fb]/50 rounded-[8px] border border-gray-50 flex items-center gap-3 transition-all duration-300"
                   >
-                    {/* Small verification dot */}
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                     <span className="text-[#0e121d] font-bold text-[14px]">
-                      {t(`about_partnerships.items.${partnerKey}`)}
+                      {group.isRaw ? partnerKey : t(`about_partnerships.items.${partnerKey}`)}
                     </span>
                   </motion.div>
                 ))}
