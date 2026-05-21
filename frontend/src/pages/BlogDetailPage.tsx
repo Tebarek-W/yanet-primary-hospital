@@ -78,7 +78,7 @@ const BlogDetailPage = () => {
       if (id?.startsWith('db-')) {
         try {
           const dbId = id.replace('db-', '');
-          const res = await fetch(`http://localhost:5002/api/blogs/${dbId}`);
+          const res = await fetch(`http://localhost:5002/api/blog/${dbId}`);
           if (res.ok) {
             const b = await res.json();
             setArticle({

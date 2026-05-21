@@ -9,6 +9,7 @@ import { StaffHeader } from '../../components/Staff/StaffHeader';
 import { StaffOverview } from '../../components/Staff/StaffOverview';
 import { StaffBlogs } from '../../components/Staff/StaffBlogs';
 import { StaffMessages } from '../../components/Staff/StaffMessages';
+import { API_BASE } from '../../utils/api';
 
 interface StaffUser {
   email: string;
@@ -87,8 +88,8 @@ export const StaffPortal: React.FC = () => {
     if (!token) return;
 
     try {
-      // Fetch Blogs
-      const blogsRes = await fetch('http://localhost:5002/api/blogs/me', {
+      // Fetch blogs authored by this doctor
+      const blogsRes = await fetch(`${API_BASE}/blogs/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (blogsRes.ok) {
@@ -96,17 +97,16 @@ export const StaffPortal: React.FC = () => {
         setBlogs(blogsData);
       }
 
-      // Fetch Channels
-      const channelsRes = await fetch('http://localhost:5002/api/messages/me', {
+      // Fetch message channels for this doctor
+      const channelsRes = await fetch(`${API_BASE}/messages/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (channelsRes.ok) {
         const channelsData = await channelsRes.json();
-        // ensure id is string if it comes as int, but let's keep it as string
         const formattedChannels = channelsData.map((c: any) => ({
           ...c,
           id: c.id.toString(),
-          history: c.history.map((m: any) => ({ ...m, id: m.id.toString() }))
+          history: (c.history || []).map((m: any) => ({ ...m, id: m.id.toString() }))
         }));
         setChannels(formattedChannels);
       }
@@ -148,7 +148,7 @@ export const StaffPortal: React.FC = () => {
     const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     
     try {
-      const res = await fetch('http://localhost:5002/api/blogs', {
+      const res = await fetch(`${API_BASE}/blogs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ export const StaffPortal: React.FC = () => {
   const handleDeleteBlog = async (id: string) => {
     const token = localStorage.getItem('yanet_staff_token');
     try {
-      const res = await fetch(`http://localhost:5002/api/blogs/${id}`, {
+      const res = await fetch(`${API_BASE}/blogs/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -197,7 +197,7 @@ export const StaffPortal: React.FC = () => {
     const token = localStorage.getItem('yanet_staff_token');
 
     try {
-      const res = await fetch('http://localhost:5002/api/messages/send', {
+      const res = await fetch(`${API_BASE}/messages/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ export const StaffPortal: React.FC = () => {
     const token = localStorage.getItem('yanet_staff_token');
 
     try {
-      const res = await fetch('http://localhost:5002/api/messages/send', {
+      const res = await fetch(`${API_BASE}/messages/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

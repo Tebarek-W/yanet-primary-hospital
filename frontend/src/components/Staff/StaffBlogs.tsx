@@ -87,11 +87,14 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
     setIsWriting(false);
   };
 
-  const filteredBlogs = blogs.filter(blog =>
-    blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    blog.titleAm.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    blog.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBlogs = blogs.filter(blog => {
+    const t1 = (blog.title || blog.titleEn || '').toLowerCase();
+    const t2 = (blog.titleAm || '').toLowerCase();
+    const cat = (blog.category || blog.categoryEn || '').toLowerCase();
+    return t1.includes(searchQuery.toLowerCase()) ||
+           t2.includes(searchQuery.toLowerCase()) ||
+           cat.includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="space-y-6 text-left">
@@ -337,10 +340,10 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                   <div>
                     {/* Header Image */}
                     <div className="aspect-video w-full relative overflow-hidden">
-                      <img src={blog.image} alt={blog.title} className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-300" />
+                      <img src={blog.image || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800'} alt={blog.title || blog.titleEn || ''} className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-300" />
                       <div className="absolute top-3 left-3 bg-slate-950/70 border border-slate-800/80 rounded-lg px-2.5 py-1 flex items-center gap-1.5">
                         <Tag className="w-3 h-3 text-primary" />
-                        <span className="text-[9px] font-bold text-white">{blog.category}</span>
+                        <span className="text-[9px] font-bold text-white">{blog.category || blog.categoryEn || ''}</span>
                       </div>
                     </div>
 
@@ -348,20 +351,20 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                     <div className="p-5 space-y-2">
                       <div className="flex items-center gap-1.5 text-[9px] text-slate-400 font-semibold">
                         <Calendar className="w-3 h-3" />
-                        <span>{blog.date}</span>
+                        <span>{blog.date || blog.dateEn || ''}</span>
                         <span>•</span>
-                        <span>By {blog.author}</span>
+                        <span>By {blog.author || blog.authorNameEn || 'Doctor'}</span>
                       </div>
                       <h4 className={`text-xs md:text-sm font-bold font-poppins tracking-tight leading-snug line-clamp-2 ${
                         darkMode ? 'text-white' : 'text-slate-900'
                       }`}>
-                        {blog.title}
+                        {blog.title || blog.titleEn || ''}
                       </h4>
                       <p className="text-[9.5px] text-slate-400 font-semibold italic mt-0.5 line-clamp-1 border-t border-slate-800/30 pt-1.5">
-                        አማርኛ፡ "{blog.titleAm}"
+                        አማርኛ፡ "{blog.titleAm || ''}"
                       </p>
                       <p className="text-[10.5px] text-slate-500 font-medium leading-relaxed line-clamp-3 mt-2">
-                        {blog.content}
+                        {blog.content || blog.contentEn || blog.excerptEn || ''}
                       </p>
                     </div>
                   </div>

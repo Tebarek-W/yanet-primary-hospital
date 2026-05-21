@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Mail, Lock, Eye, EyeOff, Check, HeartPulse } from 'lucide-react';
+import { API_BASE } from '../../utils/api';
 
 interface StaffLoginProps {
   onLogin: (email: string, name: string, role: string, avatar: string) => void;
@@ -46,7 +47,7 @@ export const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5002/api/auth/staff-login', {
+      const res = await fetch(`${API_BASE}/auth/staff-login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

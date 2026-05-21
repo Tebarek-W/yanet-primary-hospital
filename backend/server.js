@@ -9,6 +9,7 @@ const doctorRoutes  = require('./routes/doctorRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const blogRoutes    = require('./routes/blogRoutes');
 const careersRoutes = require('./routes/careersRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 const app = express();
 
@@ -22,8 +23,10 @@ app.use('/api/pages',    pageRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/doctors',  doctorRoutes);
 app.use('/api/services', serviceRoutes);
-app.use('/api/blog',     blogRoutes);
+app.use('/api/blog',     blogRoutes);   // public CMS blog
+app.use('/api/blogs',    blogRoutes);   // staff portal alias (same controller)
 app.use('/api/careers',  careersRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Health check
 app.get('/', (req, res) => {

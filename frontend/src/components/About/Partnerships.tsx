@@ -6,37 +6,37 @@ const Partnerships = ({ cmsData }: { cmsData?: Record<string, any> | null }) => 
   const { t } = useTranslation();
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  // Parse partner lists from CMS or fall back to translation keys
-  const parseList = (raw: string | undefined, fallbackKey: string): string[] => {
+  // Parse partner lists from CMS or fall back to static defaults
+  const parseList = (raw: string | undefined, staticFallback: string[]): string[] => {
     if (raw) return raw.split(',').map(s => s.trim()).filter(Boolean);
-    return t(fallbackKey, { returnObjects: true }) as string[] || [];
+    return staticFallback;
   };
 
-  const insurersList  = parseList(cmsData?.partner_insurers,  'about_partnerships.items_insurers');
-  const hospitalsList = parseList(cmsData?.partner_hospitals, 'about_partnerships.items_hospitals');
-  const ngosList      = parseList(cmsData?.partner_ngos,      'about_partnerships.items_ngos');
+  const insurersList  = parseList(cmsData?.partner_insurers,  ['Nyala Insurance', 'Medhin Insurance', 'United Insurance', 'Awash Insurance']);
+  const hospitalsList = parseList(cmsData?.partner_hospitals, ['Black Lion Hospital', 'Hawassa University Hospital']);
+  const ngosList      = parseList(cmsData?.partner_ngos,      ['Ethiopian Red Cross', 'USAID Ethiopia']);
 
   const partnerGroups = [
     {
       key: 'insurers',
       icon: <CreditCard className="w-6 h-6" />,
       color: 'text-primary', bg: 'bg-primary/5',
-      partners: insurersList.length > 0 ? insurersList : ['nyala', 'medhin', 'united', 'awash'],
-      isRaw: insurersList.length > 0
+      partners: insurersList,
+      isRaw: true
     },
     {
       key: 'hospitals',
       icon: <Landmark className="w-6 h-6" />,
       color: 'text-secondary', bg: 'bg-secondary/5',
-      partners: hospitalsList.length > 0 ? hospitalsList : ['black_lion', 'hawassa_uni'],
-      isRaw: hospitalsList.length > 0
+      partners: hospitalsList,
+      isRaw: true
     },
     {
       key: 'ngos',
       icon: <ShieldCheck className="w-6 h-6" />,
       color: 'text-teal-600', bg: 'bg-teal-50',
-      partners: ngosList.length > 0 ? ngosList : ['red_cross', 'usaid'],
-      isRaw: ngosList.length > 0
+      partners: ngosList,
+      isRaw: true
     }
   ];
 
@@ -85,16 +85,14 @@ const Partnerships = ({ cmsData }: { cmsData?: Record<string, any> | null }) => 
 
               {/* Partners list inside the category */}
               <div className="flex flex-col gap-3 flex-grow">
-                {group.partners.map((partnerKey, pIdx) => (
+                {group.partners.map((partner, pIdx) => (
                   <motion.div
                     key={pIdx}
                     whileHover={{ x: 5 }}
                     className="p-3 bg-gray-50/50 hover:bg-[#eef9fb]/50 rounded-[8px] border border-gray-50 flex items-center gap-3 transition-all duration-300"
                   >
                     <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span className="text-[#0e121d] font-bold text-[14px]">
-                      {group.isRaw ? partnerKey : t(`about_partnerships.items.${partnerKey}`)}
-                    </span>
+                    <span className="text-[#0e121d] font-bold text-[14px]">{partner}</span>
                   </motion.div>
                 ))}
               </div>
