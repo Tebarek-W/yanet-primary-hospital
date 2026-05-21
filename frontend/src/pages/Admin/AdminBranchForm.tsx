@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft, CheckCircle2, MapPin, Calendar, Heart, Palette } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { API_BASE } from '../../utils/api';
 
 const ALL_SERVICES = [
   { slug: 'general-medicine', title: 'General Medicine' },
@@ -70,7 +71,7 @@ const AdminBranchForm: React.FC = () => {
   useEffect(() => {
     if (isEditMode && slug) {
       setIsLoading(true);
-      fetch(`http://localhost:5002/api/branches/${slug}`)
+      fetch(`${API_BASE}/branches/${slug}`)
         .then(res => {
           if (!res.ok) throw new Error('Branch not found');
           return res.json();
@@ -179,8 +180,8 @@ const AdminBranchForm: React.FC = () => {
 
     try {
       const url = isEditMode 
-        ? `http://localhost:5002/api/branches/${slug}`
-        : 'http://localhost:5002/api/branches';
+        ? `${API_BASE}/branches/${slug}`
+        : `${API_BASE}/branches`;
       const method = isEditMode ? 'PUT' : 'POST';
 
       const response = await fetch(url, {

@@ -70,7 +70,7 @@ const VirtualTourSection = ({ cmsData }: { cmsData?: Record<string, any> | null 
           >
             <Link to="/virtual-tour" className="group block relative rounded-[20px] overflow-hidden aspect-[4/3] shadow-2xl shadow-black/40">
               <img
-                src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=1200&q=80"
+                src={tourImage}
                 alt="Yanet Hospital Virtual Tour"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
