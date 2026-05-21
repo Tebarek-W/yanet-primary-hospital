@@ -160,6 +160,17 @@ const AdminDoctorCrud: React.FC = () => {
     });
   };
 
+  // Generate a random secure password for new staff accounts
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#!';
+    const password = Array.from({ length: 12 }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join('');
+    if (editingDoctor) {
+      setEditingDoctor({ ...editingDoctor, password });
+    }
+  };
+
   // Filter list
   const filteredDoctors = doctors.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
