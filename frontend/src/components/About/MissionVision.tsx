@@ -21,15 +21,15 @@ const MissionVision = ({ cmsData }: MissionVisionProps) => {
 
   const items = [
     {
-      title: t('about_extra.mission.m_title'),
-      desc: cmsData?.mission_statement || t('about_extra.mission.m_desc'),
+      title: String(t('about_extra.mission.m_title') || 'Our Mission'),
+      desc: cmsData?.mission_statement || String(t('about_extra.mission.m_desc') || ''),
       icon: <Stethoscope className="w-8 h-8" />,
       color: "bg-primary",
       accent: "text-primary"
     },
     {
-      title: t('about_extra.mission.v_title'),
-      desc: cmsData?.vision_statement || t('about_extra.mission.v_desc'),
+      title: String(t('about_extra.mission.v_title') || 'Our Vision'),
+      desc: cmsData?.vision_statement || String(t('about_extra.mission.v_desc') || ''),
       icon: <Activity className="w-8 h-8" />,
       color: "bg-secondary",
       accent: "text-secondary"

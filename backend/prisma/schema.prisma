@@ -142,3 +142,27 @@ model InternshipProgram {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model MessageChannel {
+  id          Int           @id @default(autoincrement())
+  doctorId    String
+  patientName String
+  age         Int           @default(0)
+  avatar      String        @default("")
+  symptoms    String        @db.Text
+  lastActive  String        @default("")
+  unread      Boolean       @default(false)
+  history     ChatMessage[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model ChatMessage {
+  id        Int            @id @default(autoincrement())
+  channelId Int
+  channel   MessageChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  sender    String
+  text      String         @db.Text
+  time      String
+  createdAt DateTime       @default(now())
+}

@@ -1,24 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const { getAllPosts, getPostById, createPost, updatePost, deletePost } = require('../controllers/blogController');
-
-router.get('/', getAllPosts);
-router.get('/:id', getPostById);
-router.post('/', createPost);
-router.put('/:id', updatePost);
-router.delete('/:id', deletePost);
-const blogController = require('../controllers/blogController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 // Public routes
-router.get('/', blogController.getAllBlogs);
+router.get('/', getAllPosts);
 
-// Protected routes (apply authMiddleware specifically to these routes)
-router.get('/me', authMiddleware, blogController.getDoctorBlogs);
-router.post('/', authMiddleware, blogController.createBlog);
-router.delete('/:id', authMiddleware, blogController.deleteBlog);
+// Staff: get only posts authored by the logged-in doctor
+router.get('/me', authMiddleware, async (req, res) => {
+  const prisma = require('../prismaClient');
+  try {
+    const posts = await prisma.blogPost.findMany({
+      where: { authorId: req.user.id.toString() },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching your posts' });
+  }
+});
 
-// Public route for single blog (Must be after /me to avoid route shadowing)
-router.get('/:id', blogController.getBlogById);
+// Must come after /me to avoid route shadowing
+router.get('/:id', getPostById);
+
+// Create / update / delete (used by both admin and staff)
+router.post('/', createPost);
+router.put('/:id', updatePost);
+router.delete('/:id', deletePost);
 
 module.exports = router;

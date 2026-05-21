@@ -9,6 +9,7 @@ import { StaffHeader } from '../../components/Staff/StaffHeader';
 import { StaffOverview } from '../../components/Staff/StaffOverview';
 import { StaffBlogs } from '../../components/Staff/StaffBlogs';
 import { StaffMessages } from '../../components/Staff/StaffMessages';
+import { API_BASE } from '../../utils/api';
 
 interface StaffUser {
   email: string;
@@ -87,8 +88,8 @@ export const StaffPortal: React.FC = () => {
     if (!token) return;
 
     try {
-      // Fetch Blogs
-      const blogsRes = await fetch('http://localhost:5002/api/blogs/me', {
+      // Fetch blogs authored by this doctor
+      const blogsRes = await fetch(`${API_BASE}/blogs/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (blogsRes.ok) {
@@ -102,7 +103,7 @@ export const StaffPortal: React.FC = () => {
         setBlogs(formattedBlogs);
       }
 
-      // Fetch Channels
+      // Fetch message channels for this doctor
       await fetchChannels();
     } catch (err) {
       console.error('Failed to fetch data:', err);
@@ -113,7 +114,7 @@ export const StaffPortal: React.FC = () => {
     const token = localStorage.getItem('yanet_staff_token');
     if (!token) return;
     try {
-      const channelsRes = await fetch('http://localhost:5002/api/messages/me', {
+      const channelsRes = await fetch(`${API_BASE}/messages/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (channelsRes.ok) {
@@ -121,7 +122,7 @@ export const StaffPortal: React.FC = () => {
         const formattedChannels = channelsData.map((c: any) => ({
           ...c,
           id: c.id.toString(),
-          history: c.history.map((m: any) => ({ ...m, id: m.id.toString() }))
+          history: (c.history || []).map((m: any) => ({ ...m, id: m.id.toString() }))
         }));
         setChannels(formattedChannels);
       }
@@ -174,9 +175,9 @@ export const StaffPortal: React.FC = () => {
   const handleAddBlog = async (newBlog: Omit<BlogPost, 'id' | 'date' | 'author'>) => {
     const token = localStorage.getItem('yanet_staff_token');
     const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    
+
     try {
-      const res = await fetch('http://localhost:5002/api/blogs', {
+      const res = await fetch(`${API_BASE}/blogs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +208,7 @@ export const StaffPortal: React.FC = () => {
   const handleDeleteBlog = async (id: string) => {
     const token = localStorage.getItem('yanet_staff_token');
     try {
-      const res = await fetch(`http://localhost:5002/api/blogs/${id}`, {
+      const res = await fetch(`${API_BASE}/blogs/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -225,7 +226,7 @@ export const StaffPortal: React.FC = () => {
     const token = localStorage.getItem('yanet_staff_token');
 
     try {
-      const res = await fetch('http://localhost:5002/api/messages/send', {
+      const res = await fetch(`${API_BASE}/messages/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -254,18 +255,62 @@ export const StaffPortal: React.FC = () => {
     }
   };
 
+  const handleReceiveSimulatedReply = async (channelId: string, replyText: string) => {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const token = localStorage.getItem('yanet_staff_token');
+
+    try {
+      const res = await fetch(`${API_BASE}/messages/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ channelId, text: replyText, time: timeStr, sender: 'patient' })
+      });
+
+      if (res.ok) {
+        const replyMsg = await res.json();
+        replyMsg.id = replyMsg.id.toString();
+
+        setChannels(prev => prev.map(chan => {
+          if (chan.id.toString() === channelId.toString()) {
+            return {
+              ...chan,
+              lastActive: timeStr,
+              history: [...chan.history, replyMsg]
+            };
+          }
+          return chan;
+        }));
+
+        // Trigger Notification
+        const targetChan = channels.find(c => c.id.toString() === channelId.toString());
+        const newNotify = {
+          id: `n-msg-${Date.now()}`,
+          title: `Reply from ${targetChan?.patientName || 'Patient'}`,
+          message: replyText.substring(0, 45) + '...',
+          time: 'Just now',
+          read: false
+        };
+        setNotifications(prev => [newNotify, ...prev]);
+      }
+    } catch (err) {
+      console.error('Failed to simulate reply:', err);
+    }
+  };
+
   return (
-    <div className={`min-h-screen text-slate-800 font-sans selection:bg-primary/10 antialiased transition-colors duration-200 ${
-      darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'
-    }`}>
+    <div className={`min-h-screen text-slate-800 font-sans selection:bg-primary/10 antialiased transition-colors duration-200 ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'
+      }`}>
       <AnimatePresence mode="wait">
         {!staff ? (
-          
+
           /* 1. LOGIN SCREEN */
           <StaffLogin onLogin={handleLogin} />
-          
+
         ) : (
-          
+
           /* 2. AUTHENTICATED STAFF WORKSPACE */
           <motion.div
             key="staff-dashboard"
@@ -299,9 +344,8 @@ export const StaffPortal: React.FC = () => {
                     animate={{ x: 0 }}
                     exit={{ x: -260 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    className={`w-64 h-full flex flex-col justify-between p-5 text-left ${
-                      darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
-                    }`}
+                    className={`w-64 h-full flex flex-col justify-between p-5 text-left ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                      }`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div>
@@ -319,9 +363,8 @@ export const StaffPortal: React.FC = () => {
                         </button>
                       </div>
 
-                      <div className={`p-3 border rounded-xl mb-5 text-left ${
-                        darkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-200'
-                      }`}>
+                      <div className={`p-3 border rounded-xl mb-5 text-left ${darkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-200'
+                        }`}>
                         <h4 className={`text-xs font-bold font-poppins ${darkMode ? 'text-white' : 'text-slate-800'}`}>
                           {staff.name}
                         </h4>
@@ -342,13 +385,12 @@ export const StaffPortal: React.FC = () => {
                                 setActiveTab(item.id as any);
                                 setMobileMenuOpen(false);
                               }}
-                              className={`w-full rounded-lg transition-all font-semibold text-xs py-3 px-4 text-left border border-transparent ${
-                                isActive 
-                                  ? 'bg-primary text-white shadow-md font-bold' 
+                              className={`w-full rounded-lg transition-all font-semibold text-xs py-3 px-4 text-left border border-transparent ${isActive
+                                  ? 'bg-primary text-white shadow-md font-bold'
                                   : darkMode
-                                  ? 'text-slate-350 hover:bg-slate-800 hover:text-white'
-                                  : 'text-slate-505 hover:bg-slate-50 hover:text-slate-900'
-                              }`}
+                                    ? 'text-slate-350 hover:bg-slate-800 hover:text-white'
+                                    : 'text-slate-505 hover:bg-slate-50 hover:text-slate-900'
+                                }`}
                             >
                               {item.label}
                             </button>
@@ -371,7 +413,7 @@ export const StaffPortal: React.FC = () => {
 
             {/* Dashboard Workspace */}
             <div className="flex-1 flex flex-col h-screen overflow-y-auto">
-              
+
               {/* Top Header Controls */}
               <StaffHeader
                 activeTab={activeTab}
@@ -393,7 +435,7 @@ export const StaffPortal: React.FC = () => {
               {/* Dynamic Pages */}
               <main className="flex-grow p-4 sm:p-6 overflow-y-auto">
                 <AnimatePresence mode="wait">
-                  
+
                   {activeTab === 'overview' && (
                     <StaffOverview
                       doctorName={staff.name}
