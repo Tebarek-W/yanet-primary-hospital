@@ -35,8 +35,8 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
   // Form states
   const [title, setTitle] = useState('');
   const [titleAm, setTitleAm] = useState('');
-  const [category, setCategory] = useState('Medical Updates');
-  const [categoryAm, setCategoryAm] = useState('የሕክምና መረጃዎች');
+  const [category, setCategory] = useState('');
+  const [categoryAm, setCategoryAm] = useState('');
   const [content, setContent] = useState('');
   const [contentAm, setContentAm] = useState('');
   const [selectedImage, setSelectedImage] = useState('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=800');
@@ -67,7 +67,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
 
   const handlePublishSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !content) return;
+    if (!title || !content || !category) return;
 
     onAddBlog({
       title,
@@ -132,12 +132,14 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
               </h3>
               
               {/* Language Switch */}
-              <div className="flex items-center gap-1.5 bg-slate-900/60 p-1 rounded-lg border border-slate-800">
+              <div className={`flex items-center gap-1.5 p-1 rounded-lg border ${
+                darkMode ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-100 border-slate-200'
+              }`}>
                 <button
                   type="button"
                   onClick={() => setEditorLang('en')}
                   className={`text-[9.5px] font-bold px-2.5 py-1 rounded ${
-                    editorLang === 'en' ? 'bg-primary text-white' : 'text-slate-400'
+                    editorLang === 'en' ? 'bg-primary text-white' : (darkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-white shadow-sm')
                   }`}
                 >
                   English View
@@ -146,7 +148,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                   type="button"
                   onClick={() => setEditorLang('am')}
                   className={`text-[9.5px] font-bold px-2.5 py-1 rounded ${
-                    editorLang === 'am' ? 'bg-primary text-white' : 'text-slate-400'
+                    editorLang === 'am' ? 'bg-primary text-white' : (darkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-white shadow-sm')
                   }`}
                 >
                   አማርኛ እይታ
@@ -161,7 +163,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                 <div className="md:col-span-2 space-y-4">
                   {editorLang === 'en' ? (
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                         Article Title (English)
                       </label>
                       <input
@@ -169,48 +171,56 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                         required
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="e.g. 5 Heart-Healthy Habits"
-                        className="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-xs font-semibold focus:outline-none focus:border-primary"
+                        placeholder="Enter article title"
+                        className={`w-full border rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-primary ${
+                          darkMode ? 'bg-slate-900/60 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                        }`}
                       />
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                         Article Title (Amharic)
                       </label>
                       <input
                         type="text"
                         value={titleAm}
                         onChange={(e) => setTitleAm(e.target.value)}
-                        placeholder="ምሳሌ፡ 5 ጤናማ ልምዶች ለልብ ጤንነት"
-                        className="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-xs font-semibold focus:outline-none focus:border-primary"
+                        placeholder="የአንቀጹን ርዕስ ያስገቡ"
+                        className={`w-full border rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-primary ${
+                          darkMode ? 'bg-slate-900/60 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                        }`}
                       />
                     </div>
                   )}
 
                   {editorLang === 'en' ? (
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                         Body Content (English)
                       </label>
                       <textarea
                         required
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        placeholder="Write detailed health educational parameters..."
-                        className="w-full bg-slate-900/60 border border-slate-800 rounded-xl p-3.5 text-white text-xs font-semibold focus:outline-none focus:border-primary h-52 resize-none"
+                        placeholder="Write your article content here..."
+                        className={`w-full border rounded-xl p-3.5 text-xs font-semibold focus:outline-none focus:border-primary h-52 resize-none ${
+                          darkMode ? 'bg-slate-900/60 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                        }`}
                       />
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                         Body Content (Amharic)
                       </label>
                       <textarea
                         value={contentAm}
                         onChange={(e) => setContentAm(e.target.value)}
-                        placeholder="እባክዎን ዝርዝር የሕክምና ትምህርቶችን እዚህ ይጻፉ..."
-                        className="w-full bg-slate-900/60 border border-slate-800 rounded-xl p-3.5 text-white text-xs font-semibold focus:outline-none focus:border-primary h-52 resize-none"
+                        placeholder="የአንቀጹን ይዘት እዚህ ይጻፉ..."
+                        className={`w-full border rounded-xl p-3.5 text-xs font-semibold focus:outline-none focus:border-primary h-52 resize-none ${
+                          darkMode ? 'bg-slate-900/60 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                        }`}
                       />
                     </div>
                   )}
@@ -219,16 +229,21 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                 {/* Form Right Inputs */}
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                    <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                       Article Category
                     </label>
                     <select
                       value={category}
                       onChange={handleCategoryChange}
-                      className="w-full bg-slate-900/65 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-xs font-semibold focus:outline-none focus:border-primary"
+                      className={`w-full border rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-primary ${
+                        darkMode ? 'bg-slate-900/65 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800'
+                      }`}
                     >
+                      <option value="" disabled className={darkMode ? "bg-slate-900 text-slate-500" : "bg-white text-slate-400"}>
+                        Select Category
+                      </option>
                       {categories.map((cat) => (
-                        <option key={cat.en} value={cat.en} className="bg-slate-900 text-white">
+                        <option key={cat.en} value={cat.en} className={darkMode ? "bg-slate-900 text-white" : "bg-white text-slate-800"}>
                           {cat.en}
                         </option>
                       ))}
@@ -236,7 +251,7 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    <label className={`block text-[10px] font-bold uppercase tracking-wider mb-2 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                       Cover Banner Image
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -313,7 +328,9 @@ export const StaffBlogs: React.FC<StaffBlogsProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search articles..."
-                className="w-full bg-slate-950/40 border border-slate-800 rounded-lg pl-9 pr-4 py-1.5 text-white text-[11px] font-semibold focus:outline-none focus:border-primary placeholder-slate-500"
+                className={`w-full border rounded-lg pl-9 pr-4 py-1.5 text-[11px] font-semibold focus:outline-none focus:border-primary ${
+                  darkMode ? 'bg-slate-950/40 border-slate-800 text-white placeholder-slate-500' : 'bg-white border-slate-200 text-slate-800 placeholder-slate-400'
+                }`}
               />
             </div>
           </div>

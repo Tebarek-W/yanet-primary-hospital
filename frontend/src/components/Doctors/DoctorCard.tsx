@@ -9,6 +9,9 @@ interface DoctorCardProps {
     role: string;
     image: string;
     desc: string;
+    specialty?: string;
+    education?: string[];
+    experience?: string[];
   };
 }
 
@@ -58,16 +61,38 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
         </div>
       </div>
       
-      <div className="relative z-10 flex flex-col flex-grow text-center items-center">
+      <div className="relative z-10 flex flex-col flex-grow text-center items-center w-full">
         <h3 className="text-secondary text-[22px] font-bold mb-2 group-hover:text-primary transition-colors duration-300">
           {doctor.name}
         </h3>
         <p className="text-primary font-bold tracking-[1.5px] uppercase text-[11px] mb-4 bg-primary/5 inline-block px-4 py-1.5 rounded-full">
           {doctor.role}
         </p>
-        <p className="text-[#5d666e] text-[14.5px] leading-relaxed mb-8 line-clamp-3">
+        <p className="text-[#5d666e] text-[14.5px] leading-relaxed mb-6 line-clamp-2">
           {doctor.desc}
         </p>
+
+        {/* Doctor Details Summary */}
+        <div className="w-full text-left text-[13px] text-[#5d666e] space-y-2 mb-6 bg-gray-50/50 p-4 rounded-xl border border-gray-100/50">
+          {doctor.specialty && (
+            <div className="flex gap-2">
+              <span className="font-bold text-secondary min-w-[80px]">Specialty:</span>
+              <span className="truncate">{doctor.specialty}</span>
+            </div>
+          )}
+          {doctor.education && doctor.education.length > 0 && (
+            <div className="flex gap-2">
+              <span className="font-bold text-secondary min-w-[80px]">Education:</span>
+              <span className="truncate" title={doctor.education[0]}>{doctor.education[0]}</span>
+            </div>
+          )}
+          {doctor.experience && doctor.experience.length > 0 && (
+            <div className="flex gap-2">
+              <span className="font-bold text-secondary min-w-[80px]">Experience:</span>
+              <span className="truncate" title={doctor.experience[0]}>{doctor.experience[0]}</span>
+            </div>
+          )}
+        </div>
 
         <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between w-full">
            {/* Social Icons - Stop propagation to prevent card click */}

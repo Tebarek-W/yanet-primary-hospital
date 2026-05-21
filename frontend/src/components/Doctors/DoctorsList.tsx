@@ -130,7 +130,9 @@ const DoctorsList = () => {
                   ...doctor,
                   name: isAmharic ? doctor.nameAm : doctor.name,
                   role: t(doctor.roleKey),
-                  desc: isAmharic ? doctor.descAm : doctor.desc
+                  desc: isAmharic ? doctor.descAm : doctor.desc,
+                  education: isAmharic && doctor.educationAm?.length > 0 ? doctor.educationAm : doctor.education,
+                  experience: isAmharic && doctor.experienceAm?.length > 0 ? doctor.experienceAm : doctor.experience
                 }} 
               />
             ))}

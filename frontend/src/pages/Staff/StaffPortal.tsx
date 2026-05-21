@@ -94,10 +94,26 @@ export const StaffPortal: React.FC = () => {
       });
       if (blogsRes.ok) {
         const blogsData = await blogsRes.json();
-        setBlogs(blogsData);
+        const currentStaffStr = localStorage.getItem('yanet_staff_user');
+        const currentStaff = currentStaffStr ? JSON.parse(currentStaffStr) : null;
+        const formattedBlogs = blogsData.map((b: any) => ({
+          ...b,
+          author: b.author || currentStaff?.name || 'Consultant Doctor'
+        }));
+        setBlogs(formattedBlogs);
       }
 
       // Fetch message channels for this doctor
+      await fetchChannels();
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    }
+  };
+
+  const fetchChannels = async () => {
+    const token = localStorage.getItem('yanet_staff_token');
+    if (!token) return;
+    try {
       const channelsRes = await fetch(`${API_BASE}/messages/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -111,9 +127,22 @@ export const StaffPortal: React.FC = () => {
         setChannels(formattedChannels);
       }
     } catch (err) {
-      console.error('Failed to fetch data:', err);
+      console.error('Failed to fetch channels:', err);
     }
   };
+
+  // Poll channels every 5 seconds if staff is logged in
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (staff) {
+      interval = setInterval(() => {
+        fetchChannels();
+      }, 5000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [staff]);
 
   // Theme Sync on dark mode state change
   useEffect(() => {
@@ -146,7 +175,7 @@ export const StaffPortal: React.FC = () => {
   const handleAddBlog = async (newBlog: Omit<BlogPost, 'id' | 'date' | 'author'>) => {
     const token = localStorage.getItem('yanet_staff_token');
     const date = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    
+
     try {
       const res = await fetch(`${API_BASE}/blogs`, {
         method: 'POST',
@@ -272,17 +301,16 @@ export const StaffPortal: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen text-slate-800 font-sans selection:bg-primary/10 antialiased transition-colors duration-200 ${
-      darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'
-    }`}>
+    <div className={`min-h-screen text-slate-800 font-sans selection:bg-primary/10 antialiased transition-colors duration-200 ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50'
+      }`}>
       <AnimatePresence mode="wait">
         {!staff ? (
-          
+
           /* 1. LOGIN SCREEN */
           <StaffLogin onLogin={handleLogin} />
-          
+
         ) : (
-          
+
           /* 2. AUTHENTICATED STAFF WORKSPACE */
           <motion.div
             key="staff-dashboard"
@@ -316,9 +344,8 @@ export const StaffPortal: React.FC = () => {
                     animate={{ x: 0 }}
                     exit={{ x: -260 }}
                     transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                    className={`w-64 h-full flex flex-col justify-between p-5 text-left ${
-                      darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
-                    }`}
+                    className={`w-64 h-full flex flex-col justify-between p-5 text-left ${darkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+                      }`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div>
@@ -336,9 +363,8 @@ export const StaffPortal: React.FC = () => {
                         </button>
                       </div>
 
-                      <div className={`p-3 border rounded-xl mb-5 text-left ${
-                        darkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-200'
-                      }`}>
+                      <div className={`p-3 border rounded-xl mb-5 text-left ${darkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-200'
+                        }`}>
                         <h4 className={`text-xs font-bold font-poppins ${darkMode ? 'text-white' : 'text-slate-800'}`}>
                           {staff.name}
                         </h4>
@@ -359,13 +385,12 @@ export const StaffPortal: React.FC = () => {
                                 setActiveTab(item.id as any);
                                 setMobileMenuOpen(false);
                               }}
-                              className={`w-full rounded-lg transition-all font-semibold text-xs py-3 px-4 text-left border border-transparent ${
-                                isActive 
-                                  ? 'bg-primary text-white shadow-md font-bold' 
+                              className={`w-full rounded-lg transition-all font-semibold text-xs py-3 px-4 text-left border border-transparent ${isActive
+                                  ? 'bg-primary text-white shadow-md font-bold'
                                   : darkMode
-                                  ? 'text-slate-350 hover:bg-slate-800 hover:text-white'
-                                  : 'text-slate-505 hover:bg-slate-50 hover:text-slate-900'
-                              }`}
+                                    ? 'text-slate-350 hover:bg-slate-800 hover:text-white'
+                                    : 'text-slate-505 hover:bg-slate-50 hover:text-slate-900'
+                                }`}
                             >
                               {item.label}
                             </button>
@@ -388,7 +413,7 @@ export const StaffPortal: React.FC = () => {
 
             {/* Dashboard Workspace */}
             <div className="flex-1 flex flex-col h-screen overflow-y-auto">
-              
+
               {/* Top Header Controls */}
               <StaffHeader
                 activeTab={activeTab}
@@ -410,12 +435,12 @@ export const StaffPortal: React.FC = () => {
               {/* Dynamic Pages */}
               <main className="flex-grow p-4 sm:p-6 overflow-y-auto">
                 <AnimatePresence mode="wait">
-                  
+
                   {activeTab === 'overview' && (
                     <StaffOverview
                       doctorName={staff.name}
                       messagesCount={channels.filter(c => c.unread).length}
-                      blogsCount={blogs.filter(b => b.author === staff.name).length}
+                      blogsCount={blogs.length}
                       setActiveTab={setActiveTab}
                       darkMode={darkMode}
                     />
@@ -434,7 +459,6 @@ export const StaffPortal: React.FC = () => {
                     <StaffMessages
                       channels={channels}
                       onSendMessage={handleSendMessage}
-                      onReceiveSimulatedReply={handleReceiveSimulatedReply}
                       darkMode={darkMode}
                     />
                   )}
