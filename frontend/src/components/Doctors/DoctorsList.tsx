@@ -1,19 +1,32 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import DoctorCard from './DoctorCard';
-import { doctorsData } from '../../data/doctorsData';
+import { fetchDoctors } from '../../data/doctorsData';
+import type { Doctor } from '../../data/doctorsData';
 
 const ITEMS_PER_PAGE = 8;
 
 const DoctorsList = () => {
   const { t } = useTranslation();
+  const [doctorsData, setDoctorsData] = useState<Doctor[]>([]);
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   
   const isAmharic = t('nav.home') === 'መነሻ';
+
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      const data = await fetchDoctors();
+      setDoctorsData(data);
+      setIsLoading(false);
+    };
+    loadData();
+  }, []);
 
   const specialties = [
     { id: 'All', label: t('doctors_page.all') },
@@ -38,7 +51,7 @@ const DoctorsList = () => {
         
       return matchesFilter && matchesSearch;
     });
-  }, [filter, searchQuery, isAmharic, t]);
+  }, [filter, searchQuery, isAmharic, t, doctorsData]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredDoctors.length / ITEMS_PER_PAGE);

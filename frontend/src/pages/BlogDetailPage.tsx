@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Clock, Calendar, ChevronLeft, ArrowUp, Info, User, HelpCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { blogArticles } from '../data/blogData';
-import { doctorsData } from '../data/doctorsData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 
 interface MedicalTipBoxProps {
   children: React.ReactNode;
@@ -40,6 +41,11 @@ const BlogDetailPage = () => {
   const [activeSection, setActiveSection] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
+
+  useEffect(() => {
+    fetchDoctors().then(data => setAllDoctors(data));
+  }, []);
 
   // Track scroll position for progress bar and active section
   useEffect(() => {
@@ -96,7 +102,7 @@ const BlogDetailPage = () => {
   }
 
   // Query related doctor details
-  const relatedDoctor = doctorsData.find(d => d.id === article.authorId);
+  const relatedDoctor = allDoctors.find(d => d.id === article.authorId);
 
   // Extract headings for Table of Contents
   const extractHeadings = (content: string) => {

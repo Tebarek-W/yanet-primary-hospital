@@ -45,3 +45,29 @@ model Branch {
   updatedAt          DateTime @updatedAt
 }
 
+model Doctor {
+  id            Int      @id @default(autoincrement())
+  name          String
+  nameAm        String   @default("")
+  roleKey       String   @default("doctor_team.roles.general")
+  specialty     String
+  image         String   @db.Text
+  desc          String   @db.Text
+  descAm        String   @db.Text
+  email         String   @unique
+  phone         String   @default("")
+  password      String
+  location      String   @default("Addis Ababa, Ethiopia")
+  education     Json
+  educationAm   Json
+  experience    Json
+  experienceAm  Json
+  skills        Json
+  skillsAm      Json
+  biography     String   @db.Text
+  biographyAm   String   @db.Text
+  branchSlugs   Json
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

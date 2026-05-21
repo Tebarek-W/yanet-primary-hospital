@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const branchRoutes = require('./routes/branchRoutes');
+const doctorRoutes = require('./routes/doctorRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/branches', branchRoutes);
+app.use('/api/doctors', doctorRoutes);
 
 // Test Route
 app.get('/', (req, res) => {

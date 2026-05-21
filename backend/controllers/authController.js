@@ -39,6 +39,49 @@ const login = async (req, res) => {
   }
 };
 
+const staffLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const doctor = await prisma.doctor.findUnique({ where: { email } });
+    if (!doctor) {
+      return res.status(401).json({ message: 'Invalid staff credentials' });
+    }
+
+    if (!doctor.isActive) {
+      return res.status(401).json({ message: 'Staff account is deactivated' });
+    }
+
+    const isMatch = await bcrypt.compare(password, doctor.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid staff credentials' });
+    }
+
+    // Generate JWT
+    const token = jwt.sign(
+      { id: doctor.id, email: doctor.email, role: 'staff' },
+      process.env.JWT_SECRET || 'fallback_secret_key_123',
+      { expiresIn: '24h' }
+    );
+
+    res.json({ 
+      token, 
+      user: { 
+        id: doctor.id,
+        email: doctor.email, 
+        name: doctor.name,
+        role: doctor.roleKey,
+        specialty: doctor.specialty,
+        avatar: doctor.image
+      } 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error during staff login' });
+  }
+};
+
 module.exports = {
-  login
+  login,
+  staffLogin
 };

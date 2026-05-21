@@ -6,7 +6,8 @@ import { Search, MapPin, Phone, Mail, Clock, ArrowRight, SlidersHorizontal } fro
 import Breadcrumb from '../components/About/Breadcrumb';
 import CTABanner from '../components/About/CTABanner';
 import { branchesData } from '../data/branchesData';
-import { doctorsData } from '../data/doctorsData';
+import { fetchDoctors } from '../data/doctorsData';
+import type { Doctor } from '../data/doctorsData';
 import { servicesData } from '../data/servicesData';
 
 const BranchesPage = () => {
@@ -15,6 +16,7 @@ const BranchesPage = () => {
   const isAmharic = currentLang.startsWith('am');
 
   const [branches, setBranches] = useState(branchesData);
+  const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('All');
   const [selectedService, setSelectedService] = useState('All');
@@ -33,6 +35,8 @@ const BranchesPage = () => {
       .catch(err => {
         console.warn("Using fallback static branchesData:", err);
       });
+
+    fetchDoctors().then(data => setAllDoctors(data));
   }, []);
 
   // Extract all unique cities for filtering
@@ -77,8 +81,8 @@ const BranchesPage = () => {
         });
 
         // Search practicing doctors
-        const doctorsMatch = branch.doctorIds.some((docId) => {
-          const doctor = doctorsData.find(d => d.id === docId);
+        const doctorsMatch = branch.doctorIds.some((docId: string) => {
+          const doctor = allDoctors.find(d => d.id === docId);
           if (!doctor) return false;
           return doctor.name.toLowerCase().includes(query) || 
                  doctor.nameAm.toLowerCase().includes(query) ||
@@ -90,7 +94,7 @@ const BranchesPage = () => {
 
       return true;
     });
-  }, [searchQuery, selectedCity, selectedService, branches]);
+  }, [searchQuery, selectedCity, selectedService, branches, allDoctors]);
 
   return (
     <div className="bg-white relative overflow-hidden">

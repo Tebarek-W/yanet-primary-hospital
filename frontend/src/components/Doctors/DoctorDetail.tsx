@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -6,15 +7,32 @@ import {
   CheckCircle2, Clock, Calendar, ArrowRight, User, 
   Star, MessageSquare, Briefcase
 } from 'lucide-react';
-import { doctorsData } from '../../data/doctorsData';
+import { fetchDoctorById } from '../../data/doctorsData';
+import type { Doctor } from '../../data/doctorsData';
 import Breadcrumb from '../About/Breadcrumb';
 
 const DoctorDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const isAmharic = t('nav.home') === 'መነሻ';
 
-  const doctor = doctorsData.find(d => d.id === id);
+  useEffect(() => {
+    const loadDoctor = async () => {
+      if (id) {
+        setIsLoading(true);
+        const data = await fetchDoctorById(id);
+        setDoctor(data);
+        setIsLoading(false);
+      }
+    };
+    loadDoctor();
+  }, [id]);
+
+  if (isLoading) {
+    return <div className="pt-[200px] pb-[100px] text-center">Loading...</div>;
+  }
 
   if (!doctor) {
     return (

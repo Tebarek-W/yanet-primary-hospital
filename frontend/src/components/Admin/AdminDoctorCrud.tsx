@@ -11,6 +11,7 @@ import type { Doctor } from '../../data/doctorsData';
 const AdminDoctorCrud: React.FC = () => {
   // Reactive list of doctors
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [branches, setBranches] = useState<{slug: string, name: string}[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('All');
   
@@ -19,6 +20,7 @@ const AdminDoctorCrud: React.FC = () => {
   const [editingDoctor, setEditingDoctor] = useState<Partial<Doctor> | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Editor tab inside Modal: 'general' | 'bio' | 'details'
   const [modalTab, setModalTab] = useState<'general' | 'bio' | 'details'>('general');
@@ -26,22 +28,36 @@ const AdminDoctorCrud: React.FC = () => {
   // Custom alerts/toasts
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'danger' } | null>(null);
 
-  // Load doctors from proxy (localStorage backed) on mount
+  const API_URL = 'http://localhost:5002/api/doctors';
+
+  const loadDoctorsAndBranches = async () => {
+    try {
+      const [docRes, branchRes] = await Promise.all([
+        fetch(API_URL),
+        fetch('http://localhost:5002/api/branches')
+      ]);
+      if (docRes.ok) {
+        const data = await docRes.json();
+        setDoctors(data);
+      }
+      if (branchRes.ok) {
+        const branchData = await branchRes.json();
+        setBranches(branchData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      triggerToast('Failed to load data from server.', 'danger');
+    }
+  };
+
+  // Load doctors on mount
   useEffect(() => {
-    setDoctors([...doctorsData]);
+    loadDoctorsAndBranches();
   }, []);
 
   const triggerToast = (message: string, type: 'success' | 'danger' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
-  };
-
-  // Save changes back to proxy/localStorage
-  const persistDoctors = (updatedList: Doctor[]) => {
-    // Clear array and push all to trigger Proxy 'set'
-    doctorsData.length = 0;
-    updatedList.forEach(doc => doctorsData.push(doc));
-    setDoctors([...doctorsData]);
   };
 
   // Handle Delete operation
@@ -50,13 +66,23 @@ const AdminDoctorCrud: React.FC = () => {
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!doctorToDelete) return;
-    const updated = doctors.filter(doc => doc.id !== doctorToDelete.id);
-    persistDoctors(updated);
+    try {
+      const res = await fetch(`${API_URL}/${doctorToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setDoctors(doctors.filter(doc => doc.id !== doctorToDelete.id));
+        triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
+      } else {
+        triggerToast('Failed to delete doctor.', 'danger');
+      }
+    } catch (error) {
+      triggerToast('An error occurred while deleting.', 'danger');
+    }
     setIsDeleteConfirmOpen(false);
     setDoctorToDelete(null);
-    triggerToast(`Doctor ${doctorToDelete.name} has been removed successfully.`);
   };
 
   // Open Edit or Add modal
@@ -67,7 +93,6 @@ const AdminDoctorCrud: React.FC = () => {
     } else {
       // Default empty doctor template
       setEditingDoctor({
-        id: (Math.max(...doctors.map(d => parseInt(d.id) || 0), 0) + 1).toString(),
         name: '',
         nameAm: '',
         roleKey: 'doctor_team.roles.cardiologist',
@@ -85,36 +110,67 @@ const AdminDoctorCrud: React.FC = () => {
         skills: [],
         skillsAm: [],
         biography: '',
-        biographyAm: ''
+        biographyAm: '',
+        branchSlugs: []
       });
     }
     setIsEditModalOpen(true);
   };
 
   // Save add/edit form
-  const handleSaveDoctor = (e: React.FormEvent) => {
+  const handleSaveDoctor = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingDoctor || !editingDoctor.name || !editingDoctor.id) {
-      triggerToast('Please provide a valid doctor name.', 'danger');
+    if (!editingDoctor || !editingDoctor.name || !editingDoctor.email || !editingDoctor.specialty) {
+      triggerToast('Name, email, and specialty are required.', 'danger');
       return;
     }
 
-    const updatedDoctor = editingDoctor as Doctor;
-    const exists = doctors.some(d => d.id === updatedDoctor.id);
-    let updatedList: Doctor[];
+    setIsSaving(true);
+    try {
+      const isNew = !editingDoctor.id;
+      const url = isNew ? API_URL : `${API_URL}/${editingDoctor.id}`;
+      const method = isNew ? 'POST' : 'PUT';
 
-    if (exists) {
-      updatedList = doctors.map(d => d.id === updatedDoctor.id ? updatedDoctor : d);
-      triggerToast(`Profile for ${updatedDoctor.name} updated successfully.`);
-    } else {
-      updatedList = [...doctors, updatedDoctor];
-      triggerToast(`Doctor ${updatedDoctor.name} added to the registry.`);
+      const assignedBranches = branches.filter(b => editingDoctor.branchSlugs?.includes(b.slug));
+      const computedLocation = assignedBranches.length > 0 
+        ? assignedBranches.map(b => b.name).join(', ') 
+        : 'Addis Ababa, Ethiopia';
+
+      const doctorDataToSave = {
+        ...editingDoctor,
+        location: computedLocation
+      };
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(doctorDataToSave),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to save doctor');
+      }
+
+      const savedDoctor = await res.json();
+
+      if (isNew) {
+        setDoctors([savedDoctor, ...doctors]);
+        triggerToast(`Doctor ${savedDoctor.name} added to the registry.`);
+      } else {
+        setDoctors(doctors.map(d => d.id === savedDoctor.id ? savedDoctor : d));
+        triggerToast(`Profile for ${savedDoctor.name} updated successfully.`);
+      }
+
+      setIsEditModalOpen(false);
+      setEditingDoctor(null);
+    } catch (error: any) {
+      triggerToast(error.message || 'An error occurred while saving.', 'danger');
+    } finally {
+      setIsSaving(false);
     }
-
-    persistDoctors(updatedList);
-    setIsEditModalOpen(false);
-    setEditingDoctor(null);
   };
+
 
   // Lists management inside form (Education, Experience, Skills)
   const handleAddListItem = (field: 'education' | 'educationAm' | 'experience' | 'experienceAm' | 'skills' | 'skillsAm') => {
@@ -304,9 +360,6 @@ const AdminDoctorCrud: React.FC = () => {
                     <td className="px-6 py-4.5">
                       <span className="px-3 py-1.5 bg-primary/10 text-primary text-[11px] font-black rounded-xl uppercase tracking-wider block w-fit">
                         {doctor.specialty}
-                      </span>
-                      <span className="text-[10px] text-gray-400 font-bold block mt-1">
-                        {doctor.roleKey.split('.').pop()?.toUpperCase()}
                       </span>
                     </td>
 
@@ -515,17 +568,7 @@ const AdminDoctorCrud: React.FC = () => {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Location Branch</label>
-                      <input 
-                        type="text" 
-                        required
-                        placeholder="Addis Ababa, Ethiopia"
-                        value={editingDoctor.location || ''}
-                        onChange={(e) => setEditingDoctor({ ...editingDoctor, location: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
-                      />
-                    </div>
+
 
                     {/* Image URL */}
                     <div className="space-y-2">
@@ -538,6 +581,37 @@ const AdminDoctorCrud: React.FC = () => {
                         onChange={(e) => setEditingDoctor({ ...editingDoctor, image: e.target.value })}
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-sm font-semibold text-gray-800"
                       />
+                    </div>
+
+                    {/* Branch Assignment */}
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest">Assign to Branches</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 p-4 border border-gray-200 rounded-2xl">
+                        {branches.map(branch => {
+                          const isAssigned = editingDoctor.branchSlugs?.includes(branch.slug);
+                          return (
+                            <label key={branch.slug} className="flex items-center gap-2 cursor-pointer">
+                              <input 
+                                type="checkbox"
+                                checked={isAssigned || false}
+                                onChange={(e) => {
+                                  const currentSlugs = editingDoctor.branchSlugs || [];
+                                  if (e.target.checked) {
+                                    setEditingDoctor({ ...editingDoctor, branchSlugs: [...currentSlugs, branch.slug] });
+                                  } else {
+                                    setEditingDoctor({ ...editingDoctor, branchSlugs: currentSlugs.filter(s => s !== branch.slug) });
+                                  }
+                                }}
+                                className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+                              />
+                              <span className="text-xs font-bold text-gray-700">{branch.name}</span>
+                            </label>
+                          );
+                        })}
+                        {branches.length === 0 && (
+                          <div className="col-span-full text-xs text-gray-400 italic">No branches available.</div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Image Preview Box */}
@@ -870,17 +944,23 @@ const AdminDoctorCrud: React.FC = () => {
                 <button 
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-5 py-3 rounded-2xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 text-sm font-extrabold transition-colors"
+                  disabled={isSaving}
+                  className="px-5 py-3 rounded-2xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 text-sm font-extrabold transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button 
                   type="button"
                   onClick={handleSaveDoctor}
-                  className="btn-primary !px-6 flex items-center gap-2 text-sm font-extrabold"
+                  disabled={isSaving}
+                  className="btn-primary !px-6 flex items-center gap-2 text-sm font-extrabold disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <Check className="w-4.5 h-4.5" />
-                  Save Changes
+                  {isSaving ? (
+                    <div className="w-4.5 h-4.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check className="w-4.5 h-4.5" />
+                  )}
+                  {isSaving ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
 
