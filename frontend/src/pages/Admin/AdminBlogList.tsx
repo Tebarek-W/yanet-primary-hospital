@@ -118,7 +118,7 @@ const AdminBlogList: React.FC = () => {
   const labelCls = "block text-[11px] font-black text-gray-400 uppercase tracking-widest mb-1.5";
 
   return (
-    <div className="space-y-6 max-w-7xl">
+    <div className="flex flex-col gap-6 w-full flex-1">
       {/* Toast */}
       <AnimatePresence>
         {toast && (
@@ -131,7 +131,7 @@ const AdminBlogList: React.FC = () => {
       </AnimatePresence>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-gray-100">
         <div>
           <h2 className="text-2xl font-extrabold text-gray-900 flex items-center gap-2">
             <FileText className="w-6 h-6 text-primary" /> Manage Blog Posts
@@ -149,12 +149,12 @@ const AdminBlogList: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center">
+      <div className="flex flex-col md:flex-row gap-4 items-center py-2">
         <div className="relative w-full md:max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input type="text" placeholder="Search by title, category, or author..." value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm" />
+            className="w-full pl-12 pr-4 py-3.5 bg-gray-50/70 border border-gray-200/80 rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-medium text-gray-800 text-sm" />
         </div>
         <div className="text-xs text-gray-400 font-bold ml-auto uppercase tracking-wider">
           Total: <span className="text-primary text-sm font-extrabold">{filtered.length}</span>
@@ -163,18 +163,18 @@ const AdminBlogList: React.FC = () => {
 
       {/* Table */}
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-gray-100">
+        <div className="flex flex-col items-center justify-center py-24">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
           <p className="text-gray-500 font-semibold">Loading posts...</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100">
+        <div className="text-center py-20 border border-gray-100 rounded-3xl">
           <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-gray-800">No posts found</h3>
           <p className="text-gray-400 text-sm mt-1">Create your first blog post to get started.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>

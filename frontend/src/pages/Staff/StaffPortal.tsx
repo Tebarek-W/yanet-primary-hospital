@@ -412,7 +412,7 @@ export const StaffPortal: React.FC = () => {
             </AnimatePresence>
 
             {/* Dashboard Workspace */}
-            <div className="flex-1 flex flex-col h-screen overflow-y-auto">
+            <div className="flex-1 flex flex-col h-screen overflow-hidden">
 
               {/* Top Header Controls */}
               <StaffHeader
@@ -433,7 +433,7 @@ export const StaffPortal: React.FC = () => {
               />
 
               {/* Dynamic Pages */}
-              <main className="flex-grow p-4 sm:p-6 overflow-y-auto">
+              <main className="flex-1 p-5 lg:p-8 overflow-y-auto flex flex-col">
                 <AnimatePresence mode="wait">
 
                   {activeTab === 'overview' && (

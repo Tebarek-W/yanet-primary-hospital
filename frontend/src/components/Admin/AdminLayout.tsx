@@ -52,29 +52,29 @@ return (
 
     {/* Sidebar */}
     <aside
-      className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 transform shrink-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0F172A] border-r border-slate-800/80 transition-transform duration-300 transform shrink-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 lg:static lg:inset-0`}
     >
-      <div className="flex items-center justify-between h-20 px-6 bg-white border-b border-gray-50">
+      <div className="flex items-center justify-between h-20 px-6 bg-[#0F172A] border-b border-slate-800/60">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg shadow-primary/20">
             Y
           </div>
           <div>
-            <h2 className="text-lg font-black text-gray-900 leading-tight tracking-tight">Yanet Admin</h2>
-            <p className="text-[10px] text-gray-400 tracking-widest uppercase font-bold">CMS Dashboard</p>
+            <h2 className="text-lg font-black text-white leading-tight tracking-tight">Yanet Admin</h2>
+            <p className="text-[10px] text-slate-400 tracking-widest uppercase font-bold">CMS Dashboard</p>
           </div>
         </div>
         <button
           onClick={() => setIsSidebarOpen(false)}
-          className="lg:hidden text-gray-400 hover:text-gray-900 transition-colors p-2"
+          className="lg:hidden text-slate-400 hover:text-white hover:bg-slate-800/50 p-2 rounded-xl transition-all"
         >
           <X className="w-6 h-6" />
         </button>
       </div>
 
       <div className="px-4 py-6 space-y-1 overflow-y-auto h-[calc(100vh-80px)] custom-scrollbar">
-        <p className="px-4 text-[11px] font-extrabold text-gray-400 uppercase tracking-widest mb-4">Website Pages</p>
+        <p className="px-4 text-[11px] font-extrabold text-slate-500 uppercase tracking-widest mb-4">Website Pages</p>
 
         {navigation.map((item) => {
           const isActive = item.exact
@@ -89,15 +89,15 @@ return (
                 if (window.innerWidth < 1024) setIsSidebarOpen(false);
               }}
               className={`flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 group ${isActive
-                  ? 'bg-primary/10 text-primary font-bold'
-                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900 font-medium'
+                  ? 'bg-primary text-white font-bold shadow-md shadow-primary/10'
+                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-100 font-medium'
                 }`}
             >
               <div className="flex items-center gap-3.5">
-                <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-primary' : 'text-gray-400 group-hover:text-primary'}`} />
+                <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'}`} />
                 <span className="text-sm">{item.name}</span>
               </div>
-              {isActive && <ChevronRight className="w-4 h-4 opacity-50" />}
+              {isActive && <ChevronRight className="w-4 h-4 text-white opacity-60" />}
             </NavLink>
           );
         })}
@@ -156,8 +156,8 @@ return (
       </header>
 
       {/* Dynamic Page Content */}
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#F4F8FB] p-4 md:p-8">
-        <div className="max-w-7xl mx-auto w-full">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white p-6 lg:p-8 flex flex-col">
+        <div className="w-full flex-1 flex flex-col">
           <Outlet />
         </div>
       </main>

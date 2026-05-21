@@ -160,6 +160,17 @@ const AdminDoctorCrud: React.FC = () => {
     });
   };
 
+  // Generate a random secure password for new staff accounts
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#!';
+    const password = Array.from({ length: 12 }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join('');
+    if (editingDoctor) {
+      setEditingDoctor({ ...editingDoctor, password });
+    }
+  };
+
   // Filter list
   const filteredDoctors = doctors.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -174,7 +185,7 @@ const AdminDoctorCrud: React.FC = () => {
   const specialties = ['All', ...Array.from(new Set(doctors.map(d => d.specialty))).filter(Boolean)];
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-5 flex-1 w-full">
       
       {/* Toast Alert */}
       <AnimatePresence>
@@ -200,7 +211,7 @@ const AdminDoctorCrud: React.FC = () => {
       </AnimatePresence>
 
       {/* Real-time Notice */}
-      <div className="bg-blue-50/70 border border-blue-100 rounded-3xl p-5 flex items-start gap-4 shadow-sm backdrop-blur-md">
+      <div className="bg-blue-50/70 border border-blue-100 rounded-3xl p-5 flex items-start gap-4">
         <Sparkles className="w-6 h-6 text-primary shrink-0 mt-0.5" />
         <div>
           <h4 className="font-extrabold text-blue-900 leading-tight">Instant Synchronized Updates</h4>
@@ -211,10 +222,8 @@ const AdminDoctorCrud: React.FC = () => {
         </div>
       </div>
 
-
-
       {/* Search & Actions Bar */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 max-w-2xl">
           {/* Search */}
           <div className="relative flex-1">
@@ -253,7 +262,7 @@ const AdminDoctorCrud: React.FC = () => {
       </div>
 
       {/* Doctor Grid list */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>

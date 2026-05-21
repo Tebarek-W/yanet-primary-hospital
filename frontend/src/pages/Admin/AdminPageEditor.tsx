@@ -493,10 +493,10 @@ const AdminPageEditor: React.FC = () => {
   };
 
   return (
-    <div className={`space-y-6 transition-all duration-300 mx-auto ${pageId === 'doctors' && activeTab === 'Manage Doctors' ? 'max-w-7xl' : 'max-w-5xl'}`}>
+    <div className="flex flex-col gap-6 flex-1 w-full transition-all duration-300">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-gray-100">
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/admin')}
@@ -541,7 +541,7 @@ const AdminPageEditor: React.FC = () => {
       <div className="flex flex-col gap-6">
         
         {/* Top Horizontal Navigation Tabs */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-2.5 transition-all">
+        <div className="py-2 border-b border-gray-100">
           <div className="flex flex-row gap-2 overflow-x-auto custom-scrollbar pb-2 pt-0.5 px-0.5">
             {schema.tabs.map((tab: string) => {
               const Icon = getTabIcon(tab);
@@ -565,7 +565,7 @@ const AdminPageEditor: React.FC = () => {
         </div>
 
         {/* Editor Form Area */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 min-h-[500px]">
+        <div className="py-6 min-h-[500px]">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 pb-4 border-b border-gray-100">
             <Layout className="w-5 h-5 text-gray-400" />
             {activeTab} Settings
